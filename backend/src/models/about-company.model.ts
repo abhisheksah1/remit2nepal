@@ -28,6 +28,77 @@ const aboutCompanySchema = new Schema(
     teamDescription: { type: String, default: "" },
     teamLeadHeading: { type: String, default: "Managers & top employees" },
     teamStaffHeading: { type: String, default: "Our people" },
+    whoBody: { type: String, default: "" },
+    whoHighlights: [
+      {
+        title: { type: String, required: true },
+        description: { type: String, default: "" },
+        icon: { type: String, default: "shield" }
+      }
+    ],
+    missionKicker: { type: String, default: "" },
+    missionHeading: { type: String, default: "" },
+    missionBody: { type: String, default: "" },
+    missionImageUrl: { type: String, default: "" },
+    missionPoints: [
+      {
+        title: { type: String, required: true },
+        description: { type: String, default: "" },
+        icon: { type: String, default: "check" }
+      }
+    ],
+    visionKicker: { type: String, default: "" },
+    visionHeading: { type: String, default: "" },
+    visionBody: { type: String, default: "" },
+    visionImageUrl: { type: String, default: "" },
+    visionChips: [{ type: String }],
+    whyKicker: { type: String, default: "" },
+    whyHeading: { type: String, default: "" },
+    whySubheading: { type: String, default: "" },
+    whyItems: [
+      {
+        title: { type: String, required: true },
+        description: { type: String, default: "" },
+        icon: { type: String, default: "shield" }
+      }
+    ],
+    valuesKicker: { type: String, default: "" },
+    valuesHeading: { type: String, default: "" },
+    valuesSubheading: { type: String, default: "" },
+    stepsKicker: { type: String, default: "" },
+    stepsHeading: { type: String, default: "" },
+    steps: [
+      {
+        title: { type: String, required: true },
+        description: { type: String, default: "" },
+        icon: { type: String, default: "" }
+      }
+    ],
+    teamAboutKicker: { type: String, default: "" },
+    teamAboutHeading: { type: String, default: "" },
+    teamAboutIntro: { type: String, default: "" },
+    teamAboutBody: { type: String, default: "" },
+    teamMotto: { type: String, default: "" },
+    teamAboutLinkLabel: { type: String, default: "" },
+    teamAboutLinkUrl: { type: String, default: "" },
+    commitmentKicker: { type: String, default: "" },
+    commitmentHeading: { type: String, default: "" },
+    commitmentBody: { type: String, default: "" },
+    commitmentItems: [{ type: String }],
+    storyBandKicker: { type: String, default: "" },
+    storyBandHeading: { type: String, default: "" },
+    storyBandBody: { type: String, default: "" },
+    storyBandImageUrl: { type: String, default: "" },
+    heroPrimaryLabel: { type: String, default: "" },
+    heroPrimaryUrl: { type: String, default: "" },
+    heroSecondaryLabel: { type: String, default: "" },
+    heroSecondaryUrl: { type: String, default: "" },
+    ctaHeading: { type: String, default: "" },
+    ctaBody: { type: String, default: "" },
+    ctaPrimaryLabel: { type: String, default: "" },
+    ctaPrimaryUrl: { type: String, default: "" },
+    ctaSecondaryLabel: { type: String, default: "" },
+    ctaSecondaryUrl: { type: String, default: "" },
     galleryImages: [
       {
         imageUrl: { type: String, required: true },

@@ -22,9 +22,9 @@ function NprRoll({ className, label, gid }: { className?: string; label: string;
     <svg className={className} viewBox="0 0 120 78" aria-hidden>
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#1f7a3a" />
-          <stop offset="55%" stop-color="#2e9b4c" />
-          <stop offset="100%" stop-color="#166534" />
+          <stop offset="0%" stopColor="#1f7a3a" />
+          <stop offset="55%" stopColor="#2e9b4c" />
+          <stop offset="100%" stopColor="#166534" />
         </linearGradient>
       </defs>
       <ellipse cx="96" cy="39" rx="18" ry="28" fill="#d7f0de" />

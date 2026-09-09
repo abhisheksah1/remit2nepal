@@ -48,7 +48,7 @@ export default function RateHistory() {
         description="Historical NRB and company rates"
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Rate History" }]}
       />
-      <div className="mb-6 grid gap-3 md:grid-cols-5">
+      <div className="admin-toolbar mb-6 md:grid-cols-5">
         <Select
           label="Currency"
           value={currencyCode}
@@ -90,23 +90,23 @@ export default function RateHistory() {
           </div>
         )}
       </div>
-      <div className="mb-6 grid gap-4 sm:grid-cols-4">
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-gold">High</p>
-          <p className="mt-1 font-display text-2xl">{formatNpr(summary?.highest)}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-gold">Low</p>
-          <p className="mt-1 font-display text-2xl">{formatNpr(summary?.lowest)}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-gold">Average</p>
-          <p className="mt-1 font-display text-2xl">{formatNpr(summary?.average)}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wider text-gold">Change</p>
-          <p className="mt-1 font-display text-2xl">{formatPercent(summary?.changePercent)}</p>
-        </Card>
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="admin-stat">
+          <span>High</span>
+          <strong>{formatNpr(summary?.highest)}</strong>
+        </div>
+        <div className="admin-stat">
+          <span>Low</span>
+          <strong>{formatNpr(summary?.lowest)}</strong>
+        </div>
+        <div className="admin-stat">
+          <span>Average</span>
+          <strong>{formatNpr(summary?.average)}</strong>
+        </div>
+        <div className="admin-stat">
+          <span>Change</span>
+          <strong>{formatPercent(summary?.changePercent)}</strong>
+        </div>
       </div>
       <Card className="mb-8 h-80">
         <ResponsiveContainer width="100%" height="100%">

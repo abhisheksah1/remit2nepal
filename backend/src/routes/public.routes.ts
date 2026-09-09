@@ -2,9 +2,9 @@ import { Router } from "express";
 import { publicApi } from "../controllers/cms.controller.js";
 import { partnershipPublic } from "../controllers/partnership.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
-import { contactSchema } from "../validators/common.validator.js";
+import { contactSchema, trackQuerySchema } from "../validators/common.validator.js";
 import { partnerApplicationCreateSchema } from "../validators/partnership.validator.js";
-import { contactRateLimiter } from "../middlewares/rate-limit.middleware.js";
+import { contactRateLimiter, trackRateLimiter } from "../middlewares/rate-limit.middleware.js";
 import { uploadMany } from "../middlewares/upload.middleware.js";
 import { APPLICATION_DOCUMENT_KEYS } from "../constants/partnership.js";
 
@@ -34,4 +34,5 @@ publicRouter.post(
   partnershipPublic.apply
 );
 publicRouter.get("/pages/:slug", publicApi.page);
+publicRouter.get("/track", trackRateLimiter, validate(trackQuerySchema, "query"), publicApi.track);
 publicRouter.post("/contact", contactRateLimiter, validate(contactSchema), publicApi.contact);

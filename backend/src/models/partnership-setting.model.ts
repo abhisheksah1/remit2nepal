@@ -16,7 +16,7 @@ const partnershipSettingSchema = new Schema(
     pageDescription: {
       type: String,
       default:
-        "Join the Remit2Nepal network as an international sending partner or a national payout partner. Download the company agreement, sign and stamp it, then submit your documents."
+        "Join Remit2Nepal as a national agent. Submit full details and documents for verification. After review, the company emails the agreement for signature, stamp, and return by email."
     },
     internationalEnabled: { type: Boolean, default: true },
     internationalKicker: { type: String, default: "Sending corridors" },
@@ -44,10 +44,11 @@ const partnershipSettingSchema = new Schema(
     nationalPoints: {
       type: [String],
       default: [
-        "Account credit and cash payout under Remit2Nepal corridors",
         "Choose Cooperative or Private Agent when you apply",
-        "Download the company agreement, sign it, and stamp it",
-        "Submit registration, PAN, tax clearance, citizenship, and cheque"
+        "Fill the form with full company and owner details",
+        "Upload documents for verification first",
+        "After review, Remit2Nepal emails the company agreement",
+        "Sign, stamp, complete the papers, scan, and email them back"
       ]
     },
     cooperativeEnabled: { type: Boolean, default: true },

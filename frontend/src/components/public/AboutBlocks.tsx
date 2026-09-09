@@ -1,9 +1,60 @@
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Award, BadgeCheck, BookOpen, Eye, FileText, Scale, ShieldCheck, Target } from "lucide-react";
 import type { AboutCompany, AboutGalleryImage, DocumentItem, TeamMember } from "@/types/content";
-import { entityId, mediaUrl } from "@/utils/cn";
+import { cn, entityId, mediaUrl } from "@/utils/cn";
 import { aboutIcon } from "@/utils/about-icons";
 import { personInitials } from "@/utils/team";
+
+function punchParts(text: string) {
+  const trimmed = text.trim();
+  if (!trimmed) return [];
+  if (trimmed.includes("//")) {
+    return trimmed
+      .split("//")
+      .map((part, index) => ({ text: part.trim(), tone: index % 2 === 0 ? "is-navy" : "is-red" }))
+      .filter((part) => part.text);
+  }
+  const brand = trimmed.match(/^(.*?)(\bRemit2Nepal\b)(.*)$/i);
+  if (brand) {
+    return [
+      { text: brand[1].trim(), tone: "is-navy" },
+      { text: brand[2], tone: "is-red" },
+      { text: brand[3].trim(), tone: "is-navy" }
+    ].filter((part) => part.text);
+  }
+  const words = trimmed.split(/\s+/);
+  if (words.length < 4) return [{ text: trimmed, tone: "is-navy" }];
+  const splitAt = Math.ceil(words.length / 2);
+  return [
+    { text: words.slice(0, splitAt).join(" "), tone: "is-navy" },
+    { text: words.slice(splitAt).join(" "), tone: "is-red" }
+  ];
+}
+
+export function BrandPunch({
+  text,
+  as: Tag = "h1",
+  className,
+  id
+}: {
+  text: string;
+  as?: "h1" | "h2";
+  className?: string;
+  id?: string;
+}) {
+  const parts = punchParts(text);
+  return (
+    <Tag id={id} className={cn("about-punch", className)}>
+      {parts.map((part, index) => (
+        <span key={`${part.tone}-${index}`} className={part.tone}>
+          {part.text}
+          {index < parts.length - 1 ? " " : ""}
+        </span>
+      ))}
+    </Tag>
+  );
+}
 
 export function AboutHero({
   about,
@@ -24,15 +75,11 @@ export function AboutHero({
       {!isCard && about?.heroImageUrl ? <img src={mediaUrl(about.heroImageUrl)} alt="" className="about-hero-photo" /> : null}
       {!isCard ? <div className="about-hero-wash" /> : null}
       {!isCard ? <div className="hero-mesh opacity-40" /> : null}
-      <div className={isCard ? "about-team-wrap about-hero-wrap" : "relative mx-auto max-w-site px-4 py-16 lg:px-8 sm:py-20"}>
-        <div className={isCard ? "about-hero-copy is-card" : "about-hero-copy"}>
+      <div className={isCard ? "about-stage" : "relative mx-auto max-w-site px-4 py-16 lg:px-8 sm:py-20"}>
+        <div className={isCard ? "about-intro-card" : "about-hero-copy"}>
           <p className="about-kicker">{kicker}</p>
-          <h1 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-navy sm:text-5xl">{title}</h1>
-          {description ? (
-            <p className={isCard ? "mt-4 max-w-2xl text-[0.98rem] leading-relaxed text-ink-muted" : "mt-4 max-w-2xl text-ink/80"}>
-              {description}
-            </p>
-          ) : null}
+          <BrandPunch text={title} className={isCard ? "is-banner" : "is-banner"} />
+          {description ? <p className="about-lede">{description}</p> : null}
         </div>
       </div>
     </section>
@@ -43,32 +90,30 @@ export function AboutBest({ about }: { about: AboutCompany }) {
   const gallery = (about.galleryImages ?? []).filter((item) => item.imageUrl);
   return (
     <section className="about-best">
-      <div className="mx-auto max-w-site px-4 py-16 lg:px-8">
+      <div className="about-stage">
         <p className="about-kicker">{about.bestOfKicker || "Best of company"}</p>
-        <h2 className="mt-2 max-w-3xl font-display text-3xl text-navy sm:text-4xl">
-          {about.bestOfHeading || "Best of Remit2Nepal"}
-        </h2>
-        {about.bestOfSubheading ? <p className="mt-3 max-w-2xl text-ink-muted">{about.bestOfSubheading}</p> : null}
+        <BrandPunch text={about.bestOfHeading || "Best of Remit2Nepal"} as="h2" className="is-section" />
+        {about.bestOfSubheading ? <p className="about-lede">{about.bestOfSubheading}</p> : null}
 
         {about.statistics?.length ? (
-          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-5">
+          <div className="about-stat-row">
             {about.statistics.map((stat, index) => {
               const Icon = aboutIcon(undefined, stat.label);
               return (
-                <div key={stat.label} className="about-stat" style={{ animationDelay: `${index * 80}ms` }}>
+                <article key={stat.label} className="about-stat" style={{ animationDelay: `${index * 80}ms` }}>
                   <span className="about-icon" aria-hidden>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <p className="mt-3 font-display text-3xl text-navy">{stat.value}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wider text-gold">{stat.label}</p>
-                </div>
+                  <p className="about-stat-value">{stat.value}</p>
+                  <p className="about-stat-label">{stat.label}</p>
+                </article>
               );
             })}
           </div>
         ) : null}
 
         {about.coreValues?.length ? (
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="about-value-row">
             {about.coreValues.map((value, index) => {
               const Icon = aboutIcon(value.icon, value.title);
               return (
@@ -76,8 +121,8 @@ export function AboutBest({ about }: { about: AboutCompany }) {
                   <span className="about-icon is-lg" aria-hidden>
                     <Icon className="h-6 w-6" />
                   </span>
-                  <h3 className="mt-4 font-display text-xl text-navy">{value.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">{value.description}</p>
+                  <h3>{value.title}</h3>
+                  <p>{value.description}</p>
                 </article>
               );
             })}
@@ -85,7 +130,7 @@ export function AboutBest({ about }: { about: AboutCompany }) {
         ) : null}
 
         {gallery.length ? (
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="about-gallery-row">
             {gallery.map((item, index) => (
               <GalleryCard key={`${item.imageUrl}-${index}`} item={item} delay={index * 80} />
             ))}
@@ -96,12 +141,57 @@ export function AboutBest({ about }: { about: AboutCompany }) {
   );
 }
 
+export function AboutTeamWork({
+  about,
+  members
+}: {
+  about?: AboutCompany | null;
+  members: TeamMember[];
+}) {
+  const preview = members.slice(0, 8);
+  return (
+    <section className="about-teamwork">
+      <div className="about-stage">
+        <header className="about-teamwork-head">
+          <div>
+            <p className="about-kicker">{about?.teamKicker || "Team work"}</p>
+            <BrandPunch
+              text={
+                !about?.teamHeading || /^our team$/i.test(about.teamHeading)
+                  ? "The desk behind every transfer"
+                  : about.teamHeading
+              }
+              as="h2"
+              className="is-section"
+            />
+            <p className="about-lede">
+              {about?.teamDescription || "The people who run corridors, branches, and the payout desk every day."}
+            </p>
+          </div>
+          <Link className="about-teamwork-cta" to="/about/team">
+            Meet the team
+          </Link>
+        </header>
+        {preview.length ? (
+          <div className="about-person-grid">
+            {preview.map((member, index) => (
+              <PersonCard key={entityId(member)} member={member} delay={index * 70} />
+            ))}
+          </div>
+        ) : (
+          <p className="about-empty">Add people in Admin → Board & Team to show them here.</p>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export function AboutStory({ about }: { about: AboutCompany }) {
   return (
     <section className="about-story">
-      <div className="mx-auto max-w-site px-4 py-16 lg:px-8">
+      <div className="about-stage">
         <p className="about-kicker">{about.storyKicker || "The company"}</p>
-        <h2 className="mt-2 font-display text-3xl text-navy sm:text-4xl">{about.storyHeading || "Who we are"}</h2>
+        <BrandPunch text={about.storyHeading || "Who we are"} as="h2" className="is-section" />
         <div className="prose-r2n mt-5 max-w-3xl" dangerouslySetInnerHTML={{ __html: about.introduction }} />
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           <article className="about-story-card" style={{ animationDelay: "0ms" }}>

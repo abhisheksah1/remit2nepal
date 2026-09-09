@@ -83,43 +83,61 @@ export default function Settings() {
 
   return (
     <div>
-      <PageHeader title="Settings" crumbs={[{ label: "Admin", to: "/admin" }, { label: "Settings" }]} />
-      <form className="max-w-2xl space-y-4" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
-        <Input label="Company name" {...form.register("companyName")} error={form.formState.errors.companyName?.message} />
-        <Input label="Tagline" {...form.register("tagline")} />
-        <Input label="Logo URL" {...form.register("logoUrl")} />
-        <Input label="Favicon URL" {...form.register("faviconUrl")} />
-        <Input label="Phone" {...form.register("phone")} />
-        <Input label="Email" {...form.register("email")} />
-        <Input label="Address" {...form.register("address")} />
-        <Input label="Office hours" {...form.register("officeHours")} />
-        <Input label="Emergency contact" {...form.register("emergencyContact")} />
-        <Input label="Header CTA label" {...form.register("headerCtaLabel")} />
-        <Input label="Header CTA URL" {...form.register("headerCtaUrl")} />
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" {...form.register("headerCtaEnabled")} /> Header CTA enabled
-        </label>
-        <Textarea label="Footer about" {...form.register("footerAbout")} />
-        <Input label="Copyright" {...form.register("copyrightText")} />
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" {...form.register("maintenanceMode")} /> Maintenance mode
-        </label>
-        <Textarea label="Maintenance message" {...form.register("maintenanceMessage")} />
-        <Select
-          label="Public rate display"
-          {...form.register("publicRateDisplay")}
-          options={[
-            { value: "BOTH", label: "Both" },
-            { value: "NRB", label: "NRB" },
-            { value: "COMPANY", label: "Company" }
-          ]}
-        />
-        <Input label="Stale rate hours" type="number" {...form.register("staleRateHours")} />
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" {...form.register("contactFormEnabled")} /> Contact form enabled
-        </label>
-        <Textarea label="Analytics script" {...form.register("analyticsScript")} />
-        <Button type="submit" disabled={save.isPending}>Save settings</Button>
+      <PageHeader
+        title="Settings"
+        description="Company identity, contact details, and public-site switches."
+        crumbs={[{ label: "Admin", to: "/admin" }, { label: "Settings" }]}
+      />
+      <form className="admin-panel space-y-5" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
+        <fieldset className="admin-field-group space-y-4">
+          <legend>Brand</legend>
+          <Input label="Company name" {...form.register("companyName")} error={form.formState.errors.companyName?.message} />
+          <Input label="Tagline" {...form.register("tagline")} />
+          <Input label="Logo URL" {...form.register("logoUrl")} />
+          <Input label="Favicon URL" {...form.register("faviconUrl")} />
+        </fieldset>
+        <fieldset className="admin-field-group space-y-4">
+          <legend>Contact</legend>
+          <Input label="Phone" {...form.register("phone")} />
+          <Input label="Email" {...form.register("email")} />
+          <Input label="Address" {...form.register("address")} />
+          <Input label="Office hours" {...form.register("officeHours")} />
+          <Input label="Emergency contact" {...form.register("emergencyContact")} />
+        </fieldset>
+        <fieldset className="admin-field-group space-y-4">
+          <legend>Header & footer</legend>
+          <Input label="Header CTA label" {...form.register("headerCtaLabel")} />
+          <Input label="Header CTA URL" {...form.register("headerCtaUrl")} />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" {...form.register("headerCtaEnabled")} /> Header CTA enabled
+          </label>
+          <Textarea label="Footer about" {...form.register("footerAbout")} />
+          <Input label="Copyright" {...form.register("copyrightText")} />
+        </fieldset>
+        <fieldset className="admin-field-group space-y-4">
+          <legend>Operations</legend>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" {...form.register("maintenanceMode")} /> Maintenance mode
+          </label>
+          <Textarea label="Maintenance message" {...form.register("maintenanceMessage")} />
+          <Select
+            label="Public rate display"
+            {...form.register("publicRateDisplay")}
+            options={[
+              { value: "BOTH", label: "Both" },
+              { value: "NRB", label: "NRB" },
+              { value: "COMPANY", label: "Company" }
+            ]}
+          />
+          <Input label="Stale rate hours" type="number" {...form.register("staleRateHours")} />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" {...form.register("contactFormEnabled")} /> Contact form enabled
+          </label>
+          <Textarea label="Analytics script" {...form.register("analyticsScript")} />
+        </fieldset>
+        <div className="admin-form-save">
+          <Button type="submit" disabled={save.isPending}>Save settings</Button>
+        </div>
       </form>
     </div>
   );

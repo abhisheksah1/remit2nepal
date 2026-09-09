@@ -9,7 +9,24 @@ export async function getAbout() {
 }
 
 export async function updateAbout(input: Record<string, unknown>, req: Request) {
-  const rich = ["introduction", "mission", "vision", "history", "chairmanMessage"];
+  const rich = [
+    "introduction",
+    "mission",
+    "vision",
+    "history",
+    "chairmanMessage",
+    "whoBody",
+    "missionBody",
+    "visionBody",
+    "teamAboutIntro",
+    "teamAboutBody",
+    "commitmentBody",
+    "storyBandBody",
+    "ctaBody",
+    "whySubheading",
+    "valuesSubheading",
+    "heroDescription"
+  ];
   const payload = { ...input };
   for (const field of rich) {
     if (typeof payload[field] === "string") payload[field] = sanitizeRichText(payload[field] as string);

@@ -6,10 +6,10 @@ export function ScrollReveal() {
 
   useEffect(() => {
     const root = document.querySelector("main");
-    if (!root) return;
+    if (!root) return undefined;
 
     const nodes = root.querySelectorAll(
-      "section, .glass-panel, .lift-card, .hero-network, .transfer-desk, .why-card, .why-head, .nepal-story-copy, .remittance-copy, .remittance-cube, .remittance-lede, .remittance-cta, .about-stat, .about-value, .about-story-card, .about-shot, .about-person, .about-comp-card, .about-hero-copy.is-card, .about-leader-head, .about-leader-panel, .chat-assist"
+      "section, .section-intro, .glass-panel, .lift-card, .hero-network, .transfer-desk, .why-card, .why-head, .nepal-story-copy, .remittance-copy, .remittance-cube, .remittance-lede, .remittance-cta, .about-stat, .about-value, .about-story-card, .about-shot, .about-person, .about-comp-card, .about-hero-copy.is-card, .about-leader-head, .about-leader-panel, .chat-assist, .apro-card, .apro-value, .apro-split-grid"
     );
     const observer = new IntersectionObserver(
       (entries) => {
@@ -24,7 +24,7 @@ export function ScrollReveal() {
     );
 
     nodes.forEach((node) => {
-      if (node.classList.contains("hero-stage") || node.classList.contains("reveal-skip")) {
+      if (node.classList.contains("hero-stage") || node.classList.contains("reveal-skip") || node.classList.contains("page-hero") || node.classList.contains("cdesk") || node.classList.contains("agent-desk") || node.classList.contains("agent-hero") || node.classList.contains("board-desk") || node.classList.contains("ba-desk") || node.classList.contains("ba-hero") || node.classList.contains("apply-desk") || node.classList.contains("apply-hero")) {
         node.classList.add("is-revealed");
         return;
       }

@@ -2,6 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
 import { loginAs, resetCollections, seedAuthFixtures, startTestDb, stopTestDb, testApp, withAuth } from "./harness.js";
 import { User } from "../models/user.model.js";
+import { CSRF_COOKIE } from "../config/cookies.js";
 
 const app = testApp();
 
@@ -40,6 +41,30 @@ describe("authentication", () => {
     expect([401, 423]).toContain(response.status);
     const user = await User.findOne({ userId: "superadmin" });
     expect((user?.failedLoginAttempts ?? 0) >= 8 || user?.status === "LOCKED").toBe(true);
+  });
+
+  it("does not send the user back to change-password after a successful update", async () => {
+    await User.updateOne({ userId: "superadmin" }, { mustChangePassword: true });
+    const { cookies, csrf } = await loginAs(app, "superadmin", "change-this-password");
+    const before = await withAuth(request(app).get("/api/v1/auth/me"), cookies, csrf);
+    expect(before.body.data.user.mustChangePassword).toBe(true);
+
+    const changed = await withAuth(request(app).post("/api/v1/auth/change-password"), cookies, csrf).send({
+      currentPassword: "change-this-password",
+      newPassword: "NewPass!23456"
+    });
+    expect(changed.status).toBe(200);
+    expect(changed.body.data.user.mustChangePassword).toBe(false);
+
+    const dashboard = await withAuth(request(app).get("/api/v1/dashboard"), cookies, csrf);
+    expect(dashboard.status).toBe(200);
+
+    const nextCookies = (changed.headers["set-cookie"] as string[] | undefined) ?? cookies;
+    const nextCsrf =
+      nextCookies.find((cookie) => cookie.startsWith(`${CSRF_COOKIE}=`))?.split(";")[0]?.split("=")[1] ?? csrf;
+    const after = await withAuth(request(app).get("/api/v1/auth/me"), nextCookies, nextCsrf);
+    expect(after.status).toBe(200);
+    expect(after.body.data.user.mustChangePassword).toBe(false);
   });
 
   it("returns the current user and logs out", async () => {

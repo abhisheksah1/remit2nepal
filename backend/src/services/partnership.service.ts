@@ -12,6 +12,7 @@ import { privateFilePath, removePrivateFile, removePrivateFolder, writePrivateFi
 import {
   AGREEMENT_SLOTS,
   APPLICATION_DOCUMENT_KEYS,
+  APPLY_DOCUMENT_KEYS,
   DEFAULT_DOCUMENT_LABELS,
   type AgreementSlot,
   type ApplicationDocumentKey
@@ -71,7 +72,11 @@ function publicSettings(doc: Record<string, unknown>) {
     privateAgentEnabled: doc.privateAgentEnabled !== false,
     privateAgentLabel: doc.privateAgentLabel || "Private Agent",
     documentLabels: labels,
-    requiredDocuments: APPLICATION_DOCUMENT_KEYS.map((key) => ({ key, label: labels[key], required: true })),
+    requiredDocuments: APPLICATION_DOCUMENT_KEYS.map((key) => ({
+      key,
+      label: labels[key],
+      required: key !== "signedAgreement"
+    })),
     agreements: {
       international: agreementPublic(agreements.international),
       cooperative: agreementPublic(agreements.cooperative),
@@ -192,7 +197,7 @@ export async function submitPartnerApplication(input: Record<string, string>, re
   }
 
   const files = filesFromRequest(req);
-  const missing = APPLICATION_DOCUMENT_KEYS.filter((key) => !files[key]);
+  const missing = APPLY_DOCUMENT_KEYS.filter((key) => !files[key]);
   if (missing.length) {
     throw new AppError("All required documents must be uploaded", 400, missing.map((field) => ({ field, message: "This document is required" })));
   }

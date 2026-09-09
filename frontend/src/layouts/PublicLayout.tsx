@@ -52,7 +52,7 @@ export function PublicLayout() {
       <ScrollReveal />
       <SmoothScroll />
       <Header settings={settings} items={site.data?.navigation ?? []} />
-      <main className="page-enter relative z-0 min-w-0 flex-1 overflow-x-clip">
+      <main className="relative z-0 min-w-0 flex-1 overflow-x-clip">
         <Suspense fallback={<div className="mx-auto max-w-site px-4 py-16 lg:px-8"><Skeleton className="h-72 w-full" /></div>}>
           <Outlet context={site.data} />
         </Suspense>

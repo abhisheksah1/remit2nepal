@@ -28,20 +28,18 @@ export default function Dashboard() {
     <div>
       <PageHeader
         title="Dashboard"
-        description="Licensed operations snapshot"
+        description="Snapshot of the desk: branches, rates, messages, and recent activity."
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Dashboard" }]}
       />
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center gap-3">
         <Badge tone={statusTone(cards.websiteStatus)}>{cards.websiteStatus}</Badge>
         <p className="text-sm text-ink-muted">Last rate update {formatDateTime(cards.lastRateUpdate)}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((item) => (
-          <Link key={item.label} to={item.to}>
-            <Card>
-              <p className="text-xs uppercase tracking-wider text-gold">{item.label}</p>
-              <p className="mt-2 font-display text-3xl text-navy">{item.value}</p>
-            </Card>
+          <Link key={item.label} to={item.to} className="admin-stat">
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
           </Link>
         ))}
       </div>

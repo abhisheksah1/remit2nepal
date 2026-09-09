@@ -163,7 +163,9 @@ export default function Admins() {
               ))}
             </fieldset>
           ) : null}
-          <Button type="submit" disabled={save.isPending}>Save</Button>
+          <div className="admin-drawer-actions">
+            <Button type="submit" disabled={save.isPending}>Save</Button>
+          </div>
         </form>
       </FormDrawer>
       <ConfirmDialog

@@ -9,6 +9,7 @@ import { loginSchema, type LoginValues } from "@/schemas/auth.schema";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
+import { BRAND } from "@/constants/brand";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -29,26 +30,36 @@ export default function Login() {
   });
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="relative hidden bg-navy text-cream lg:flex lg:flex-col lg:justify-between p-12">
-        <p className="font-display text-2xl text-gold">Remit2Nepal</p>
+    <div className="admin-login">
+      <aside className="admin-login-brand">
+        <div className="flex items-center gap-3">
+          <img src={BRAND.logo} alt="" />
+          <p className="text-lg font-extrabold tracking-tight text-white">{BRAND.name}</p>
+        </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-gold">Operations portal</p>
-          <h1 className="mt-4 max-w-md font-display text-5xl leading-tight">Rates, branches and records under one licensed desk</h1>
-          <p className="mt-6 max-w-md text-cream/75">
+          <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-white/55">Operations portal</p>
+          <h1>Rates, branches and records in one desk</h1>
+          <p className="mt-5 max-w-md text-sm leading-relaxed text-white/70">
             Sign in with your staff user ID. Sessions use httpOnly cookies. Privileged actions are audited.
           </p>
         </div>
-        <p className="text-sm text-cream/50">Authorized personnel only. Unauthorized access is prohibited.</p>
-      </div>
-      <div className="flex items-center justify-center bg-cream px-6 py-16">
+        <p className="text-sm text-white/45">Authorized personnel only. Unauthorized access is prohibited.</p>
+      </aside>
+      <div className="admin-login-form">
+        <div className="admin-login-mobile">
+          <img src={BRAND.logo} alt="" />
+          <div>
+            <p className="text-base font-extrabold text-navy">{BRAND.name}</p>
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-navy/50">Admin desk</p>
+          </div>
+        </div>
         <form
-          className="w-full max-w-md space-y-5 rounded-3xl border border-navy/10 bg-white p-8 shadow-card"
+          className="admin-login-card space-y-5"
           onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
         >
           <div className="flex items-center gap-2 text-gold">
             <ShieldCheck className="h-5 w-5" />
-            <span className="text-xs uppercase tracking-[0.2em]">Secure sign-in</span>
+            <span className="text-xs font-bold uppercase tracking-[0.16em]">Secure sign-in</span>
           </div>
           <h2 className="font-display text-3xl text-navy">Staff login</h2>
           <Input label="User ID" autoComplete="username" {...form.register("userId")} error={form.formState.errors.userId?.message} />
@@ -59,7 +70,7 @@ export default function Login() {
             {...form.register("password")}
             error={form.formState.errors.password?.message}
           />
-          <Button type="submit" className="w-full" disabled={mutation.isPending}>
+          <Button type="submit" className="w-full min-h-11 rounded-xl" disabled={mutation.isPending}>
             {mutation.isPending ? "Signing in…" : "Sign in"}
           </Button>
         </form>

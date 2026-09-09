@@ -2,7 +2,7 @@ export const defaultChatbotQuestions = [
   {
     question: "How do I become an agent?",
     answer:
-      "Open Become a Agent, choose Cooperative or Private Agent, prepare the required documents, download and sign the company agreement, then submit the national agent form. After approval, operations will help you start payouts.",
+      "Open Become a Agent, choose Cooperative or Private Agent, and fill the form with full company details and documents. The desk verifies those files first. If they are in order, Remit2Nepal emails the company agreement. Sign it, stamp it, complete the required papers, scan them, and email them back to become an agent.",
     keywords: "become agent, national agent, apply, join, partner, create agent",
     category: "Agent",
     displayOrder: 1
@@ -10,7 +10,7 @@ export const defaultChatbotQuestions = [
   {
     question: "What documents do I need to become an agent?",
     answer:
-      "You typically need company registration, PAN, tax clearance, citizenship of both sides, a cheque, and the signed and stamped company agreement. Labels can change in Partnership Settings.",
+      "For the first form you typically need company registration, PAN, tax clearance, citizenship of both sides, and a cheque. After the desk verifies those, Remit2Nepal emails the company agreement. Sign it, stamp it, complete any remaining papers, scan them, and email them back.",
     keywords: "documents, papers, pan, citizenship, agreement, registration",
     category: "Agent",
     displayOrder: 2
@@ -18,7 +18,7 @@ export const defaultChatbotQuestions = [
   {
     question: "How do I apply as a cooperative?",
     answer:
-      "On Become a Agent choose Cooperative, download that agreement, sign and stamp it, then upload it with your registration, PAN, tax clearance, citizenship, and cheque on the national form.",
+      "On Become a Agent choose Cooperative, fill the national form with full details, and upload your documents for verification. After review, Remit2Nepal emails the agreement. Sign, stamp, scan, and email it back.",
     keywords: "cooperative, sahakari, national type",
     category: "Agent",
     displayOrder: 3
@@ -26,7 +26,7 @@ export const defaultChatbotQuestions = [
   {
     question: "How do I apply as a private agent?",
     answer:
-      "On Become a Agent choose Private Agent, download that agreement, sign and stamp it, then submit the national form with your documents.",
+      "On Become a Agent choose Private Agent, fill the national form with full details, and upload your documents for verification. After review, Remit2Nepal emails the agreement. Sign, stamp, scan, and email it back.",
     keywords: "private agent, individual agent",
     category: "Agent",
     displayOrder: 4
@@ -68,7 +68,7 @@ export const defaultChatbotQuestions = [
 export const defaultChatbotSteps = [
   {
     title: "Choose agent type",
-    body: "Decide whether you will join as a Cooperative or a Private Agent. That choice selects the agreement you must sign.",
+    body: "Decide whether you will join as a Cooperative or a Private Agent, then fill the national form with full company and owner details.",
     displayOrder: 1
   },
   {
@@ -77,18 +77,18 @@ export const defaultChatbotSteps = [
     displayOrder: 2
   },
   {
-    title: "Download and sign the agreement",
-    body: "Download the company agreement for your agent type, sign it, stamp it, and scan the signed copy.",
+    title: "Documents are verified first",
+    body: "The partnership desk checks your uploaded files. The company agreement is not sent until those documents are verified.",
     displayOrder: 3
   },
   {
-    title: "Submit the Become a Agent form",
-    body: "Open Become a Agent, complete the national form, and upload every required file including the signed agreement.",
+    title: "Company emails the agreement",
+    body: "After verification, Remit2Nepal emails the company agreement. Sign it, add your stamp, complete the required papers, scan them, and email the scans back to become an agent.",
     displayOrder: 4
   },
   {
-    title: "Wait for review",
-    body: "Operations reviews the application. You will be contacted if a document needs to be replaced.",
+    title: "Wait for confirmation",
+    body: "Operations confirms the signed papers. You will be contacted if a document needs to be replaced.",
     displayOrder: 5
   },
   {

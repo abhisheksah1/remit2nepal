@@ -54,7 +54,7 @@ export default function RateSettings() {
           setOpen(true);
         }}
       />
-      <div className="mb-8 max-w-sm">
+      <div className="admin-toolbar mb-8 max-w-sm">
         <Select
           label="Public rate display"
           value={settings.data?.publicRateDisplay ?? "BOTH"}
@@ -86,7 +86,9 @@ export default function RateSettings() {
           <Input label="Flag" {...form.register("flag")} />
           <Input label="Unit" type="number" {...form.register("unit")} />
           <Input label="Display order" type="number" {...form.register("displayOrder")} />
-          <Button type="submit" disabled={saveCurrency.isPending}>Save</Button>
+          <div className="admin-drawer-actions">
+            <Button type="submit" disabled={saveCurrency.isPending}>Save</Button>
+          </div>
         </form>
       </FormDrawer>
     </div>

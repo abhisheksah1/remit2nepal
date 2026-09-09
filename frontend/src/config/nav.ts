@@ -18,6 +18,7 @@ import {
   Settings,
   Shield,
   ShieldCheck,
+  Search,
   SlidersHorizontal,
   Users,
   Wallet
@@ -88,6 +89,7 @@ export const adminNav: AdminNavGroup[] = [
   {
     label: "Operations",
     items: [
+      { label: "Control numbers", path: "/admin/remittances", icon: Search, permission: "remittances" },
       { label: "Media Library", path: "/admin/media", icon: ImageIcon, permission: "media" },
       { label: "Contact Messages", path: "/admin/contact", icon: Contact, permission: "contact" },
       { label: "SEO", path: "/admin/seo", icon: Globe, permission: "seo" },

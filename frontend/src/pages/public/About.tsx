@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
-import { AboutBest, AboutHero, AboutStory } from "@/components/public/AboutBlocks";
+import { AboutPro } from "@/components/public/AboutPro";
 import { SeoHead } from "@/components/public/SeoHead";
 import { SkeletonLines } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { ABOUT_DEFAULTS, aboutLine } from "@/content/about-defaults";
 
 export default function About() {
   const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
@@ -20,15 +21,11 @@ export default function About() {
 
   return (
     <>
-      <SeoHead title="About Remit2Nepal" description="Licensed remittance company serving families across Nepal." />
-      <AboutHero
-        about={about}
-        kicker={about.heroKicker || "Our institution"}
-        title={about.heroTitle || "Built for families who wait on a transfer"}
-        description={about.heroDescription || "Licensed remittance for people sending from abroad and families receiving across Nepal."}
+      <SeoHead
+        title={`${aboutLine(about.heroTitle, ABOUT_DEFAULTS.heroTitle).replace(/\s*\/\/\s*/g, " ")} | Remit2Nepal`}
+        description={aboutLine(about.heroDescription, ABOUT_DEFAULTS.heroDescription)}
       />
-      <AboutBest about={about} />
-      <AboutStory about={about} />
+      <AboutPro about={about} />
     </>
   );
 }

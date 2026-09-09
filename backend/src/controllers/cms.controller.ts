@@ -26,6 +26,12 @@ import * as mediaService from "../services/media.service.js";
 import * as siteService from "../services/site.service.js";
 import * as serviceChargeService from "../services/service-charge.service.js";
 import { publicRates } from "../services/exchange-rate.service.js";
+import {
+  createRemittance,
+  lookupControlNumber,
+  remittanceCatalog,
+  updateRemittance
+} from "../services/remittance-track.service.js";
 import { env } from "../config/env.js";
 import { AppError } from "../utils/app-error.js";
 
@@ -98,6 +104,16 @@ export const faqs = {
   create: createHandler(faqCatalog),
   update: updateHandler(faqCatalog),
   remove: deleteHandler(faqCatalog)
+};
+
+export const remittances = {
+  list: listHandler(remittanceCatalog),
+  get: getHandler(remittanceCatalog),
+  create: asyncHandler(async (req, res) => sendSuccess(res, await createRemittance(req.body, req), "Created", 201)),
+  update: asyncHandler(async (req, res) =>
+    sendSuccess(res, await updateRemittance(req.params.id as string, req.body, req), "Updated")
+  ),
+  remove: deleteHandler(remittanceCatalog)
 };
 
 export const gallery = {
@@ -217,6 +233,9 @@ export const publicApi = {
   documents: asyncHandler(async (_req, res) => sendSuccess(res, await publicDocuments())),
   partners: asyncHandler(async (_req, res) => sendSuccess(res, await partnerCatalog.publicList())),
   page: asyncHandler(async (req, res) => sendSuccess(res, await siteService.getPublishedPage(req.params.slug as string))),
+  track: asyncHandler(async (req, res) => {
+    sendSuccess(res, await lookupControlNumber(String(req.query.controlNumber ?? "")));
+  }),
   contact: asyncHandler(async (req, res) => {
     await contactService.createContactMessage(req.body);
     sendSuccess(res, null, "Message received", 201);

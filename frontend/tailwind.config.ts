@@ -36,13 +36,13 @@ export default {
           200: "#E6EAF3"
         },
         ink: {
-          DEFAULT: "#1A1B4A",
-          muted: "#4A5568"
+          DEFAULT: "#0B1736",
+          muted: "#536078"
         }
       },
       fontFamily: {
-        display: ["Fraunces", "Georgia", "serif"],
-        sans: ["Outfit", "system-ui", "sans-serif"]
+        display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"]
       },
       boxShadow: {
         card: "0 18px 50px -24px rgba(46, 49, 146, 0.35)",

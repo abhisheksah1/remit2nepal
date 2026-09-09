@@ -44,11 +44,13 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const me = asyncHandler(async (req: Request, res: Response) => {
-  sendSuccess(res, { user: req.user });
+  const result = await authService.currentUser(req.user!.id);
+  sendSuccess(res, result);
 });
 
 export const changePassword = asyncHandler(async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body as { currentPassword: string; newPassword: string };
-  await authService.changePassword(req.user!.id, currentPassword, newPassword, req);
-  sendSuccess(res, null, "Password updated");
+  const result = await authService.changePassword(req.user!.id, currentPassword, newPassword, req);
+  setAuthCookies(res, result.accessToken, result.refreshToken);
+  sendSuccess(res, { user: result.user }, "Password updated");
 });

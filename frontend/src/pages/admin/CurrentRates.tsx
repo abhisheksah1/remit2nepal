@@ -117,7 +117,9 @@ export default function CurrentRates() {
           <Input label="Sell rate" type="number" step="0.0001" {...form.register("sellRate")} error={form.formState.errors.sellRate?.message} />
           <Input label="Effective date" type="date" {...form.register("effectiveDate")} error={form.formState.errors.effectiveDate?.message} />
           <Input label="Reason" {...form.register("reason")} error={form.formState.errors.reason?.message} />
-          <Button type="submit" disabled={save.isPending}>Save company rate</Button>
+          <div className="admin-drawer-actions">
+            <Button type="submit" disabled={save.isPending}>Save company rate</Button>
+          </div>
         </form>
       </FormDrawer>
     </div>

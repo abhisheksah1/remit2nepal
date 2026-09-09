@@ -13,6 +13,7 @@ import {
   partnerSchema,
   sectionSchema,
   serviceChargePageSchema,
+  remittanceSchema,
   serviceChargeRowSchema,
   serviceSchema,
   socialSchema,
@@ -47,6 +48,7 @@ partnerApplicationRouter.patch("/:id", validate(partnerApplicationUpdateSchema),
 partnerApplicationRouter.delete("/:id", partnershipAdmin.removeApplication);
 export const newsRouter = crudRouter(cms.news, newsSchema, "news");
 export const faqRouter = crudRouter(cms.faqs, faqSchema, "faq");
+export const remittanceRouter = crudRouter(cms.remittances, remittanceSchema, "remittances");
 export const galleryRouter = crudRouter(cms.gallery, gallerySchema, "gallery");
 export const documentRouter = crudRouter(cms.documents, documentSchema, "documents");
 export const pageRouter = crudRouter(cms.pages, pageSchema, "website_cms");

@@ -15,9 +15,9 @@ import type { AgreementSlot } from "@/types/content";
 import { downloadAuthorized } from "@/utils/download";
 
 const agreementSlots: Array<{ slot: AgreementSlot; title: string; help: string }> = [
-  { slot: "international", title: "International agreement", help: "International partners download, sign, and stamp this file." },
-  { slot: "cooperative", title: "Cooperative agreement", help: "National Cooperative applicants download, sign, and stamp this file." },
-  { slot: "privateAgent", title: "Private Agent agreement", help: "National Private Agent applicants download, sign, and stamp this file." }
+  { slot: "international", title: "International agreement", help: "Email this file after you verify an international applicant’s documents." },
+  { slot: "cooperative", title: "Cooperative agreement", help: "Email this file after you verify a Cooperative applicant’s documents." },
+  { slot: "privateAgent", title: "Private Agent agreement", help: "Email this file after you verify a Private Agent applicant’s documents." }
 ];
 
 function linesToList(value: string) {
@@ -118,7 +118,7 @@ export default function PartnershipSettings() {
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Partners", to: "/admin/partners" }, { label: "Settings" }]}
       />
       <p className="mb-6 max-w-3xl text-sm text-ink-muted">
-        Edit the public Become a Partner page, choose whether Cooperative and Private Agent applications are open, and upload the company agreement each applicant must download, sign, and stamp.
+        Edit the public Become a Agent page and choose whether Cooperative and Private Agent applications are open. After you verify an applicant’s documents, email the company agreement from Remit2Nepal. The agent signs, stamps, completes the papers, scans them, and emails them back.
       </p>
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">
@@ -157,7 +157,7 @@ export default function PartnershipSettings() {
         })}
       </div>
 
-      <form className="max-w-3xl space-y-5" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
+      <form className="admin-panel max-w-3xl space-y-5" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
         <label className="flex items-center gap-2 text-sm text-navy">
           <input type="checkbox" {...form.register("formEnabled")} />
           Application form is open
@@ -210,9 +210,11 @@ export default function PartnershipSettings() {
         <Input label="Cheque" {...form.register("labelCheque")} />
         <Input label="Signed agreement" {...form.register("labelSignedAgreement")} />
 
-        <Button type="submit" disabled={save.isPending}>
-          {save.isPending ? "Saving…" : "Save partnership page"}
-        </Button>
+        <div className="admin-form-save">
+          <Button type="submit" disabled={save.isPending}>
+            {save.isPending ? "Saving…" : "Save partnership page"}
+          </Button>
+        </div>
       </form>
     </div>
   );

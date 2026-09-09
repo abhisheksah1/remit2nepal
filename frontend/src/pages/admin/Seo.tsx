@@ -45,8 +45,12 @@ export default function Seo() {
 
   return (
     <div>
-      <PageHeader title="SEO" crumbs={[{ label: "Admin", to: "/admin" }, { label: "SEO" }]} />
-      <form className="max-w-2xl space-y-4" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
+      <PageHeader
+        title="SEO"
+        description="Search titles, descriptions, and social preview fields for the public site."
+        crumbs={[{ label: "Admin", to: "/admin" }, { label: "SEO" }]}
+      />
+      <form className="admin-panel space-y-4" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
         <Input label="Site title" {...form.register("siteTitle")} error={form.formState.errors.siteTitle?.message} />
         <Textarea label="Meta description" {...form.register("metaDescription")} />
         <Input label="Keywords" {...form.register("keywords")} />
@@ -54,7 +58,9 @@ export default function Seo() {
         <Input label="Open Graph image" {...form.register("ogImage")} />
         <Input label="Robots" {...form.register("robots")} />
         <Input label="Canonical URL" {...form.register("canonicalUrl")} />
-        <Button type="submit" disabled={save.isPending}>Save SEO</Button>
+        <div className="admin-form-save">
+          <Button type="submit" disabled={save.isPending}>Save SEO</Button>
+        </div>
       </form>
     </div>
   );

@@ -20,7 +20,14 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       <ToastProvider>
-        <BrowserRouter>{children}</BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}
+        >
+          {children}
+        </BrowserRouter>
       </ToastProvider>
     </QueryClientProvider>
   );

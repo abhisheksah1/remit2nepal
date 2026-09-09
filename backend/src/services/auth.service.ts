@@ -14,8 +14,9 @@ import {
   verifySecret
 } from "./token.service.js";
 import { clientIp, userAgent } from "../utils/request-meta.js";
-import { ROLES } from "../constants/roles.js";
+import { ROLES, type RoleName } from "../constants/roles.js";
 import { PERMISSIONS } from "../constants/permissions.js";
+import type { UserDocument } from "../models/user.model.js";
 
 const LOCK_THRESHOLD = 8;
 const LOCK_MINUTES = 30;
@@ -28,6 +29,39 @@ function strongPassword(password: string): boolean {
     /\d/.test(password) &&
     /[^A-Za-z0-9]/.test(password)
   );
+}
+
+function publicUser(user: UserDocument) {
+  const permissions = user.role === ROLES.SUPER_ADMIN ? [...PERMISSIONS] : user.permissions;
+  return {
+    id: String(user._id),
+    userId: user.userId,
+    fullName: user.fullName,
+    role: user.role as RoleName,
+    permissions,
+    mustChangePassword: Boolean(user.mustChangePassword),
+    email: user.email,
+    phone: user.phone
+  };
+}
+
+async function issueSession(user: UserDocument) {
+  const sessionUser = publicUser(user);
+  const accessToken = signAccessToken({
+    sub: sessionUser.id,
+    userId: sessionUser.userId,
+    fullName: sessionUser.fullName,
+    role: sessionUser.role,
+    permissions: sessionUser.permissions,
+    mustChangePassword: sessionUser.mustChangePassword
+  });
+  const refreshToken = signRefreshToken(sessionUser.id, randomToken());
+  await RefreshToken.create({
+    user: user._id,
+    tokenHash: sha256(refreshToken),
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  });
+  return { accessToken, refreshToken, user: sessionUser };
 }
 
 export async function login(userId: string, password: string, req: Request) {
@@ -73,23 +107,6 @@ export async function login(userId: string, password: string, req: Request) {
   user.lastLoginAt = new Date();
   await user.save();
 
-  const permissions = user.role === ROLES.SUPER_ADMIN ? [...PERMISSIONS] : user.permissions;
-  const accessToken = signAccessToken({
-    sub: String(user._id),
-    userId: user.userId,
-    fullName: user.fullName,
-    role: user.role,
-    permissions,
-    mustChangePassword: user.mustChangePassword
-  });
-  const refreshId = randomToken();
-  const refreshToken = signRefreshToken(String(user._id), refreshId);
-  await RefreshToken.create({
-    user: user._id,
-    tokenHash: sha256(refreshToken),
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  });
-
   await writeAudit({
     action: AUDIT_ACTIONS.LOGIN,
     module: "auth",
@@ -99,20 +116,7 @@ export async function login(userId: string, password: string, req: Request) {
     userAgent: ua
   });
 
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id: String(user._id),
-      userId: user.userId,
-      fullName: user.fullName,
-      role: user.role,
-      permissions,
-      mustChangePassword: user.mustChangePassword,
-      email: user.email,
-      phone: user.phone
-    }
-  };
+  return issueSession(user);
 }
 
 export async function refreshSession(refreshToken: string) {
@@ -130,26 +134,24 @@ export async function refreshSession(refreshToken: string) {
   if (!user || user.status !== "ACTIVE") {
     throw new UnauthorizedError("Account is not active");
   }
-  const permissions = user.role === ROLES.SUPER_ADMIN ? [...PERMISSIONS] : user.permissions;
+  const sessionUser = publicUser(user);
   const accessToken = signAccessToken({
-    sub: String(user._id),
-    userId: user.userId,
-    fullName: user.fullName,
-    role: user.role,
-    permissions,
-    mustChangePassword: user.mustChangePassword
+    sub: sessionUser.id,
+    userId: sessionUser.userId,
+    fullName: sessionUser.fullName,
+    role: sessionUser.role,
+    permissions: sessionUser.permissions,
+    mustChangePassword: sessionUser.mustChangePassword
   });
-  return {
-    accessToken,
-    user: {
-      id: String(user._id),
-      userId: user.userId,
-      fullName: user.fullName,
-      role: user.role,
-      permissions,
-      mustChangePassword: user.mustChangePassword
-    }
-  };
+  return { accessToken, user: sessionUser };
+}
+
+export async function currentUser(userId: string) {
+  const user = await User.findById(userId);
+  if (!user || user.status !== "ACTIVE") {
+    throw new UnauthorizedError("Account is not active");
+  }
+  return { user: publicUser(user) };
 }
 
 export async function logout(refreshToken: string | undefined, req: Request) {
@@ -188,4 +190,5 @@ export async function changePassword(userId: string, currentPassword: string, ne
     ipAddress: clientIp(req),
     userAgent: userAgent(req)
   });
+  return issueSession(user);
 }

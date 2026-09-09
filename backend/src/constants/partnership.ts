@@ -12,6 +12,14 @@ export const APPLICATION_DOCUMENT_KEYS = [
   "signedAgreement"
 ] as const;
 
+export const APPLY_DOCUMENT_KEYS = [
+  "companyRegistration",
+  "pan",
+  "taxClearance",
+  "citizenshipBoth",
+  "cheque"
+] as const;
+
 export type PartnerKind = (typeof PARTNER_KINDS)[number];
 export type NationalType = (typeof NATIONAL_TYPES)[number];
 export type ApplicationNationalType = (typeof APPLICATION_NATIONAL_TYPES)[number];

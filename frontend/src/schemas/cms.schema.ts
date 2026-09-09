@@ -64,6 +64,16 @@ export const faqFormSchema = z.object({
   displayOrder: z.coerce.number().optional()
 });
 
+export const remittanceFormSchema = z.object({
+  controlNumber: z
+    .string()
+    .trim()
+    .min(4, "Enter a control number")
+    .max(40)
+    .regex(/^[A-Za-z0-9][A-Za-z0-9-]*$/, "Use letters, numbers, and hyphens only"),
+  status: z.enum(["PAID", "UNPAID"])
+});
+
 export const partnerFormSchema = z.object({
   name: z.string().min(2),
   logoUrl: optionalText,

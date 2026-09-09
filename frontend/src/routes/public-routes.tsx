@@ -13,12 +13,15 @@ const Branches = lazy(() => import("@/pages/public/Branches"));
 const BranchDetail = lazy(() => import("@/pages/public/BranchDetail"));
 const Partners = lazy(() => import("@/pages/public/Partners"));
 const PartnerApply = lazy(() => import("@/pages/public/PartnerApply"));
+const Track = lazy(() => import("@/pages/public/Track"));
 const News = lazy(() => import("@/pages/public/News"));
 const NewsDetail = lazy(() => import("@/pages/public/NewsDetail"));
 const Faq = lazy(() => import("@/pages/public/Faq"));
 const ServiceCharge = lazy(() => import("@/pages/public/ServiceCharge"));
 const Gallery = lazy(() => import("@/pages/public/Gallery"));
 const Contact = lazy(() => import("@/pages/public/Contact"));
+const Privacy = lazy(() => import("@/pages/public/Privacy"));
+const Terms = lazy(() => import("@/pages/public/Terms"));
 const CmsPage = lazy(() => import("@/pages/public/CmsPage"));
 const NotFound = lazy(() => import("@/pages/public/NotFound"));
 
@@ -41,7 +44,10 @@ export const publicRouteElements = (
     <Route path="news/:slug" element={<NewsDetail />} />
     <Route path="faq" element={<Faq />} />
     <Route path="gallery" element={<Gallery />} />
+    <Route path="track" element={<Track />} />
     <Route path="contact" element={<Contact />} />
+    <Route path="privacy" element={<Privacy />} />
+    <Route path="terms" element={<Terms />} />
     <Route path=":slug" element={<CmsPage />} />
     <Route path="*" element={<NotFound />} />
   </>

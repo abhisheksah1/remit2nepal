@@ -12,6 +12,7 @@ const icons: Record<string, typeof Facebook> = {
 };
 
 const TRANSFER_LINKS = [
+  { label: "Track a transfer", path: "/track" },
   { label: "Services", path: "/services" },
   { label: "Exchange Rate", path: "/exchange-rate" },
   { label: PUBLIC_NAV.ourAgent.label, path: PUBLIC_NAV.ourAgent.path },

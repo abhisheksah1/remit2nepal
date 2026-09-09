@@ -17,7 +17,8 @@ export const PERMISSIONS = [
   "audit_logs",
   "admins",
   "documents",
-  "chatbot"
+  "chatbot",
+  "remittances"
 ] as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[number];

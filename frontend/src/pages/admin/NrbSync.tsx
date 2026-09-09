@@ -67,7 +67,7 @@ export default function NrbSync() {
           </Button>
         }
       />
-      <form className="mb-10 grid max-w-2xl gap-4" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
+      <form className="admin-panel mb-8 grid gap-4" onSubmit={form.handleSubmit((values) => save.mutate(values))}>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" {...form.register("enabled")} /> Enabled
         </label>

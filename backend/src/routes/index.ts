@@ -11,6 +11,7 @@ import {
   documentRouter,
   faqRouter,
   galleryRouter,
+  remittanceRouter,
   mediaRouter,
   navigationRouter,
   newsRouter,
@@ -58,6 +59,7 @@ apiRouter.use("/partnership-settings", partnershipSettingsRouter);
 apiRouter.use("/partner-applications", partnerApplicationRouter);
 apiRouter.use("/news", newsRouter);
 apiRouter.use("/faqs", faqRouter);
+apiRouter.use("/remittances", remittanceRouter);
 apiRouter.use("/gallery", galleryRouter);
 apiRouter.use("/documents", documentRouter);
 apiRouter.use("/pages", pageRouter);

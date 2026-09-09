@@ -1,7 +1,9 @@
+import { Fragment } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
 import { SectionRenderer } from "@/components/public/SectionRenderer";
 import { SeoHead } from "@/components/public/SeoHead";
+import { TrackTransfer } from "@/components/public/TrackTransfer";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { StatItem } from "@/types/content";
@@ -32,20 +34,25 @@ export default function Home() {
   const statsSection = sections.find((section) => section.type === "STATS");
   const stats = Array.isArray(statsSection?.items) ? (statsSection.items as StatItem[]) : [];
 
+  const hasHero = sections.some((section) => section.type === "HERO");
+
   return (
     <>
       <SeoHead seo={home.data.seo} title={home.data.seo?.siteTitle} description={home.data.seo?.metaDescription} />
+      {hasHero ? null : <TrackTransfer />}
       {sections.map((section) => (
-        <SectionRenderer
-          key={section._id}
-          section={section}
-          services={home.data.services}
-          partners={home.data.partners}
-          news={home.data.news}
-          rates={home.data.rates}
-          stats={stats}
-          gallery={home.data.gallery}
-        />
+        <Fragment key={section._id}>
+          <SectionRenderer
+            section={section}
+            services={home.data.services}
+            partners={home.data.partners}
+            news={home.data.news}
+            rates={home.data.rates}
+            stats={stats}
+            gallery={home.data.gallery}
+          />
+          {section.type === "HERO" ? <TrackTransfer /> : null}
+        </Fragment>
       ))}
     </>
   );

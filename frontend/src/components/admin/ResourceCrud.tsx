@@ -13,16 +13,33 @@ import { FormDrawer } from "./FormDrawer";
 import { PageHeader } from "./PageHeader";
 import { entityId } from "@/utils/cn";
 import { ImageUploadField } from "./ImageUploadField";
+import { RepeatableListField, type ListItemField } from "./RepeatableListField";
 
 export interface FieldSpec {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "url" | "date" | "image";
+  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "url" | "date" | "image" | "list" | "note";
   options?: Array<{ value: string; label: string }>;
   hint?: string;
   folder?: string;
   id?: string;
+  group?: string;
   showWhen?: (values: Record<string, string | number | boolean>) => boolean;
+  disabledWhen?: (values: Record<string, string | number | boolean>, editing: boolean) => boolean;
+  itemFields?: ListItemField[];
+  addLabel?: string;
+  emptyItem?: Record<string, string>;
+}
+
+function groupedFields(fields: FieldSpec[]) {
+  const groups: Array<{ name: string; fields: FieldSpec[] }> = [];
+  for (const field of fields) {
+    const name = field.group ?? "";
+    const last = groups[groups.length - 1];
+    if (last && last.name === name) last.fields.push(field);
+    else groups.push({ name, fields: [field] });
+  }
+  return groups;
 }
 
 export function ResourceCrud<T extends { _id?: string; status?: string }>({
@@ -39,7 +56,8 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
   toForm,
   toPayload,
   schema,
-  extraActions
+  extraActions,
+  itemTitle
 }: {
   title: string;
   description?: string;
@@ -55,6 +73,7 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
   toPayload: (values: Record<string, string | number | boolean>) => unknown;
   schema?: ZodType;
   extraActions?: ReactNode;
+  itemTitle?: (item: T) => string;
 }) {
   const { push } = useToast();
   const client = useQueryClient();
@@ -175,26 +194,45 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
         onPageChange={setPage}
         rowKey={(row) => entityId(row)}
       />
-      <FormDrawer open={open} title={editing ? `Edit ${title}` : `Create ${title}`} onClose={() => setOpen(false)} wide>
+      <FormDrawer
+        open={open}
+        title={editing ? `Edit ${itemTitle?.(editing) || title}` : `New ${title.replace(/s$/, "")}`}
+        onClose={() => setOpen(false)}
+        wide
+      >
         <form
-          className="space-y-4"
+          className="space-y-5"
           onSubmit={(event) => {
             event.preventDefault();
             save.mutate();
           }}
         >
-          {fields
-            .filter((field) => !field.showWhen || field.showWhen(values))
-            .map((field) => (
-            <Field
-              key={field.id ?? `${field.name}-${field.label}`}
-              field={field}
-              value={values[field.name]}
-              error={errors[field.name]}
-              onChange={(next) => setValues((current) => ({ ...current, [field.name]: next }))}
-            />
-          ))}
-          <div className="flex justify-end gap-2 pt-2">
+          {groupedFields(fields.filter((field) => !field.showWhen || field.showWhen(values))).map((group) => {
+            const body = group.fields.map((field) => (
+              <Field
+                key={field.id ?? `${field.name}-${field.label}`}
+                field={field}
+                value={values[field.name]}
+                error={errors[field.name]}
+                disabled={field.disabledWhen?.(values, Boolean(editing))}
+                onChange={(next) => setValues((current) => ({ ...current, [field.name]: next }))}
+              />
+            ));
+            if (!group.name) {
+              return (
+                <div key="ungrouped" className="space-y-4">
+                  {body}
+                </div>
+              );
+            }
+            return (
+              <fieldset key={group.name} className="admin-field-group space-y-4">
+                <legend>{group.name}</legend>
+                {body}
+              </fieldset>
+            );
+          })}
+          <div className="admin-drawer-actions">
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Cancel
             </Button>
@@ -222,14 +260,23 @@ function Field({
   field,
   value,
   error,
+  disabled,
   onChange
 }: {
   field: FieldSpec;
   value: string | number | boolean | undefined;
   error?: string;
+  disabled?: boolean;
   onChange: (value: string | number | boolean) => void;
 }) {
   const id = field.name;
+  if (field.type === "note") {
+    return (
+      <p className="rounded-xl border border-dashed border-navy/15 bg-white px-3 py-3 text-sm text-ink-muted">
+        {field.hint || field.label}
+      </p>
+    );
+  }
   if (field.type === "checkbox") {
     return (
       <label className="flex items-center gap-2 text-sm text-navy" htmlFor={id}>
@@ -237,6 +284,7 @@ function Field({
           id={id}
           type="checkbox"
           checked={Boolean(value)}
+          disabled={disabled}
           onChange={(event) => onChange(event.target.checked)}
         />
         {field.label}
@@ -249,14 +297,29 @@ function Field({
         <span className="text-sm font-medium text-navy">{field.label}</span>
         <textarea
           id={id}
-          className="w-full rounded-md border border-navy/15 px-3 py-2 text-sm"
-          rows={5}
+          className="w-full rounded-md border border-navy/15 bg-white px-3 py-2 text-sm disabled:bg-navy-50 disabled:text-ink-muted"
+          rows={4}
           value={String(value ?? "")}
+          disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
         />
         {field.hint ? <span className="text-xs text-ink-muted">{field.hint}</span> : null}
         {error ? <span className="text-xs text-red-700">{error}</span> : null}
       </label>
+    );
+  }
+  if (field.type === "list") {
+    return (
+      <RepeatableListField
+        label={field.label}
+        hint={field.hint}
+        error={error}
+        value={String(value ?? "[]")}
+        itemFields={field.itemFields ?? [{ name: "title", label: "Text" }]}
+        addLabel={field.addLabel}
+        emptyItem={field.emptyItem ?? { title: "" }}
+        onChange={onChange}
+      />
     );
   }
   if (field.type === "image") {
@@ -276,8 +339,9 @@ function Field({
         <span className="text-sm font-medium text-navy">{field.label}</span>
         <select
           id={id}
-          className="w-full rounded-md border border-navy/15 px-3 py-2.5 text-sm"
+          className="w-full rounded-md border border-navy/15 bg-white px-3 py-2.5 text-sm disabled:bg-navy-50 disabled:text-ink-muted"
           value={String(value ?? "")}
+          disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
         >
           {(field.options ?? []).map((option) => (
@@ -297,8 +361,9 @@ function Field({
       <input
         id={id}
         type={field.type === "number" ? "number" : field.type === "date" ? "date" : field.type === "url" ? "url" : "text"}
-        className="w-full rounded-md border border-navy/15 px-3 py-2.5 text-sm"
+        className="w-full rounded-md border border-navy/15 bg-white px-3 py-2.5 text-sm disabled:bg-navy-50 disabled:text-ink-muted"
         value={String(value ?? "")}
+        disabled={disabled}
         onChange={(event) => onChange(field.type === "number" ? Number(event.target.value) : event.target.value)}
       />
       {field.hint ? <span className="text-xs text-ink-muted">{field.hint}</span> : null}

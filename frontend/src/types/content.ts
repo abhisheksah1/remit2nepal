@@ -133,6 +133,8 @@ export interface CmsPage extends EntityId {
   ogImage: string;
   canonicalUrl: string;
   displayOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ServiceItem extends EntityId {
@@ -209,6 +211,13 @@ export interface FaqItem extends EntityId {
   category: string;
   status: StatusFlag;
   displayOrder: number;
+}
+
+export type RemittanceStatus = "PAID" | "UNPAID";
+
+export interface RemittanceItem extends EntityId {
+  controlNumber: string;
+  status: RemittanceStatus;
 }
 
 export interface ServiceChargeRow extends EntityId {
@@ -307,6 +316,53 @@ export interface AboutCompany extends EntityId {
   teamDescription?: string;
   teamLeadHeading?: string;
   teamStaffHeading?: string;
+  whoBody?: string;
+  whoHighlights?: WhyItem[];
+  missionKicker?: string;
+  missionHeading?: string;
+  missionBody?: string;
+  missionImageUrl?: string;
+  missionPoints?: WhyItem[];
+  visionKicker?: string;
+  visionHeading?: string;
+  visionBody?: string;
+  visionImageUrl?: string;
+  visionChips?: string[];
+  whyKicker?: string;
+  whyHeading?: string;
+  whySubheading?: string;
+  whyItems?: WhyItem[];
+  valuesKicker?: string;
+  valuesHeading?: string;
+  valuesSubheading?: string;
+  stepsKicker?: string;
+  stepsHeading?: string;
+  steps?: WhyItem[];
+  teamAboutKicker?: string;
+  teamAboutHeading?: string;
+  teamAboutIntro?: string;
+  teamAboutBody?: string;
+  teamMotto?: string;
+  teamAboutLinkLabel?: string;
+  teamAboutLinkUrl?: string;
+  commitmentKicker?: string;
+  commitmentHeading?: string;
+  commitmentBody?: string;
+  commitmentItems?: string[];
+  storyBandKicker?: string;
+  storyBandHeading?: string;
+  storyBandBody?: string;
+  storyBandImageUrl?: string;
+  heroPrimaryLabel?: string;
+  heroPrimaryUrl?: string;
+  heroSecondaryLabel?: string;
+  heroSecondaryUrl?: string;
+  ctaHeading?: string;
+  ctaBody?: string;
+  ctaPrimaryLabel?: string;
+  ctaPrimaryUrl?: string;
+  ctaSecondaryLabel?: string;
+  ctaSecondaryUrl?: string;
   galleryImages?: AboutGalleryImage[];
   coreValues: WhyItem[];
   statistics: StatItem[];

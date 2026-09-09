@@ -43,6 +43,15 @@ export const contactSchema = z.object({
   message: z.string().min(10).max(4000)
 });
 
+export const trackQuerySchema = z.object({
+  controlNumber: z
+    .string()
+    .trim()
+    .min(4)
+    .max(40)
+    .regex(/^[A-Za-z0-9][A-Za-z0-9-]*$/)
+});
+
 export const companyRateSchema = z.object({
   currencyCode: z.string().length(3),
   buyRate: z.number().positive(),

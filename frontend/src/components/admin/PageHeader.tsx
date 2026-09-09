@@ -18,14 +18,14 @@ export function PageHeader({
   extra?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="admin-page-head">
       <div>
-        <nav className="mb-2 flex flex-wrap gap-1 text-xs text-ink-muted" aria-label="Breadcrumb">
+        <nav className="admin-crumbs" aria-label="Breadcrumb">
           {crumbs.map((crumb, index) => (
             <span key={crumb.label} className="flex items-center gap-1">
               {index > 0 ? <span>/</span> : null}
               {crumb.to ? (
-                <Link to={crumb.to} className="hover:text-navy">
+                <Link to={crumb.to}>
                   {crumb.label}
                 </Link>
               ) : (
@@ -34,10 +34,10 @@ export function PageHeader({
             </span>
           ))}
         </nav>
-        <h1 className="font-display text-3xl text-navy">{title}</h1>
-        {description ? <p className="mt-1 text-sm text-ink-muted">{description}</p> : null}
+        <h1>{title}</h1>
+        {description ? <p>{description}</p> : null}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="admin-page-actions">
         {extra}
         {actionLabel && onAction ? <Button onClick={onAction}>{actionLabel}</Button> : null}
       </div>

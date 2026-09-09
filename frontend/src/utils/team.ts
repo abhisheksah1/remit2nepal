@@ -24,7 +24,25 @@ export function groupTeam(members: TeamMember[]) {
     if (resolveTeamTier(member) === "LEAD") leads.push(member);
     else staff.push(member);
   }
+  board.sort((a, b) => a.displayOrder - b.displayOrder);
+  leads.sort((a, b) => a.displayOrder - b.displayOrder);
+  staff.sort((a, b) => a.displayOrder - b.displayOrder);
   return { board, team: [...leads, ...staff], leads, staff };
+}
+
+export function isTeamCeo(member: TeamMember) {
+  return /\bceo\b|chief executive officer/i.test(member.title);
+}
+
+export function isBoardChair(member: TeamMember) {
+  return /chairman|chairperson|^chair\b|chair of/i.test(member.title);
+}
+
+export function splitBoard(members: TeamMember[]) {
+  const ordered = [...members].sort((a, b) => a.displayOrder - b.displayOrder);
+  const chair = ordered.find(isBoardChair) ?? ordered[0] ?? null;
+  const rest = chair ? ordered.filter((member) => member !== chair) : ordered;
+  return { chair, rest };
 }
 
 export function personInitials(name: string): string {

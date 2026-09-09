@@ -1,6 +1,6 @@
 export function SiteAtmosphere() {
   return (
-    <div className="site-atmosphere pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+    <div className="site-atmosphere pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
       <div className="atmosphere-grid" />
       <svg className="atmosphere-corridors" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
         <defs>

@@ -8,5 +8,5 @@ export const authApi = {
   me: () => unwrap<AuthPayload>(api.get("/auth/me")),
   refresh: () => unwrap<AuthPayload>(api.post("/auth/refresh")),
   changePassword: (currentPassword: string, newPassword: string) =>
-    unwrap<null>(api.post("/auth/change-password", { currentPassword, newPassword }))
+    unwrap<AuthPayload>(api.post("/auth/change-password", { currentPassword, newPassword }))
 };

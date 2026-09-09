@@ -24,6 +24,8 @@ export const publicApi = {
   page: (slug: string) => unwrap<CmsPage | null>(api.get(`/public/pages/${slug}`)),
   contact: (payload: { name: string; email: string; phone?: string; subject: string; message: string }) =>
     unwrap<null>(api.post("/public/contact", payload)),
+  track: (controlNumber: string) =>
+    unwrap<{ controlNumber: string; status: "PAID" | "UNPAID" }>(api.get("/public/track", { params: { controlNumber } })),
   chatbot: () => unwrap<PublicChatbot>(api.get("/public/chatbot")),
   askChatbot: (message: string) => unwrap<ChatbotAskResult>(api.post("/public/chatbot/ask", { message }))
 };

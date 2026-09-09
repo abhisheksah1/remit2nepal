@@ -9,7 +9,7 @@ export default function Team() {
   return (
     <ResourceCrud<TeamMember>
       title="Board & Team"
-      description="On Our Team, the first Manager / top employee (lowest display order) is the featured leader. Other managers sit in the next row. Other employees sit at the bottom. Upload a square portrait for even cards."
+      description="On Our Team, people marked Manager / top employee appear under Top Leaders. CEO is not shown on this page. Other employees sit below. Upload a square portrait for even cards."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Board & Team" }]}
       queryKey="admin-team"
       list={adminApi.team.list}
@@ -59,7 +59,7 @@ export default function Team() {
           name: "tier",
           label: "Team level",
           type: "select",
-          hint: "Managers and top employees appear first on Our Team. Other employees appear below.",
+          hint: "Top employees appear under Top Leaders on Our Team. CEO is not shown there. Other employees appear below.",
           options: [
             { value: "LEAD", label: "Manager / top employee" },
             { value: "STAFF", label: "Other employee" }

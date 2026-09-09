@@ -195,3 +195,13 @@ export const serviceChargePageSchema = z.object({
   pageDescription: z.string().optional(),
   footnote: z.string().optional()
 });
+
+export const remittanceSchema = z.object({
+  controlNumber: z
+    .string()
+    .trim()
+    .min(4)
+    .max(40)
+    .regex(/^[A-Za-z0-9][A-Za-z0-9-]*$/),
+  status: z.enum(["PAID", "UNPAID"])
+});

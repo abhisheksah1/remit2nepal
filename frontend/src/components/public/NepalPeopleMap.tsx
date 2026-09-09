@@ -19,12 +19,31 @@ function districtNames(agents: BranchItem[], province: string) {
   return official?.[1] ?? [];
 }
 
-export function NepalPeopleMap({ label = "Map of Nepal" }: { label?: string }) {
+export function NepalPeopleMap({
+  label = "Map of Nepal",
+  variant = "story",
+  province: provinceProp,
+  onProvince
+}: {
+  label?: string;
+  variant?: "story" | "atlas";
+  province?: string;
+  onProvince?: (province: string) => void;
+}) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [hover, setHover] = useState<NepalMosaicCell | null>(null);
-  const [province, setProvince] = useState("");
+  const [localProvince, setLocalProvince] = useState("");
   const [district, setDistrict] = useState("");
+  const province = provinceProp ?? localProvince;
+  const atlas = variant === "atlas";
+
+  function chooseProvince(name: string) {
+    const next = sameProvince(province, name) ? "" : name;
+    if (onProvince) onProvince(next);
+    else setLocalProvince(next);
+    setDistrict("");
+  }
 
   const query = useQuery({
     queryKey: ["public", "branches", "all"],
@@ -63,18 +82,13 @@ export function NepalPeopleMap({ label = "Map of Nepal" }: { label?: string }) {
   const selectedDistricts = province ? districtNames(agents, province) : [];
 
   function pickRegion(cell: NepalMosaicCell) {
-    if (sameProvince(province, cell.name)) {
-      setProvince("");
-      setDistrict("");
-      return;
-    }
     const names = districtNames(agents, cell.name);
-    setProvince(cell.name);
-    setDistrict(names[0] ?? "");
+    chooseProvince(cell.name);
+    if (!atlas) setDistrict(sameProvince(province, cell.name) ? "" : names[0] ?? "");
   }
 
   return (
-    <div ref={frameRef} className={cn("nepal-map-frame", inView && "is-in")}>
+    <div ref={frameRef} className={cn("nepal-map-frame", atlas && "is-atlas", inView && "is-in")}>
       <svg className="nepal-map-art" viewBox={NEPAL_MAP_VIEWBOX} role="img" aria-label={label}>
         {NEPAL_MOSAIC.map((cell, index) => {
           const ox = cell.band === 0 ? "-22px" : cell.band === 2 ? "22px" : "0px";
@@ -124,16 +138,22 @@ export function NepalPeopleMap({ label = "Map of Nepal" }: { label?: string }) {
           </span>
         </div>
       ) : null}
-      <p className="nepal-mosaic-hint">{hover ? `${hover.name} · click to open agents` : "Hover a region · click to see district agents"}</p>
+      <p className="nepal-mosaic-hint">
+        {hover
+          ? `${hover.name} · tap to ${atlas ? "filter" : "open"} agents`
+          : atlas
+            ? "Tap a province to filter the directory"
+            : "Hover a region · tap to see district agents"}
+      </p>
 
-      {province ? (
+      {!atlas && province ? (
         <div className="nepal-agent-panel">
           <div className="nepal-agent-panel-head">
             <div>
               <p className="nepal-story-kicker">District agents</p>
               <h3>{province}</h3>
             </div>
-            <button type="button" className="nepal-agent-close" onClick={() => { setProvince(""); setDistrict(""); }} aria-label="Close agent list">
+            <button type="button" className="nepal-agent-close" onClick={() => chooseProvince(province)} aria-label="Close agent list">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -193,6 +213,10 @@ export function NepalStory({
 
   return (
     <section className={cn("nepal-story", "reveal-skip", compact && "is-compact")} aria-labelledby={`${section.key}-heading`}>
+      <div className="nepal-story-sky" aria-hidden>
+        <span className="nepal-story-mesh" />
+        <div className="nepal-story-mountains" />
+      </div>
       <div className={cn("nepal-story-wrap", align)}>
         <header className="nepal-story-copy">
           {section.icon ? <p className="nepal-story-kicker">{section.icon}</p> : null}
@@ -202,7 +226,9 @@ export function NepalStory({
             <p className="nepal-story-body">{section.description}</p>
           ) : null}
         </header>
-        <NepalPeopleMap label={section.heading || "Map of Nepal"} />
+        <div className="nepal-story-board">
+          <NepalPeopleMap label={section.heading || "Map of Nepal"} />
+        </div>
         {section.buttonUrl ? (
           <Link className="nepal-story-cta" to={section.buttonUrl}>
             {section.buttonLabel || "Our Agent"}

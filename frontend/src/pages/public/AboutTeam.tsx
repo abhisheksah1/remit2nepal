@@ -1,15 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
-import { AboutHero, AboutPeople, LeaderSpotlight } from "@/components/public/AboutBlocks";
+import { AboutHero, AboutPeople } from "@/components/public/AboutBlocks";
 import { SeoHead } from "@/components/public/SeoHead";
 import { SkeletonLines } from "@/components/ui/Skeleton";
-import { groupTeam } from "@/utils/team";
+import { groupTeam, isTeamCeo } from "@/utils/team";
+
+function topLeadersHeading(value?: string) {
+  if (!value || /^(managers\s*&\s*top employees|department heads)$/i.test(value.trim())) {
+    return "Top Leaders";
+  }
+  return value;
+}
 
 export default function AboutTeam() {
   const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
   const about = site.data?.about;
-  const { leads, staff } = groupTeam(site.data?.team ?? []);
-  const [leader, ...heads] = leads;
+  const grouped = groupTeam(site.data?.team ?? []);
+  const topLeaders = grouped.leads.filter((member) => !isTeamCeo(member));
+  const staff = grouped.staff;
 
   if (site.isLoading) {
     return (
@@ -21,7 +29,7 @@ export default function AboutTeam() {
 
   const title = about?.teamHeading || "Our Team";
   const description =
-    about?.teamDescription || "The desk that runs corridors, branches, and the compliance file every day.";
+    about?.teamDescription || "The desk that runs corridors, branches, and the payout file every day.";
 
   return (
     <div className="about-team-page">
@@ -33,13 +41,12 @@ export default function AboutTeam() {
         description={description}
         variant="card"
       />
-      {leader ? <LeaderSpotlight member={leader} kicker="Leadership" /> : null}
-      {heads.length ? (
+      {topLeaders.length ? (
         <AboutPeople
-          kicker="Department"
-          title={about?.teamLeadHeading || "Department heads"}
-          description="The managers who run operations, compliance, and the payout desk."
-          members={heads}
+          kicker="Top Leaders"
+          title={topLeadersHeading(about?.teamLeadHeading)}
+          description="Top employees of the Remit2Nepal desk."
+          members={topLeaders}
           tone="team"
         />
       ) : null}
@@ -52,7 +59,7 @@ export default function AboutTeam() {
           tone="team"
         />
       ) : null}
-      {!leader && !staff.length ? (
+      {!topLeaders.length && !staff.length ? (
         <AboutPeople kicker="Team" title={title} description={description} members={[]} tone="team" />
       ) : null}
     </div>

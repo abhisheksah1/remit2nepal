@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
-import { AboutComplianceBlock, AboutHero } from "@/components/public/AboutBlocks";
+import { CompliancePro } from "@/components/public/CompliancePro";
 import { SeoHead } from "@/components/public/SeoHead";
 import { SkeletonLines } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { groupTeam } from "@/utils/team";
 
 export default function AboutCompliance() {
   const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
   const documents = useQuery({ queryKey: ["public", "documents"], queryFn: publicApi.documents });
   const about = site.data?.about;
+  const { team } = groupTeam(site.data?.team ?? []);
 
   if (site.isLoading) {
     return (
@@ -21,14 +23,16 @@ export default function AboutCompliance() {
 
   return (
     <>
-      <SeoHead title="Compliance | Remit2Nepal" description="Licenses, certifications, and public documents." />
-      <AboutHero
-        about={about}
-        kicker="Regulatory desk"
-        title="Compliance"
-        description="Licenses, certifications, and filings you can check before you send or partner with us."
+      <SeoHead
+        title="Compliance & Security | Remit2Nepal"
+        description="How Remit2Nepal approaches compliance, KYC, financial-crime controls, privacy, and customer protection."
       />
-      <AboutComplianceBlock about={about} documents={documents.data ?? []} />
+      <CompliancePro
+        about={about}
+        settings={site.data?.settings ?? null}
+        team={team}
+        documents={documents.data ?? []}
+      />
     </>
   );
 }

@@ -183,7 +183,7 @@ export function robotsTxt(canonical?: string) {
 export async function sitemapXml(baseUrl: string) {
   const pages = await Page.find({ status: "PUBLISHED" }).lean();
   const news = await News.find({ status: "PUBLISHED" }).lean();
-  const staticPaths = ["/", "/about", "/about/board", "/about/team", "/about/compliance", "/services", "/service-charge", "/exchange-rate", "/branches", "/partners", "/partners/apply/national", "/news", "/faq", "/gallery", "/contact"];
+  const staticPaths = ["/", "/about", "/about/board", "/about/team", "/about/compliance", "/services", "/service-charge", "/exchange-rate", "/branches", "/partners", "/partners/apply/national", "/news", "/faq", "/gallery", "/track", "/contact"];
   const urls = [
     ...staticPaths.map((path) => `${baseUrl}${path}`),
     ...pages.map((page) => `${baseUrl}/${page.slug}`),

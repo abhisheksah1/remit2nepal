@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ChevronRight, MessageCircle, Send, X } from "lucide-react";
+import { ChevronRight, Minus, Send, X } from "lucide-react";
 import { publicApi } from "@/api/public.api";
 import { getErrorMessage } from "@/api/client";
 import { CHAT_OPEN_EVENT } from "@/utils/chatbot";
@@ -105,7 +105,7 @@ export function ChatWidget() {
   const suggestions = data?.suggestedQuestions?.length ? data.suggestedQuestions : data?.topics ?? [];
 
   return (
-    <div className="chat-dock">
+    <div className={open ? "chat-dock is-open" : "chat-dock"}>
       <section
         ref={panel}
         className={open ? "chat-panel is-open" : "chat-panel"}
@@ -120,9 +120,14 @@ export function ChatWidget() {
               <p>{name}</p>
               <span>Online for agents</span>
             </div>
-            <button type="button" className="chat-icon-btn" onClick={() => setOpen(false)} aria-label="Close chat">
-              <X className="h-4 w-4" />
-            </button>
+            <div className="chat-panel-actions">
+              <button type="button" className="chat-icon-btn" onClick={() => setOpen(false)} aria-label="Minimize chat">
+                <Minus className="h-4 w-4" />
+              </button>
+              <button type="button" className="chat-icon-btn" onClick={() => setOpen(false)} aria-label="Close chat">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </header>
           <div className="chat-thread" ref={scroller}>
             {messages.map((line) => {
@@ -214,16 +219,29 @@ export function ChatWidget() {
             </button>
           </form>
       </section>
-      <button
-        type="button"
-        className={open ? "chat-launcher is-open" : "chat-launcher"}
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        aria-label={data?.launcherLabel || "Open chat"}
-      >
-        {open ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
-        <span>{data?.launcherLabel || "Agent help"}</span>
-      </button>
+      {open ? null : (
+      <div className="chat-float">
+          <div className="chat-float-notes" aria-hidden>
+            <span className="chat-float-note is-hi">Hi!</span>
+            <span className="chat-float-note is-help">How can I help you?</span>
+          </div>
+        <button
+          type="button"
+          className="chat-launcher"
+          onClick={() => setOpen(true)}
+          aria-expanded={false}
+          aria-label={data?.launcherLabel || "Open chat"}
+        >
+            <svg className="chat-msg-icon" viewBox="0 0 48 48" aria-hidden>
+              <path
+                fill="#fff"
+                fillRule="evenodd"
+                d="M11 13.2c0-3.4 2.8-6.2 6.2-6.2h13.6c3.4 0 6.2 2.8 6.2 6.2v11.2c0 3.4-2.8 6.2-6.2 6.2H23.1L14 40.2v-9.2c-1.8-.7-3-2.4-3-4.4V13.2zm9.2 4.6a2.15 2.15 0 1 0 0 4.3 2.15 2.15 0 0 0 0-4.3zm4.8 0a2.15 2.15 0 1 0 0 4.3 2.15 2.15 0 0 0 0-4.3zm4.8 0a2.15 2.15 0 1 0 0 4.3 2.15 2.15 0 0 0 0-4.3z"
+              />
+            </svg>
+        </button>
+      </div>
+      )}
     </div>
   );
 }

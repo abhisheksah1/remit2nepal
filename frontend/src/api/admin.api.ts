@@ -18,6 +18,7 @@ import type {
   MediaItem,
   NavItem,
   NewsItem,
+  RemittanceItem,
   PartnerApplicationItem,
   PartnerApplicationStatus,
   PartnerItem,
@@ -141,6 +142,13 @@ export const adminApi = {
     create: (body: unknown) => create<FaqItem>("/faqs", body),
     update: (id: string, body: unknown) => patch<FaqItem>(`/faqs/${id}`, body),
     remove: (id: string) => remove<FaqItem>(`/faqs/${id}`)
+  },
+  remittances: {
+    list: (params?: ListParams) => list<RemittanceItem>("/remittances", params),
+    get: (id: string) => get<RemittanceItem>(`/remittances/${id}`),
+    create: (body: unknown) => create<RemittanceItem>("/remittances", body),
+    update: (id: string, body: unknown) => patch<RemittanceItem>(`/remittances/${id}`, body),
+    remove: (id: string) => remove<RemittanceItem>(`/remittances/${id}`)
   },
   serviceCharges: {
     list: (params?: ListParams) => list<ServiceChargeRow>("/service-charges", params),

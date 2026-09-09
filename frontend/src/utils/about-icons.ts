@@ -15,6 +15,7 @@ import {
   Sparkles,
   Target,
   Users,
+  Wallet,
   Zap,
   type LucideIcon
 } from "lucide-react";
@@ -36,7 +37,8 @@ export const ABOUT_ICON_OPTIONS = [
   { value: "eye", label: "Eye" },
   { value: "sparkles", label: "Sparkles" },
   { value: "target", label: "Target" },
-  { value: "book", label: "Book" }
+  { value: "book", label: "Book" },
+  { value: "wallet", label: "Wallet" }
 ] as const;
 
 const ICONS: Record<string, LucideIcon> = {
@@ -56,7 +58,8 @@ const ICONS: Record<string, LucideIcon> = {
   eye: Eye,
   sparkles: Sparkles,
   target: Target,
-  book: BookOpen
+  book: BookOpen,
+  wallet: Wallet
 };
 
 const TITLE_MATCH: Array<{ match: RegExp; icon: string }> = [

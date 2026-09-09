@@ -5,6 +5,7 @@ import { adminNav } from "@/config/nav";
 import { prefetchAdminPage } from "@/routes/admin-routes";
 import { hasPermission } from "@/hooks/usePermission";
 import type { AuthUser } from "@/types/auth";
+import { BRAND } from "@/constants/brand";
 import { cn } from "@/utils/cn";
 import { initials } from "@/utils/format";
 
@@ -46,18 +47,16 @@ export function Sidebar({
       {open ? (
         <button type="button" className="admin-sidebar-backdrop lg:hidden" aria-label="Close sidebar" onClick={onClose} />
       ) : null}
-      <aside className={cn("admin-sidebar", open && "is-open")}>
+      <aside className={cn("admin-sidebar", open && "is-open")} aria-label="Admin navigation">
         <div className="admin-sidebar-brand">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="admin-mark" aria-hidden>
-              R2
-            </span>
-            <div className="min-w-0">
-              <p className="font-display text-lg leading-none text-cream">Remit2Nepal</p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-gold/90">Operations desk</p>
+            <img src={BRAND.logo} alt="" className="admin-sidebar-logo" />
+            <div className="admin-sidebar-brand-copy">
+              <p>{BRAND.name}</p>
+              <span>Admin desk</span>
             </div>
           </div>
-          <button type="button" className="rounded-md p-1 text-cream/70 hover:bg-white/10 lg:hidden" onClick={onClose} aria-label="Close navigation">
+          <button type="button" className="admin-sidebar-close lg:hidden" onClick={onClose} aria-label="Close navigation">
             <X className="h-5 w-5" />
           </button>
         </div>

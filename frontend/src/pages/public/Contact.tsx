@@ -1,22 +1,35 @@
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { ArrowRight, Clock3, Mail, MapPin, Phone, PhoneCall } from "lucide-react";
 import { publicApi } from "@/api/public.api";
 import { getErrorMessage } from "@/api/client";
 import { contactSchema, type ContactValues } from "@/schemas/contact.schema";
 import { SeoHead } from "@/components/public/SeoHead";
-import { PageHero } from "@/components/public/PageHero";
-import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toast";
-import { Card } from "@/components/ui/Card";
+
+function telHref(value: string) {
+  return `tel:${value.replace(/[^\d+]/g, "")}`;
+}
 
 export default function Contact() {
   const { push } = useToast();
+  const [params] = useSearchParams();
   const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
   const settings = site.data?.settings;
-  const form = useForm<ContactValues>({ resolver: zodResolver(contactSchema) });
+  const form = useForm<ContactValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: params.get("subject") || "",
+      message: ""
+    }
+  });
   const mutation = useMutation({
     mutationFn: (values: ContactValues) => publicApi.contact(values),
     onSuccess: () => {
@@ -26,41 +39,97 @@ export default function Contact() {
     onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
   });
 
+  const facts = [
+    settings?.address ? { icon: MapPin, label: "Address", value: settings.address } : null,
+    settings?.officeHours ? { icon: Clock3, label: "Hours", value: settings.officeHours } : null,
+    settings?.phone ? { icon: Phone, label: "Phone", value: settings.phone, href: telHref(settings.phone) } : null,
+    settings?.email ? { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` } : null,
+    settings?.emergencyContact
+      ? { icon: PhoneCall, label: "Emergency", value: settings.emergencyContact, href: telHref(settings.emergencyContact) }
+      : null
+  ].filter(Boolean) as { icon: typeof MapPin; label: string; value: string; href?: string }[];
+
   return (
     <>
-      <PageHero
-        kicker="Relationship desk"
-        title="How can we help?"
-        description="Use this form for branch hours, rate queries and corporate remittance. Do not send transfer passwords or one-time codes."
-      />
-      <div className="mx-auto grid max-w-site gap-10 px-4 lg:px-8 py-16 lg:grid-cols-[0.9fr_1.1fr]">
       <SeoHead title="Contact Remit2Nepal" description="Speak with the relationship desk about branches, rates and transfers." />
-      <div>
-        <Card className="space-y-2 text-sm">
-          <p>{settings?.address}</p>
-          <p>{settings?.officeHours}</p>
-          {settings?.phone ? <p>Phone: {settings.phone}</p> : null}
-          {settings?.email ? <p>Email: {settings.email}</p> : null}
-          {settings?.emergencyContact ? <p>Emergency: {settings.emergencyContact}</p> : null}
-        </Card>
-      </div>
-      {settings && settings.contactFormEnabled === false ? (
-        <Card>
-          <p className="text-navy">The enquiry form is temporarily closed. Please call the relationship desk.</p>
-        </Card>
-      ) : (
-        <form className="glass-panel space-y-4 rounded-2xl p-6" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
-          <Input label="Full name" {...form.register("name")} error={form.formState.errors.name?.message} />
-          <Input label="Email" type="email" {...form.register("email")} error={form.formState.errors.email?.message} />
-          <Input label="Phone" {...form.register("phone")} error={form.formState.errors.phone?.message} />
-          <Input label="Subject" {...form.register("subject")} error={form.formState.errors.subject?.message} />
-          <Textarea label="Message" {...form.register("message")} error={form.formState.errors.message?.message} />
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Sending…" : "Send message"}
-          </Button>
-        </form>
-      )}
-    </div>
+      <section className="cdesk" aria-labelledby="contact-title">
+        <div className="cdesk-sky" aria-hidden>
+          <span className="cdesk-mesh" />
+          <div className="cdesk-mountains" />
+        </div>
+
+        <header className="cdesk-head">
+          <p className="cdesk-kicker">Relationship desk</p>
+          <h1 id="contact-title">How can we help?</h1>
+          <p className="cdesk-lede">
+            Use this form for branch hours, rate queries and corporate remittance. Do not send transfer passwords or
+            one-time codes.
+          </p>
+        </header>
+
+        <div className="cdesk-grid">
+          <aside className="cdesk-card cdesk-info">
+            <p className="cdesk-card-kicker">Reach us</p>
+            {facts.length ? (
+              <ul>
+                {facts.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.label}>
+                      <span className="cdesk-ico" aria-hidden>
+                        <Icon strokeWidth={2.4} />
+                      </span>
+                      <span className="cdesk-copy">
+                        <span className="cdesk-label">{item.label}</span>
+                        {item.href ? (
+                          <a className="cdesk-value" href={item.href}>
+                            {item.value}
+                          </a>
+                        ) : (
+                          <span className="cdesk-value">{item.value}</span>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p className="cdesk-empty">Contact details will appear here shortly.</p>
+            )}
+          </aside>
+
+          {settings && settings.contactFormEnabled === false ? (
+            <div className="cdesk-card cdesk-form is-closed">
+              <p className="cdesk-card-kicker">Enquiry form</p>
+              <h2>Form temporarily closed</h2>
+              <p>Please call the relationship desk during office hours.</p>
+              {settings.phone ? (
+                <a className="cdesk-submit" href={telHref(settings.phone)}>
+                  Call desk <ArrowRight />
+                </a>
+              ) : null}
+            </div>
+          ) : (
+            <form
+              className="cdesk-card cdesk-form"
+              onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+            >
+              <p className="cdesk-card-kicker">Send a message</p>
+              <div className="cdesk-fields">
+                <Input label="Full name" className="cdesk-control" {...form.register("name")} error={form.formState.errors.name?.message} />
+                <Input label="Email" type="email" className="cdesk-control" {...form.register("email")} error={form.formState.errors.email?.message} />
+                <Input label="Phone" className="cdesk-control" {...form.register("phone")} error={form.formState.errors.phone?.message} />
+                <Input label="Subject" className="cdesk-control" {...form.register("subject")} error={form.formState.errors.subject?.message} />
+                <Textarea label="Message" rows={6} className="cdesk-control" {...form.register("message")} error={form.formState.errors.message?.message} />
+              </div>
+              <button className="cdesk-submit" type="submit" disabled={mutation.isPending}>
+                {mutation.isPending ? "Sending…" : "Send message"}
+                <ArrowRight />
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
     </>
   );
 }

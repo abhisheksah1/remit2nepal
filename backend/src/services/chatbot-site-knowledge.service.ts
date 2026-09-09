@@ -131,7 +131,7 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
     cards.push({
       kind: "contact",
       title: "Contact Remit2Nepal",
-      keywords: "contact, phone, email, address, office, hours, location, hotline, emergency, whatsapp",
+      keywords: "contact, phone, email, address, office, hours, location, hotline, emergency, whatsapp, track, tracking, remittance status",
       href: "/contact",
       hrefLabel: "Contact",
       text: joinLines([
@@ -142,6 +142,14 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
         settings.officeHours ? `Office hours: ${settings.officeHours}` : "",
         social.map((item) => `${item.label}: ${item.url}`).join("\n")
       ])
+    });
+    cards.push({
+      kind: "page",
+      title: "Track a transfer",
+      keywords: "track, tracking, remittance, transfer status, reference number, receipt, control number, pin, payout status",
+      href: "/track",
+      hrefLabel: "Track a transfer",
+      text: "Enter your control number to see whether the transfer is paid or unpaid."
     });
   }
 

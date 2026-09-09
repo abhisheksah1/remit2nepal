@@ -18,7 +18,7 @@ export const partnerEnquirySchema = z
     taxClearance: fileRequired,
     citizenshipBoth: fileRequired,
     cheque: fileRequired,
-    signedAgreement: fileRequired
+    signedAgreement: z.custom<File>((value) => value === undefined || (value instanceof File && value.size > 0)).optional()
   })
   .superRefine((value, ctx) => {
     if (value.kind === "NATIONAL" && value.nationalType !== "COOPERATIVE" && value.nationalType !== "PRIVATE_AGENT") {

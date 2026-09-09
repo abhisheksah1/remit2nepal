@@ -76,7 +76,7 @@ export function SectionRenderer({
       return <Testimonials section={section} />;
     case "BRANCH_FINDER":
       return (
-        <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
+        <section className="agent-embed">
           <SectionHeading section={section} />
           <BranchFinder compact />
         </section>
@@ -112,7 +112,7 @@ export function SectionRenderer({
 
 function SectionHeading({ section }: { section: CmsSection }) {
   return (
-    <div className="mb-8 max-w-2xl">
+    <div className="section-intro mb-8 max-w-2xl">
       <div className="section-gold-line mb-3 h-px w-16 bg-gold" />
       {section.icon ? (
         <p className="mb-2 text-[0.72rem] font-bold uppercase tracking-[0.28em] text-gold">{section.icon}</p>
@@ -126,7 +126,7 @@ function SectionHeading({ section }: { section: CmsSection }) {
 
 function ServicesSection({ section, services }: { section: CmsSection; services: ServiceItem[] }) {
   return (
-    <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
+    <section id="how-it-works" className="mx-auto max-w-site px-4 lg:px-8 py-16">
       <SectionHeading section={section} />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {services.slice(0, 6).map((service) => {

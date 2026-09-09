@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Download, FileUp, Landmark, Store } from "lucide-react";
+import { CheckCircle2, FileUp, Landmark, Store } from "lucide-react";
 import { publicApi } from "@/api/public.api";
 import { getErrorMessage } from "@/api/client";
 import { Button } from "@/components/ui/Button";
@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/Toast";
 import { partnerEnquirySchema, type PartnerEnquiryValues } from "@/schemas/partner-enquiry.schema";
 import type { ApplicationDocumentKey, ApplicationNationalType, PublicPartnership } from "@/types/content";
 import { cn } from "@/utils/cn";
-import { agreementSlotFor, type PartnerKind } from "@/utils/partners";
+import type { PartnerKind } from "@/utils/partners";
 
 function FileField({
   label,
@@ -58,6 +58,8 @@ export function PartnerApplyForm({
   defaultNationalType?: ApplicationNationalType | "";
 }) {
   const { push } = useToast();
+  const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
+  const deskEmail = site.data?.settings?.email;
   const [formKey, setFormKey] = useState(0);
   const [done, setDone] = useState(false);
   const initialNational =
@@ -105,15 +107,14 @@ export function PartnerApplyForm({
       : [])
   ];
 
-  const slot = agreementSlotFor(kind, nationalType as ApplicationNationalType | "");
-  const agreement = settings.agreements[slot];
-
   const documentFields = useMemo(
     () =>
-      settings.requiredDocuments.map((item) => ({
-        key: item.key,
-        label: settings.documentLabels[item.key] || item.label
-      })),
+      settings.requiredDocuments
+        .filter((item) => item.key !== "signedAgreement" && item.required !== false)
+        .map((item) => ({
+          key: item.key,
+          label: settings.documentLabels[item.key] || item.label
+        })),
     [settings]
   );
 
@@ -130,7 +131,8 @@ export function PartnerApplyForm({
       payload.append("country", values.country || (values.kind === "NATIONAL" ? "Nepal" : ""));
       payload.append("notes", values.notes || "");
       for (const key of documentFields.map((item) => item.key)) {
-        payload.append(key, values[key]);
+        const file = values[key];
+        if (file instanceof File) payload.append(key, file);
       }
       return publicApi.applyPartnership(payload);
     },
@@ -138,7 +140,7 @@ export function PartnerApplyForm({
       setDone(true);
       push({
         title: "Application received",
-        description: "A partnership officer will review your documents during office hours.",
+        description: "The desk will verify your documents, then email the company agreement.",
         tone: "success"
       });
       form.reset({
@@ -163,7 +165,17 @@ export function PartnerApplyForm({
         <CheckCircle2 className="h-12 w-12 text-gold" />
         <h2 className="mt-4 font-display text-3xl text-navy">Application received</h2>
         <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-          Thank you. The partnership desk will review your company details and documents during office hours.
+          Thank you. The partnership desk will verify your documents first. If they are in order, Remit2Nepal will email
+          the company agreement. Sign it, add your stamp, complete the required papers, scan them, and email them back
+          {deskEmail ? (
+            <>
+              {" "}
+              to <a className="text-navy underline" href={`mailto:${deskEmail}`}>{deskEmail}</a>
+            </>
+          ) : (
+            " to the address in that company email"
+          )}{" "}
+          to become an agent.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button onClick={() => setDone(false)}>Submit another file</Button>
@@ -196,9 +208,9 @@ export function PartnerApplyForm({
                   className={cn("apply-type-card", active && "is-active")}
                   onClick={() => form.setValue("nationalType", option.value, { shouldValidate: true })}
                 >
-                  <Icon className="h-6 w-6" />
-                  <span className="mt-3 block font-display text-xl">{option.label}</span>
-                  <span className="mt-1 block text-xs leading-relaxed text-ink-muted">{option.help}</span>
+                  <Icon className="apply-type-icon" aria-hidden />
+                  <strong>{option.label}</strong>
+                  <em>{option.help}</em>
                 </button>
               );
             })}
@@ -228,26 +240,10 @@ export function PartnerApplyForm({
 
       <section>
         <p className="apply-section-kicker">{kind === "NATIONAL" ? "Step 3" : "Step 2"}</p>
-        <h2 className="mt-1 font-display text-2xl text-navy">Company agreement</h2>
-        <div className="apply-agreement mt-4">
-          <p className="text-sm font-medium text-navy">Download, sign, and stamp</p>
-          <p className="mt-1 text-sm text-ink-muted">
-            Print the agreement for this track, sign it, add your stamp, then upload the signed copy with the other documents.
-          </p>
-          {agreement.available ? (
-            <a href={`/api/v1/public/partnership/agreements/${slot}`} className="apply-download">
-              <Download className="h-4 w-4" />
-              Download {agreement.fileName || "company agreement"}
-            </a>
-          ) : (
-            <p className="mt-3 text-sm text-gold">The agreement file will appear here after the desk uploads it.</p>
-          )}
-        </div>
-      </section>
-
-      <section>
-        <p className="apply-section-kicker">{kind === "NATIONAL" ? "Step 4" : "Step 3"}</p>
-        <h2 className="mt-1 font-display text-2xl text-navy">Upload documents</h2>
+        <h2 className="mt-1 font-display text-2xl text-navy">Documents for verification</h2>
+        <p className="mt-2 text-sm text-ink-muted">
+          Upload clear scans of these files. The desk verifies them before Remit2Nepal emails the company agreement.
+        </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {documentFields.map((item) => (
             <FileField
@@ -259,6 +255,24 @@ export function PartnerApplyForm({
             />
           ))}
         </div>
+      </section>
+
+      <section className="apply-agreement">
+        <p className="apply-section-kicker">After you submit</p>
+        <h2 className="mt-1 font-display text-2xl text-navy">Agreement by email</h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+          Do not wait for a download on this page. Once your documents are verified, Remit2Nepal sends the agreement from
+          the company. Sign it, stamp it, fill any remaining papers, scan everything, and email the scans back
+          {deskEmail ? (
+            <>
+              {" "}
+              to <a className="font-semibold text-navy underline" href={`mailto:${deskEmail}`}>{deskEmail}</a>
+            </>
+          ) : (
+            " using the address in that company email"
+          )}
+          .
+        </p>
       </section>
 
       <section>

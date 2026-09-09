@@ -52,3 +52,16 @@ export const chatAskRateLimiter = rateLimit({
     errors: []
   }
 });
+
+export const trackRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 40,
+  skip: () => isTest,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many tracking requests. Please wait and try again.",
+    errors: []
+  }
+});

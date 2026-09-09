@@ -48,7 +48,7 @@ export default function Media() {
     <div>
       <PageHeader title="Media library" crumbs={[{ label: "Admin", to: "/admin" }, { label: "Media" }]} />
       <form
-        className="mb-6 grid gap-3 rounded-2xl border border-navy/10 bg-white p-4 md:grid-cols-4"
+        className="admin-toolbar mb-6 md:grid-cols-4"
         onSubmit={(event) => event.preventDefault()}
       >
         <Input label="Alt text" value={altText} onChange={(event) => setAltText(event.target.value)} />

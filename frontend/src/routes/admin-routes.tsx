@@ -22,6 +22,7 @@ const loaders = {
   "/admin/rates/settings": () => import("@/pages/admin/RateSettings"),
   "/admin/news": () => import("@/pages/admin/News"),
   "/admin/faq": () => import("@/pages/admin/Faq"),
+  "/admin/remittances": () => import("@/pages/admin/Remittances"),
   "/admin/chatbot": () => import("@/pages/admin/Chatbot"),
   "/admin/gallery": () => import("@/pages/admin/Gallery"),
   "/admin/media": () => import("@/pages/admin/Media"),
@@ -57,6 +58,7 @@ const NrbSync = lazy(loaders["/admin/rates/nrb"]);
 const RateSettings = lazy(loaders["/admin/rates/settings"]);
 const News = lazy(loaders["/admin/news"]);
 const Faq = lazy(loaders["/admin/faq"]);
+const Remittances = lazy(loaders["/admin/remittances"]);
 const Chatbot = lazy(loaders["/admin/chatbot"]);
 const Gallery = lazy(loaders["/admin/gallery"]);
 const Media = lazy(loaders["/admin/media"]);
@@ -88,6 +90,7 @@ export const adminRouteElements = (
     <Route path="rates/settings" element={<RateSettings />} />
     <Route path="news" element={<News />} />
     <Route path="faq" element={<Faq />} />
+    <Route path="remittances" element={<Remittances />} />
     <Route path="chatbot" element={<Chatbot />} />
     <Route path="gallery" element={<Gallery />} />
     <Route path="media" element={<Media />} />

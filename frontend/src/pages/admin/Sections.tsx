@@ -3,44 +3,84 @@ import { adminApi } from "@/api/admin.api";
 import { sectionFormSchema } from "@/schemas/cms.schema";
 import type { CmsSection } from "@/types/content";
 
-const isMap = (values: Record<string, string | number | boolean>) =>
-  values.type === "NEPAL_MAP" || values.type === "GALLERY";
-const isRemittance = (values: Record<string, string | number | boolean>) => values.type === "REMITTANCE";
-const isHero = (values: Record<string, string | number | boolean>) => values.type === "HERO";
-const isWhy = (values: Record<string, string | number | boolean>) => values.type === "WHY_CHOOSE";
-const isStats = (values: Record<string, string | number | boolean>) => values.type === "STATS";
-const isTestimonials = (values: Record<string, string | number | boolean>) => values.type === "TESTIMONIALS";
-const isGenericItems = (values: Record<string, string | number | boolean>) =>
-  !isHero(values) && !isWhy(values) && !isStats(values) && !isRemittance(values) && !isTestimonials(values);
+type FormValues = Record<string, string | number | boolean>;
+
+const isType =
+  (...types: string[]) =>
+  (values: FormValues) =>
+    types.includes(String(values.type));
+
+const isHero = isType("HERO");
+const isStats = isType("STATS");
+const isWhy = isType("WHY_CHOOSE");
+const isRemittance = isType("REMITTANCE");
+const isTestimonials = isType("TESTIMONIALS");
+const isPartners = isType("PARTNERS");
+const isNews = isType("NEWS");
+const isServices = isType("SERVICES");
+const isRates = isType("RATES");
+const isBranch = isType("BRANCH_FINDER");
+const isContact = isType("CONTACT_CTA");
+const isMap = isType("NEPAL_MAP", "GALLERY");
+const isCustom = isType("CUSTOM");
+const hasKicker = isType(
+  "WHY_CHOOSE",
+  "REMITTANCE",
+  "PARTNERS",
+  "NEWS",
+  "TESTIMONIALS",
+  "CONTACT_CTA",
+  "NEPAL_MAP",
+  "GALLERY",
+  "SERVICES",
+  "RATES",
+  "BRANCH_FINDER"
+);
+const hasHeading = (values: FormValues) => !isStats(values) && !isTestimonials(values);
+const hasPunch = isType(
+  "WHY_CHOOSE",
+  "REMITTANCE",
+  "PARTNERS",
+  "NEWS",
+  "SERVICES",
+  "RATES",
+  "BRANCH_FINDER",
+  "CONTACT_CTA",
+  "NEPAL_MAP",
+  "GALLERY"
+);
+const hasDescription = isType(
+  "HERO",
+  "WHY_CHOOSE",
+  "REMITTANCE",
+  "PARTNERS",
+  "SERVICES",
+  "RATES",
+  "BRANCH_FINDER",
+  "CONTACT_CTA",
+  "NEPAL_MAP",
+  "CUSTOM"
+);
+const hasPrimaryButton = isType("HERO", "REMITTANCE", "PARTNERS", "RATES", "NEWS", "CONTACT_CTA", "NEPAL_MAP", "GALLERY");
+const hasSecondaryButton = isHero;
+const whenEditing = (_values: FormValues, editing: boolean) => editing;
 
 const types = [
   { value: "HERO", label: "Hero" },
-  { value: "STATS", label: "Stats" },
+  { value: "STATS", label: "Hero stats" },
   { value: "SERVICES", label: "Services" },
   { value: "RATES", label: "Exchange rates" },
   { value: "WHY_CHOOSE", label: "Why Remit2Nepal" },
-  { value: "NEPAL_MAP", label: "Nepal people map" },
-  { value: "REMITTANCE", label: "Remittance letter cubes" },
-  { value: "GALLERY", label: "Gallery" },
+  { value: "REMITTANCE", label: "Remittance cubes" },
   { value: "PARTNERS", label: "Partners" },
-  { value: "NEWS", label: "News" },
   { value: "TESTIMONIALS", label: "Testimonials" },
+  { value: "NEWS", label: "News" },
   { value: "BRANCH_FINDER", label: "Agent finder" },
+  { value: "NEPAL_MAP", label: "Nepal map" },
+  { value: "GALLERY", label: "Gallery" },
   { value: "CONTACT_CTA", label: "Contact banner" },
   { value: "CUSTOM", label: "Custom HTML" }
 ];
-
-function collageFrom(item?: CmsSection): [string, string, string, string] {
-  const items = Array.isArray(item?.items) ? item.items : [];
-  const pick = (index: number) => {
-    const row = items[index];
-    if (row && typeof row === "object" && "imageUrl" in row) {
-      return String((row as { imageUrl?: string }).imageUrl ?? "");
-    }
-    return "";
-  };
-  return [pick(0), pick(1), pick(2), pick(3)];
-}
 
 function cubeWordFrom(item?: CmsSection) {
   const items = Array.isArray(item?.items) ? item.items : [];
@@ -54,25 +94,18 @@ function cubeWordFrom(item?: CmsSection) {
 function itemsJsonFrom(item?: CmsSection) {
   const items = Array.isArray(item?.items) ? item.items : [];
   if (item?.type === "HERO") {
-    const chips = items.filter(
-      (row) => row && typeof row === "object" && "title" in row && !("value" in row)
-    );
-    return JSON.stringify(
-      chips.length
-        ? chips
-        : [{ title: "Licensed operator" }, { title: "NRB-referenced rates" }, { title: "Nationwide payout" }],
-      null,
-      2
-    );
+    const chips = items.filter((row) => row && typeof row === "object" && "title" in row && !("value" in row));
+    return JSON.stringify(chips);
   }
-  return item?.items ? JSON.stringify(item.items, null, 2) : "[]";
+  if (item?.type === "REMITTANCE") return "[]";
+  return JSON.stringify(items);
 }
 
 export default function Sections() {
   return (
     <ResourceCrud<CmsSection>
       title="Sections"
-      description="Every homepage block is fully editable here: heading, punch line, photos, buttons, cards, order, and visibility."
+      description="Edit homepage copy, buttons, and cards. Only fields that appear on the public site are shown."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Sections" }]}
       queryKey="admin-sections"
       list={adminApi.sections.list}
@@ -80,191 +113,243 @@ export default function Sections() {
       update={adminApi.sections.update}
       remove={adminApi.sections.remove}
       schema={sectionFormSchema}
+      itemTitle={(row) => row.heading || types.find((item) => item.value === row.type)?.label || row.key}
       columns={[
         { key: "heading", header: "Heading", render: (row) => row.heading || row.key },
-        { key: "type", header: "Type", render: (row) => row.type },
+        { key: "type", header: "Type", render: (row) => types.find((item) => item.value === row.type)?.label || row.type },
         { key: "order", header: "Order", render: (row) => row.displayOrder },
         { key: "enabled", header: "Enabled", render: (row) => <StatusCell value={row.enabled ? "ACTIVE" : "INACTIVE"} /> }
       ]}
       fields={[
-        { name: "key", label: "Key" },
-        { name: "type", label: "Type", type: "select", options: types },
-        { name: "icon", label: "Kicker", hint: "Small red label above the heading. Used on Why, Remittance, and Nepal map." },
-        { name: "heading", label: "Heading" },
+        { name: "type", label: "Block type", type: "select", options: types, group: "Block", disabledWhen: whenEditing },
+        { name: "key", label: "Key", group: "Block", hint: "Internal id. Do not change after create.", disabledWhen: whenEditing },
+        { name: "enabled", label: "Show on site", type: "checkbox", group: "Block" },
+        { name: "displayOrder", label: "Order on homepage", type: "number", group: "Block" },
+
         {
           name: "subheading",
+          label: "Kicker",
+          group: "Copy",
+          hint: "Small line above the hero title.",
+          showWhen: isHero
+        },
+        {
+          name: "icon",
+          label: "Kicker",
+          group: "Copy",
+          hint: "Small red label above the heading.",
+          showWhen: hasKicker
+        },
+        {
+          name: "heading",
+          label: "Title",
+          group: "Copy",
+          hint: "Main headline on the homepage.",
+          showWhen: hasHeading
+        },
+        {
+          name: "subheading",
+          id: "punch",
           label: "Punch line",
-          hint: "Hero: small line above the title. Remittance: line under the letter cubes. Other sections: line under the heading."
+          group: "Copy",
+          hint: "Line under the heading. Partners: Nepali line. Remittance: line under the cubes.",
+          showWhen: hasPunch
         },
         {
           name: "description",
-          label: "Supporting copy",
+          label: "Intro",
           type: "textarea",
-          hint: "Optional extra paragraph. Leave empty if the punch line is enough."
-        },
-        {
-          name: "backgroundUrl",
-          label: "Background image",
-          type: "image",
-          folder: "sections",
-          hint: "Hero backdrop, Nepal map cityscape, or section wash."
-        },
-        {
-          name: "imageUrl",
-          label: "Main image",
-          type: "image",
-          folder: "sections",
-          hint: "For Nepal people map: one photo fills the whole Nepal shape. Leave empty to use collage tiles."
-        },
-        {
-          name: "collage1",
-          label: "Collage photo 1",
-          type: "image",
-          folder: "gallery",
-          hint: "Clipped into the Nepal map. Upload Nepali community photos.",
-          showWhen: isMap
-        },
-        {
-          name: "collage2",
-          label: "Collage photo 2",
-          type: "image",
-          folder: "gallery",
-          showWhen: isMap
-        },
-        {
-          name: "collage3",
-          label: "Collage photo 3",
-          type: "image",
-          folder: "gallery",
-          showWhen: isMap
-        },
-        {
-          name: "collage4",
-          label: "Collage photo 4",
-          type: "image",
-          folder: "gallery",
-          showWhen: isMap
-        },
-        {
-          name: "collage1",
-          label: "Photo 1",
-          type: "image",
-          folder: "testimonials",
-          hint: "Lead story photo. Upload a real customer photo here.",
-          showWhen: isTestimonials
-        },
-        {
-          name: "collage2",
-          label: "Photo 2",
-          type: "image",
-          folder: "testimonials",
-          showWhen: isTestimonials
-        },
-        {
-          name: "collage3",
-          label: "Photo 3",
-          type: "image",
-          folder: "testimonials",
-          showWhen: isTestimonials
-        },
-        {
-          name: "collage4",
-          label: "Photo 4",
-          type: "image",
-          folder: "testimonials",
-          showWhen: isTestimonials
+          group: "Copy",
+          hint: "Short paragraph under the title. Leave empty if the punch line is enough.",
+          showWhen: hasDescription
         },
         {
           name: "cubeWord",
-          label: "Letter cubes word",
-          hint: "Letters on the cubes, e.g. REMITTANCE or REMIT2NEPAL.",
+          label: "Cube letters",
+          group: "Copy",
+          hint: "Word spelled on the cubes, for example REMITTANCE.",
           showWhen: isRemittance
         },
-        { name: "buttonLabel", label: "Button label" },
-        { name: "buttonUrl", label: "Button URL" },
-        { name: "secondaryButtonLabel", label: "Secondary button label" },
-        { name: "secondaryButtonUrl", label: "Secondary button URL" },
+
         {
-          name: "alignment",
-          label: "Alignment",
-          type: "select",
-          options: [
-            { value: "left", label: "Left" },
-            { value: "center", label: "Center" },
-            { value: "right", label: "Right" }
-          ]
+          name: "buttonLabel",
+          label: "Button text",
+          group: "Buttons",
+          showWhen: hasPrimaryButton
         },
+        {
+          name: "buttonUrl",
+          label: "Button link",
+          group: "Buttons",
+          hint: "Page path, for example /exchange-rate or /partners.",
+          showWhen: hasPrimaryButton
+        },
+        {
+          name: "secondaryButtonLabel",
+          label: "Second button text",
+          group: "Buttons",
+          showWhen: hasSecondaryButton
+        },
+        {
+          name: "secondaryButtonUrl",
+          label: "Second button link",
+          group: "Buttons",
+          showWhen: hasSecondaryButton
+        },
+
         {
           name: "itemsJson",
           id: "items-hero",
-          label: "Trust chips JSON",
-          type: "textarea",
-          hint: 'Hero line under the buttons: [{ "title": "Licensed operator" }, { "title": "NRB-referenced rates" }]',
+          label: "Trust chips",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add chip",
+          emptyItem: { title: "" },
+          itemFields: [{ name: "title", label: "Chip text" }],
+          hint: "Pills under the hero buttons.",
           showWhen: isHero
         },
         {
           name: "itemsJson",
           id: "items-why",
-          label: "Why cards JSON",
-          type: "textarea",
-          hint: 'Six cards: [{ "title": "Secure", "description": "Regulated operations..." }]',
+          label: "Why cards",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add card",
+          emptyItem: { title: "", description: "" },
+          itemFields: [
+            { name: "title", label: "Title" },
+            { name: "description", label: "Description", type: "textarea" }
+          ],
           showWhen: isWhy
         },
         {
           name: "itemsJson",
           id: "items-stats",
-          label: "Stats JSON",
-          type: "textarea",
-          hint: '[{ "label": "Branches", "value": "120+" }]',
+          label: "Hero stats",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add stat",
+          emptyItem: { label: "", value: "" },
+          itemFields: [
+            { name: "value", label: "Number" },
+            { name: "label", label: "Label" }
+          ],
+          hint: "These numbers appear under the homepage hero.",
           showWhen: isStats
         },
         {
           name: "itemsJson",
           id: "items-voices",
-          label: "Testimonials JSON",
-          type: "textarea",
-          hint: '[{ "name": "Sita Gurung", "headline": "English title", "headlineNe": "नेपाली शीर्षक", "quote": "...", "quoteNe": "...", "imageUrl": "/uploads/..." }]',
+          label: "Stories",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add story",
+          emptyItem: { name: "", headline: "", headlineNe: "", quote: "", quoteNe: "", imageUrl: "" },
+          itemFields: [
+            { name: "name", label: "Name" },
+            { name: "headline", label: "Headline (English)" },
+            { name: "headlineNe", label: "शीर्षक (नेपाली)" },
+            { name: "quote", label: "Quote (English)", type: "textarea" },
+            { name: "quoteNe", label: "उद्धरण (नेपाली)", type: "textarea" },
+            { name: "imageUrl", label: "Photo", type: "image", folder: "testimonials" }
+          ],
+          hint: "First story is featured on the homepage.",
           showWhen: isTestimonials
         },
         {
-          name: "itemsJson",
-          id: "items-generic",
-          label: "Items JSON",
-          type: "textarea",
-          hint: "Optional extra items for this block.",
-          showWhen: isGenericItems
+          name: "partnersNote",
+          label: "Partner logos",
+          type: "note",
+          group: "On the page",
+          hint: "Logos come from Admin → Partners. This block only controls the heading and button.",
+          showWhen: isPartners
         },
-        { name: "overlay", label: "Overlay", type: "checkbox" },
-        { name: "enabled", label: "Enabled", type: "checkbox" },
-        { name: "displayOrder", label: "Display order", type: "number" }
+        {
+          name: "servicesNote",
+          label: "Service cards",
+          type: "note",
+          group: "On the page",
+          hint: "Cards come from Admin → Services. This block only controls the heading.",
+          showWhen: isServices
+        },
+        {
+          name: "newsNote",
+          label: "News cards",
+          type: "note",
+          group: "On the page",
+          hint: "Stories come from Admin → News. This block only controls the heading and button.",
+          showWhen: isNews
+        },
+        {
+          name: "ratesNote",
+          label: "Rate table",
+          type: "note",
+          group: "On the page",
+          hint: "Rates come from Admin → Exchange rates. This block only controls the heading and button.",
+          showWhen: isRates
+        },
+        {
+          name: "branchNote",
+          label: "Agent finder",
+          type: "note",
+          group: "On the page",
+          hint: "Agents come from Admin → Branches. This block only controls the heading.",
+          showWhen: isBranch
+        },
+        {
+          name: "mapNote",
+          label: "Nepal map",
+          type: "note",
+          group: "On the page",
+          hint: "The map uses live agent data. This block is currently hidden on the homepage.",
+          showWhen: isMap
+        },
+        {
+          name: "contactNote",
+          label: "Contact banner",
+          type: "note",
+          group: "On the page",
+          hint: "This banner is currently hidden on the homepage.",
+          showWhen: isContact
+        },
+        {
+          name: "customNote",
+          label: "Custom HTML",
+          type: "note",
+          group: "On the page",
+          hint: "Put HTML in Intro. Use this only for a one-off block.",
+          showWhen: isCustom
+        }
       ]}
-      toForm={(item) => {
-        const [collage1, collage2, collage3, collage4] = collageFrom(item);
-        return {
-          key: item?.key ?? "",
-          type: item?.type ?? "CUSTOM",
-          icon: item?.icon ?? "",
-          heading: item?.heading ?? "",
-          subheading: item?.subheading ?? "",
-          description: item?.description ?? "",
-          backgroundUrl: item?.backgroundUrl ?? "",
-          imageUrl: item?.imageUrl ?? "",
-          collage1,
-          collage2,
-          collage3,
-          collage4,
-          cubeWord: cubeWordFrom(item),
-          buttonLabel: item?.buttonLabel ?? "",
-          buttonUrl: item?.buttonUrl ?? "",
-          secondaryButtonLabel: item?.secondaryButtonLabel ?? "",
-          secondaryButtonUrl: item?.secondaryButtonUrl ?? "",
-          alignment: item?.alignment ?? "left",
-          itemsJson: itemsJsonFrom(item),
-          overlay: item?.overlay ?? true,
-          enabled: item?.enabled ?? true,
-          displayOrder: item?.displayOrder ?? 0
-        };
-      }}
+      toForm={(item) => ({
+        key: item?.key ?? "",
+        type: item?.type ?? "CUSTOM",
+        icon: item?.icon ?? "",
+        heading: item?.heading ?? "",
+        subheading: item?.subheading ?? "",
+        description: item?.description ?? "",
+        backgroundUrl: item?.backgroundUrl ?? "",
+        imageUrl: item?.imageUrl ?? "",
+        cubeWord: cubeWordFrom(item),
+        buttonLabel: item?.buttonLabel ?? "",
+        buttonUrl: item?.buttonUrl ?? "",
+        secondaryButtonLabel: item?.secondaryButtonLabel ?? "",
+        secondaryButtonUrl: item?.secondaryButtonUrl ?? "",
+        alignment: item?.alignment ?? "left",
+        itemsJson: itemsJsonFrom(item),
+        overlay: item?.overlay ?? true,
+        enabled: item?.enabled ?? true,
+        displayOrder: item?.displayOrder ?? 0,
+        partnersNote: "",
+        servicesNote: "",
+        newsNote: "",
+        ratesNote: "",
+        branchNote: "",
+        mapNote: "",
+        contactNote: "",
+        customNote: ""
+      })}
       toPayload={(values) => {
         let items: unknown = [];
         try {
@@ -272,22 +357,15 @@ export default function Sections() {
         } catch {
           items = [];
         }
-        const collage = [values.collage1, values.collage2, values.collage3, values.collage4]
-          .map((value) => String(value ?? "").trim())
-          .filter(Boolean);
-        if (collage.length && (values.type === "NEPAL_MAP" || values.type === "GALLERY" || values.type === "TESTIMONIALS")) {
-          const existing = Array.isArray(items) ? items : [];
-          items = collage.map((imageUrl, index) => {
-            const row = existing[index];
-            const extra = row && typeof row === "object" ? (row as Record<string, unknown>) : {};
-            return { ...extra, imageUrl };
+        if (Array.isArray(items)) {
+          items = items.filter((row) => {
+            if (!row || typeof row !== "object") return false;
+            return Object.values(row as Record<string, unknown>).some((value) => String(value ?? "").trim());
           });
         }
         const cubeWord = String(values.cubeWord ?? "").trim();
         if (cubeWord && values.type === "REMITTANCE") {
-          const existing = Array.isArray(items) ? items : [];
-          const first = existing[0] && typeof existing[0] === "object" ? (existing[0] as Record<string, unknown>) : {};
-          items = [{ ...first, word: cubeWord }, ...existing.slice(1)];
+          items = [{ word: cubeWord }];
         }
         return {
           key: values.key,

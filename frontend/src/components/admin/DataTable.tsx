@@ -45,7 +45,7 @@ export function DataTable<T>({
   return (
     <div className="space-y-4">
       {onSearch ? (
-        <div className="max-w-xs">
+        <div className="admin-table-tools">
           <Input
             label="Search"
             value={search}
@@ -81,7 +81,7 @@ export function DataTable<T>({
         </Table>
       ) : null}
       {total > limit ? (
-        <div className="flex items-center justify-end gap-2">
+        <div className="admin-pager">
           <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPageChange?.(page - 1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>

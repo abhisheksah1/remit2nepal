@@ -26,7 +26,9 @@ export function Header({
   const location = useLocation();
   const headerRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const aboutRef = useRef<HTMLDivElement>(null);
   const nav = items.filter((item) => item.location === "HEADER" && item.enabled && item.path !== "/");
   const drawerNav = nav.filter((item) => !PINNED_PATHS.has(item.path));
   const company = settings?.companyName || BRAND.name;
@@ -41,7 +43,30 @@ export function Header({
 
   useEffect(() => {
     setOpen(false);
+    setAboutOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!aboutOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!aboutRef.current?.contains(event.target as Node)) setAboutOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAboutOpen(false);
+    };
+    window.addEventListener("pointerdown", onPointer);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [aboutOpen]);
+
+  function closeAboutMenu() {
+    setAboutOpen(false);
+    const active = document.activeElement;
+    if (active instanceof HTMLElement) active.blur();
+  }
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -77,7 +102,7 @@ export function Header({
 
   return (
     <>
-    <header ref={headerRef} className={cn("site-header", scrolled && "is-stuck")}>
+    <header ref={headerRef} className={cn("site-header", scrolled && "is-stuck", open && "is-menu-open")}>
       <div className="vault-rail">
         <div className="mx-auto flex max-w-site items-center gap-3 px-4 py-1.5 text-[11px] uppercase tracking-[0.16em] text-cream/80 sm:gap-4 sm:tracking-[0.2em] lg:px-8 sm:text-xs">
           <span className="hidden items-center gap-1.5 text-gold md:inline-flex">
@@ -96,28 +121,35 @@ export function Header({
         </div>
       </div>
 
-      <div className="nav-bar px-3 sm:px-4 lg:px-8">
-        <div
-          className={cn(
-            "nav-shell mx-auto grid w-full grid-cols-[1fr_auto] items-center gap-2 px-2 transition-all duration-500 sm:px-3",
-            scrolled ? "nav-shell-compact" : "py-2"
-          )}
-        >
-          <Link to="/" className="shrink-0 justify-self-start" aria-label={`${company} home`}>
+      <div className="nav-bar">
+        <div className={cn("nav-shell", scrolled && "is-compact")}>
+          <Link to="/" className="nav-brand" aria-label={`${company} home`}>
             <img src={logoSrc} alt={company} className="site-logo" />
           </Link>
 
-          <div className="flex min-w-0 shrink-0 items-center justify-end gap-1 justify-self-end sm:gap-2">
-            <nav className="flex min-w-0 items-center" aria-label="Primary">
+          <div className="nav-cluster">
+            <nav className="nav-pins" aria-label="Primary">
               {PINNED_NAV.map((item) =>
                 item.path === "/about" ? (
-                  <div key={item.path} className="nav-flyout nav-flyout-end">
+                  <div
+                    key={item.path}
+                    ref={aboutRef}
+                    className={cn("nav-flyout nav-flyout-end", aboutOpen && "is-open")}
+                    onMouseEnter={() => setAboutOpen(true)}
+                    onMouseLeave={() => setAboutOpen(false)}
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node)) setAboutOpen(false);
+                    }}
+                  >
                     <NavLink
                       to="/about"
-                      className={() => cn("nav-link nav-link-pin", isAboutPath(location.pathname) && "is-active")}
+                      aria-expanded={aboutOpen}
+                      aria-haspopup="menu"
+                      className={() => cn("nav-link", isAboutPath(location.pathname) && "is-active")}
+                      onFocus={() => setAboutOpen(true)}
                     >
                       {item.label}
-                      <ChevronDown className="nav-flyout-caret hidden sm:block" aria-hidden />
+                      <ChevronDown className="nav-flyout-caret" aria-hidden />
                     </NavLink>
                     <div className="nav-flyout-menu" role="menu">
                       {ABOUT_NAV.map((link) => (
@@ -126,6 +158,7 @@ export function Header({
                           to={link.path}
                           role="menuitem"
                           end={link.path === "/about"}
+                          onClick={closeAboutMenu}
                           className={({ isActive }) => cn("nav-flyout-link", isActive && "is-active")}
                         >
                           {link.label}
@@ -137,7 +170,7 @@ export function Header({
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className={({ isActive }) => cn("nav-link nav-link-pin", isActive && "is-active")}
+                    className={({ isActive }) => cn("nav-link", isActive && "is-active")}
                   >
                     {item.label}
                   </NavLink>
@@ -170,6 +203,30 @@ export function Header({
       <button type="button" className="nav-drawer-backdrop" aria-label="Close menu" onClick={() => setOpen(false)} />
       <nav className="nav-drawer-panel" aria-label="More pages">
         <p className="nav-drawer-head">Menu</p>
+        <div className="nav-drawer-pinned">
+          <p className="nav-drawer-label">About</p>
+          {ABOUT_NAV.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              end={link.path === "/about"}
+              onClick={() => setOpen(false)}
+              className={({ isActive }) => cn("mobile-link", isActive && "is-active")}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+          {PINNED_NAV.filter((item) => item.path !== "/about").map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={() => setOpen(false)}
+              className={({ isActive }) => cn("mobile-link", isActive && "is-active")}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
         <div className="nav-drawer-links">
           {drawerNav.map((item, index) => (
             <NavLink

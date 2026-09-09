@@ -1,59 +1,76 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Landmark, MapPin, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { publicCtaLabel } from "@/config/public-labels";
+import { ArrowRight, Check } from "lucide-react";
 import { HeroNetwork } from "./HeroNetwork";
 import type { CmsSection, StatItem } from "@/types/content";
 
-export function Hero({ section, stats = [] }: { section: CmsSection; stats?: StatItem[] }) {
+const TRUST = ["Secure Transfers", "Transparent Fees", "Global Reach", "Reliable Support"];
+
+export function Hero({ stats = [] }: { section: CmsSection; stats?: StatItem[] }) {
+  const stage = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const node = stage.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+
+    function onScroll() {
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      const leave = Math.min(1, Math.max(0, -rect.top / Math.max(rect.height * 0.45, 1)));
+      node.style.setProperty("--hero-leave", String(leave));
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section className="hero-stage">
+    <section ref={stage} className="hero-stage" aria-labelledby="hero-title">
+      <div className="hero-atm" aria-hidden>
+        <span className="hero-atm-glow is-blue" />
+        <span className="hero-atm-glow is-red" />
+        <span className="hero-atm-grid" />
+        <div className="hero-mountains" />
+      </div>
+
       <div className="hero-inner">
         <div className="hero-copy-block">
-          <p className="hero-kicker inline-flex max-w-full flex-wrap items-center gap-2 text-[0.65rem] uppercase tracking-[0.14em] text-gold sm:text-xs sm:tracking-[0.28em]">
-            <ShieldCheck className="h-4 w-4" aria-hidden />
-            {section.subheading || "Licensed. Secure. Nationwide."}
+          <p className="hero-badge">
+            <span className="hero-badge-dot" />
+            Global Remittance • Fast • Secure
           </p>
-          <h1 className="hero-title mt-4 max-w-xl font-display text-[clamp(1.75rem,4.2vw+0.85rem,3.6rem)] leading-[1.1] text-navy">
-            {section.heading}
+          <h1 id="hero-title" className="hero-title">
+            <span className="is-navy">Moving Money.</span>
+            <span className="is-red">Connecting Lives.</span>
           </h1>
-          <p className="hero-copy mt-4 max-w-lg text-sm leading-relaxed text-ink-muted sm:mt-5 sm:text-base lg:text-lg">{section.description}</p>
-          <div className="hero-actions hero-copy mt-6 sm:mt-8">
-            {section.buttonLabel && section.buttonUrl ? (
-              <Link to={section.buttonUrl}>
-                <Button variant="gold" size="lg" className="btn-shimmer">
-                  {publicCtaLabel(section.buttonUrl, section.buttonLabel)}
-                </Button>
-              </Link>
-            ) : null}
-            {section.secondaryButtonLabel && section.secondaryButtonUrl ? (
-              <Link to={section.secondaryButtonUrl}>
-                <Button variant="secondary" size="lg">
-                  {publicCtaLabel(section.secondaryButtonUrl, section.secondaryButtonLabel)} <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            ) : null}
+          <p className="hero-lede">
+            Send money across borders with confidence. Experience fast, secure, and transparent international money
+            transfers designed to keep you connected with the people who matter most.
+          </p>
+          <div className="hero-actions">
+            <Link to="/contact" className="hero-cta is-primary">
+              Send Money <ArrowRight />
+            </Link>
+            <a href="#how-it-works" className="hero-cta is-ghost">
+              How It Works <ArrowRight />
+            </a>
           </div>
           <ul className="hero-trust">
-            <li>
-              <ShieldCheck className="h-4 w-4" aria-hidden />
-              Licensed operator
-            </li>
-            <li>
-              <Landmark className="h-4 w-4" aria-hidden />
-              NRB-referenced rates
-            </li>
-            <li>
-              <MapPin className="h-4 w-4" aria-hidden />
-              Nationwide payout
-            </li>
+            {TRUST.map((item) => (
+              <li key={item}>
+                <Check aria-hidden />
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
         <div className="hero-visual">
           <HeroNetwork />
         </div>
       </div>
-      {stats.length > 0 ? (
+
+      {stats.length ? (
         <div className="hero-metrics">
           <div className="hero-metrics-inner">
             {stats.map((item) => (
