@@ -7,6 +7,7 @@ export default function Partners() {
   return (
     <ResourceCrud<PartnerItem>
       title="Partners"
+      description="Add each desk and upload its logo. Active partners appear on the homepage Global remittance partners strip."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Partners" }]}
       queryKey="admin-partners"
       list={adminApi.partners.list}
@@ -23,7 +24,13 @@ export default function Partners() {
       ]}
       fields={[
         { name: "name", label: "Name" },
-        { name: "logoUrl", label: "Logo URL" },
+        {
+          name: "logoUrl",
+          label: "Logo",
+          type: "image",
+          folder: "partners",
+          hint: "Square or wide logo on a clear background. Shown on the homepage partner strip."
+        },
         { name: "description", label: "Description", type: "textarea" },
         { name: "website", label: "Website" },
         { name: "country", label: "Country" },

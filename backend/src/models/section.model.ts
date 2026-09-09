@@ -16,6 +16,7 @@ const sectionSchema = new Schema(
         "REMITTANCE",
         "PARTNERS",
         "NEWS",
+        "TESTIMONIALS",
         "BRANCH_FINDER",
         "CONTACT_CTA",
         "CUSTOM"

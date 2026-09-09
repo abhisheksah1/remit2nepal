@@ -6,7 +6,7 @@ import { NEPAL_MAP_VIEWBOX } from "@/constants/nepalMap";
 import { NEPAL_MOSAIC, PROVINCE_DISTRICTS, sameProvince, type NepalMosaicCell } from "@/constants/nepalMosaic";
 import { publicApi } from "@/api/public.api";
 import type { BranchItem, CmsSection, GalleryItem } from "@/types/content";
-import { cn, entityId, mediaUrl } from "@/utils/cn";
+import { cn, entityId } from "@/utils/cn";
 
 function provinceAgents(agents: BranchItem[], province: string) {
   return agents.filter((agent) => sameProvince(agent.province, province));
@@ -193,14 +193,14 @@ export function NepalStory({
 
   return (
     <section className={cn("nepal-story", "reveal-skip", compact && "is-compact")} aria-labelledby={`${section.key}-heading`}>
-      <div className="nepal-story-skyline" style={section.backgroundUrl ? { backgroundImage: `url(${mediaUrl(section.backgroundUrl)})` } : undefined} aria-hidden />
-      {section.overlay ? <div className="nepal-story-wash" aria-hidden /> : null}
       <div className={cn("nepal-story-wrap", align)}>
         <header className="nepal-story-copy">
-          <p className="nepal-story-kicker">{section.icon || "Our Nepal"}</p>
+          {section.icon ? <p className="nepal-story-kicker">{section.icon}</p> : null}
           <h2 id={`${section.key}-heading`}>{section.heading || "Find an agent across Nepal"}</h2>
           {section.subheading ? <p className="nepal-story-lede">{section.subheading}</p> : null}
-          {section.description ? <p className="nepal-story-body">{section.description}</p> : null}
+          {section.description && !/illustrated scenes of nepali/i.test(section.description) ? (
+            <p className="nepal-story-body">{section.description}</p>
+          ) : null}
         </header>
         <NepalPeopleMap label={section.heading || "Map of Nepal"} />
         {section.buttonUrl ? (

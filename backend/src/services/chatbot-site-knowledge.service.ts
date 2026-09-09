@@ -285,10 +285,10 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
     cards.push({
       kind: "news",
       title: item.title,
-      keywords: `news notice alert ${item.category} ${item.title}`,
+      keywords: `news notice alert ${item.category} ${item.title} ${item.titleNe ?? ""}`,
       href: `/news/${item.slug}`,
       hrefLabel: item.title,
-      text: clip(joinLines([item.summary, item.content]), 800)
+      text: clip(joinLines([item.punchLine, item.summary, item.summaryNe, item.content, item.contentNe]), 800)
     });
   }
 

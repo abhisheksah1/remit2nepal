@@ -72,9 +72,21 @@ export type SectionType =
   | "REMITTANCE"
   | "PARTNERS"
   | "NEWS"
+  | "TESTIMONIALS"
   | "BRANCH_FINDER"
   | "CONTACT_CTA"
   | "CUSTOM";
+
+export interface TestimonialItem {
+  name: string;
+  title?: string;
+  location?: string;
+  headline?: string;
+  headlineNe?: string;
+  quote: string;
+  quoteNe?: string;
+  imageUrl?: string;
+}
 
 export interface StatItem {
   label: string;
@@ -174,9 +186,14 @@ export interface PartnerItem extends EntityId {
 
 export interface NewsItem extends EntityId {
   title: string;
+  titleNe?: string;
   slug: string;
+  punchLine?: string;
+  punchLineNe?: string;
   summary: string;
+  summaryNe?: string;
   content: string;
+  contentNe?: string;
   featuredImage: string;
   category: "NEWS" | "NOTICE" | "ALERT";
   publishedAt?: string | null;

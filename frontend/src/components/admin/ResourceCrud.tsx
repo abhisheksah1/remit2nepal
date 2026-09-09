@@ -21,6 +21,7 @@ export interface FieldSpec {
   options?: Array<{ value: string; label: string }>;
   hint?: string;
   folder?: string;
+  id?: string;
   showWhen?: (values: Record<string, string | number | boolean>) => boolean;
 }
 
@@ -186,7 +187,7 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
             .filter((field) => !field.showWhen || field.showWhen(values))
             .map((field) => (
             <Field
-              key={field.name}
+              key={field.id ?? `${field.name}-${field.label}`}
               field={field}
               value={values[field.name]}
               error={errors[field.name]}
@@ -253,6 +254,7 @@ function Field({
           value={String(value ?? "")}
           onChange={(event) => onChange(event.target.value)}
         />
+        {field.hint ? <span className="text-xs text-ink-muted">{field.hint}</span> : null}
         {error ? <span className="text-xs text-red-700">{error}</span> : null}
       </label>
     );
@@ -284,6 +286,7 @@ function Field({
             </option>
           ))}
         </select>
+        {field.hint ? <span className="text-xs text-ink-muted">{field.hint}</span> : null}
         {error ? <span className="text-xs text-red-700">{error}</span> : null}
       </label>
     );

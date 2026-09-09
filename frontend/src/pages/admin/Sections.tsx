@@ -6,6 +6,12 @@ import type { CmsSection } from "@/types/content";
 const isMap = (values: Record<string, string | number | boolean>) =>
   values.type === "NEPAL_MAP" || values.type === "GALLERY";
 const isRemittance = (values: Record<string, string | number | boolean>) => values.type === "REMITTANCE";
+const isHero = (values: Record<string, string | number | boolean>) => values.type === "HERO";
+const isWhy = (values: Record<string, string | number | boolean>) => values.type === "WHY_CHOOSE";
+const isStats = (values: Record<string, string | number | boolean>) => values.type === "STATS";
+const isTestimonials = (values: Record<string, string | number | boolean>) => values.type === "TESTIMONIALS";
+const isGenericItems = (values: Record<string, string | number | boolean>) =>
+  !isHero(values) && !isWhy(values) && !isStats(values) && !isRemittance(values) && !isTestimonials(values);
 
 const types = [
   { value: "HERO", label: "Hero" },
@@ -18,6 +24,7 @@ const types = [
   { value: "GALLERY", label: "Gallery" },
   { value: "PARTNERS", label: "Partners" },
   { value: "NEWS", label: "News" },
+  { value: "TESTIMONIALS", label: "Testimonials" },
   { value: "BRANCH_FINDER", label: "Agent finder" },
   { value: "CONTACT_CTA", label: "Contact banner" },
   { value: "CUSTOM", label: "Custom HTML" }
@@ -44,11 +51,28 @@ function cubeWordFrom(item?: CmsSection) {
   return "";
 }
 
+function itemsJsonFrom(item?: CmsSection) {
+  const items = Array.isArray(item?.items) ? item.items : [];
+  if (item?.type === "HERO") {
+    const chips = items.filter(
+      (row) => row && typeof row === "object" && "title" in row && !("value" in row)
+    );
+    return JSON.stringify(
+      chips.length
+        ? chips
+        : [{ title: "Licensed operator" }, { title: "NRB-referenced rates" }, { title: "Nationwide payout" }],
+      null,
+      2
+    );
+  }
+  return item?.items ? JSON.stringify(item.items, null, 2) : "[]";
+}
+
 export default function Sections() {
   return (
     <ResourceCrud<CmsSection>
       title="Sections"
-      description="Every homepage block is editable here: copy, photos, buttons, order, and visibility."
+      description="Every homepage block is fully editable here: heading, punch line, photos, buttons, cards, order, and visibility."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Sections" }]}
       queryKey="admin-sections"
       list={adminApi.sections.list}
@@ -65,10 +89,19 @@ export default function Sections() {
       fields={[
         { name: "key", label: "Key" },
         { name: "type", label: "Type", type: "select", options: types },
-        { name: "icon", label: "Kicker", hint: "Small red label above the heading (Nepal map, Why, custom blocks)." },
+        { name: "icon", label: "Kicker", hint: "Small red label above the heading. Used on Why, Remittance, and Nepal map." },
         { name: "heading", label: "Heading" },
-        { name: "subheading", label: "Subheading" },
-        { name: "description", label: "Description", type: "textarea" },
+        {
+          name: "subheading",
+          label: "Punch line",
+          hint: "Hero: small line above the title. Remittance: line under the letter cubes. Other sections: line under the heading."
+        },
+        {
+          name: "description",
+          label: "Supporting copy",
+          type: "textarea",
+          hint: "Optional extra paragraph. Leave empty if the punch line is enough."
+        },
         {
           name: "backgroundUrl",
           label: "Background image",
@@ -113,9 +146,38 @@ export default function Sections() {
           showWhen: isMap
         },
         {
+          name: "collage1",
+          label: "Photo 1",
+          type: "image",
+          folder: "testimonials",
+          hint: "Lead story photo. Upload a real customer photo here.",
+          showWhen: isTestimonials
+        },
+        {
+          name: "collage2",
+          label: "Photo 2",
+          type: "image",
+          folder: "testimonials",
+          showWhen: isTestimonials
+        },
+        {
+          name: "collage3",
+          label: "Photo 3",
+          type: "image",
+          folder: "testimonials",
+          showWhen: isTestimonials
+        },
+        {
+          name: "collage4",
+          label: "Photo 4",
+          type: "image",
+          folder: "testimonials",
+          showWhen: isTestimonials
+        },
+        {
           name: "cubeWord",
           label: "Letter cubes word",
-          hint: "Spelled on the dice, e.g. REMITTANCE or REMIT2NEPAL. Hover each letter on the site.",
+          hint: "Letters on the cubes, e.g. REMITTANCE or REMIT2NEPAL.",
           showWhen: isRemittance
         },
         { name: "buttonLabel", label: "Button label" },
@@ -134,9 +196,43 @@ export default function Sections() {
         },
         {
           name: "itemsJson",
+          id: "items-hero",
+          label: "Trust chips JSON",
+          type: "textarea",
+          hint: 'Hero line under the buttons: [{ "title": "Licensed operator" }, { "title": "NRB-referenced rates" }]',
+          showWhen: isHero
+        },
+        {
+          name: "itemsJson",
+          id: "items-why",
+          label: "Why cards JSON",
+          type: "textarea",
+          hint: 'Six cards: [{ "title": "Secure", "description": "Regulated operations..." }]',
+          showWhen: isWhy
+        },
+        {
+          name: "itemsJson",
+          id: "items-stats",
+          label: "Stats JSON",
+          type: "textarea",
+          hint: '[{ "label": "Branches", "value": "120+" }]',
+          showWhen: isStats
+        },
+        {
+          name: "itemsJson",
+          id: "items-voices",
+          label: "Testimonials JSON",
+          type: "textarea",
+          hint: '[{ "name": "Sita Gurung", "headline": "English title", "headlineNe": "नेपाली शीर्षक", "quote": "...", "quoteNe": "...", "imageUrl": "/uploads/..." }]',
+          showWhen: isTestimonials
+        },
+        {
+          name: "itemsJson",
+          id: "items-generic",
           label: "Items JSON",
           type: "textarea",
-          hint: "Stats, Why cards, or extra collage tiles: [{ \"imageUrl\": \"/uploads/...\", \"alt\": \"Family\", \"title\": \"Home\" }]"
+          hint: "Optional extra items for this block.",
+          showWhen: isGenericItems
         },
         { name: "overlay", label: "Overlay", type: "checkbox" },
         { name: "enabled", label: "Enabled", type: "checkbox" },
@@ -163,7 +259,7 @@ export default function Sections() {
           secondaryButtonLabel: item?.secondaryButtonLabel ?? "",
           secondaryButtonUrl: item?.secondaryButtonUrl ?? "",
           alignment: item?.alignment ?? "left",
-          itemsJson: item?.items ? JSON.stringify(item.items, null, 2) : "[]",
+          itemsJson: itemsJsonFrom(item),
           overlay: item?.overlay ?? true,
           enabled: item?.enabled ?? true,
           displayOrder: item?.displayOrder ?? 0
@@ -179,7 +275,7 @@ export default function Sections() {
         const collage = [values.collage1, values.collage2, values.collage3, values.collage4]
           .map((value) => String(value ?? "").trim())
           .filter(Boolean);
-        if (collage.length && (values.type === "NEPAL_MAP" || values.type === "GALLERY")) {
+        if (collage.length && (values.type === "NEPAL_MAP" || values.type === "GALLERY" || values.type === "TESTIMONIALS")) {
           const existing = Array.isArray(items) ? items : [];
           items = collage.map((imageUrl, index) => {
             const row = existing[index];

@@ -39,9 +39,14 @@ export const branchFormSchema = z.object({
 
 export const newsFormSchema = z.object({
   title: z.string().min(3),
+  titleNe: optionalText,
   slug: optionalText,
+  punchLine: optionalText,
+  punchLineNe: optionalText,
   summary: optionalText,
+  summaryNe: optionalText,
   content: optionalText,
+  contentNe: optionalText,
   featuredImage: optionalText,
   category: z.enum(["NEWS", "NOTICE", "ALERT"]).optional(),
   publishedAt: optionalText,
@@ -124,6 +129,7 @@ export const sectionFormSchema = z.object({
     "REMITTANCE",
     "PARTNERS",
     "NEWS",
+    "TESTIMONIALS",
     "BRANCH_FINDER",
     "CONTACT_CTA",
     "CUSTOM"

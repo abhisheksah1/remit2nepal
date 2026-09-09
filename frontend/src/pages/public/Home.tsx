@@ -4,7 +4,6 @@ import { SectionRenderer } from "@/components/public/SectionRenderer";
 import { SeoHead } from "@/components/public/SeoHead";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { ChatAssist } from "@/components/public/ChatAssist";
 import type { StatItem } from "@/types/content";
 
 export default function Home() {
@@ -23,7 +22,12 @@ export default function Home() {
   }
 
   const sections = [...home.data.sections]
-    .filter((section) => section.type !== "PARTNERS")
+    .filter(
+      (section) =>
+        section.type !== "NEPAL_MAP" &&
+        section.type !== "CONTACT_CTA" &&
+        section.type !== "NEWS"
+    )
     .sort((a, b) => a.displayOrder - b.displayOrder);
   const statsSection = sections.find((section) => section.type === "STATS");
   const stats = Array.isArray(statsSection?.items) ? (statsSection.items as StatItem[]) : [];
@@ -43,7 +47,6 @@ export default function Home() {
           gallery={home.data.gallery}
         />
       ))}
-      <ChatAssist />
     </>
   );
 }

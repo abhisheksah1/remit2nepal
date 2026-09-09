@@ -27,9 +27,10 @@ export function WhyChoose({ section }: { section: CmsSection }) {
       <div className="why-mountains" aria-hidden />
       <div className="why-wrap">
         <header className="why-head">
-          <p className="why-kicker">Why Remit2Nepal</p>
+          <p className="why-kicker">{section.icon || "Why Remit2Nepal"}</p>
           <h2 id="why-heading">{section.heading || "Why families choose Remit2Nepal"}</h2>
           {section.subheading ? <p className="why-lede">{section.subheading}</p> : null}
+          {section.description ? <p className="why-lede">{section.description}</p> : null}
         </header>
         <div className="why-grid">
           {items.map((item, index) => {

@@ -41,7 +41,12 @@ export const defaultSections = [
     buttonUrl: "/exchange-rate",
     secondaryButtonLabel: "Our Agent",
     secondaryButtonUrl: "/branches",
-    displayOrder: 1
+    displayOrder: 1,
+    items: [
+      { title: "Licensed operator" },
+      { title: "NRB-referenced rates" },
+      { title: "Nationwide payout" }
+    ]
   },
   {
     key: "stats",
@@ -76,8 +81,8 @@ export const defaultSections = [
     key: "remittance-stage",
     type: "REMITTANCE",
     heading: "Remittance to Nepal",
-    subheading: "Earn abroad, support home — into NPR through a licensed nationwide payout network.",
-    description: "Hover each letter. The word is the work: regulated corridors, published rates, and families waiting on the other side.",
+    subheading: "Earn abroad. Support home. Paid out in NPR.",
+    description: "",
     icon: "Licensed transfer",
     overlay: true,
     alignment: "center",
@@ -90,6 +95,8 @@ export const defaultSections = [
     key: "why",
     type: "WHY_CHOOSE",
     heading: "Why families choose Remit2Nepal",
+    icon: "Why Remit2Nepal",
+    subheading: "Regulated. Nationwide. Built for families.",
     displayOrder: 5,
     items: [
       { title: "Secure", description: "Regulated operations, audited processes, and protected customer data." },
@@ -105,13 +112,14 @@ export const defaultSections = [
     type: "NEPAL_MAP",
     heading: "People and families across Nepal",
     subheading: "Earners abroad, families at home — from the Himalaya to the Terai.",
-    description: "Illustrated scenes of Nepali families, workers, and payouts — clipped to the map of Nepal.",
+    description: "",
     icon: "Our Nepal",
-    backgroundUrl: "/images/nepal-map/cityscape.svg",
-    overlay: true,
+    backgroundUrl: "",
+    overlay: false,
     alignment: "center",
     buttonLabel: "View gallery",
     buttonUrl: "/gallery",
+    enabled: false,
     displayOrder: 6,
     items: [
       { imageUrl: "/images/nepal-map/scene-office.svg", alt: "Nepali professional on a call", title: "Working abroad" },
@@ -123,17 +131,64 @@ export const defaultSections = [
   {
     key: "partners",
     type: "PARTNERS",
-    heading: "Become a partner",
-    subheading: "International sending corridors and national payout partners across Nepal.",
-    displayOrder: 7
+    heading: "Global remittance partners",
+    icon: "Our network",
+    subheading: "हाम्रा विश्वव्यापी साझेदार",
+    description: "Licensed desks that send money home.",
+    buttonLabel: "Become a Agent",
+    buttonUrl: "/partners",
+    displayOrder: 5.5
   },
   {
     key: "news",
     type: "NEWS",
     heading: "News and notices",
+    icon: "Desk",
+    subheading: "Published for families and agents.",
     buttonLabel: "All notices",
     buttonUrl: "/news",
-    displayOrder: 8
+    displayOrder: 11
+  },
+  {
+    key: "testimonials",
+    type: "TESTIMONIALS",
+    heading: "Stories from the corridor",
+    icon: "Testimonials",
+    subheading: "Families who send. Families who receive.",
+    alignment: "center",
+    displayOrder: 8,
+    items: [
+      {
+        name: "Sita Gurung",
+        title: "Receiver",
+        location: "Pokhara",
+        headline: "The money reached home the same afternoon.",
+        headlineNe: "सोही दिन दिउँसो पैसा घर आयो।",
+        quote: "I did not have to wait at the branch twice. The payout was ready, and the staff explained every step.",
+        quoteNe: "शाखामा दुईपटक कुर्नु परेन। पैसा तयार थियो र कर्मचारीले हरेक चरण स्पष्टसँग बुझाए।",
+        imageUrl: "/images/testimonials/portrait-sita.svg"
+      },
+      {
+        name: "Ramesh Adhikari",
+        title: "Sender",
+        location: "Doha to Kathmandu",
+        headline: "What I saw on the rate page is what my family received.",
+        headlineNe: "दर पृष्ठमा देखेको रकम परिवारले पायो।",
+        quote: "I checked the published rate before I sent. There was no surprise at the counter in Kathmandu.",
+        quoteNe: "पठाउनुअघि प्रकाशित दर हेरेँ। काठमाडौं काउन्टरमा कुनै अनपेक्षित कुरा भएन।",
+        imageUrl: "/images/testimonials/portrait-ramesh.svg"
+      },
+      {
+        name: "Amina Khatun",
+        title: "Receiver",
+        location: "Biratnagar",
+        headline: "The agent called the moment the transfer was ready.",
+        headlineNe: "ट्रान्सफर तयार हुनेबित्तिकै एजेन्टले फोन गरे।",
+        quote: "Clear, fast, and close to home. I collected the funds the same day.",
+        quoteNe: "छिटो, स्पष्ट र घर नजिक। सोही दिन रकम बुझिलिएँ।",
+        imageUrl: "/images/testimonials/portrait-amina.svg"
+      }
+    ]
   },
   {
     key: "branches",
@@ -306,9 +361,15 @@ export const defaultFaqs = [
 export const defaultNews = [
   {
     title: "NRB rate desk now publishes company vs official comparison",
+    titleNe: "एनआरबी दर डेस्कले कम्पनी र आधिकारिक दर तुलना सार्वजनिक गर्‍यो",
     slug: "nrb-rate-desk-comparison",
+    punchLine: "Official NRB rates sit beside our customer rates — nothing hidden.",
+    punchLineNe: "आधिकारिक एनआरबी दर र हाम्रो ग्राहक दर सँगै — केही लुकाइएको छैन।",
     summary: "Customers can view official NRB rates alongside Remit2Nepal customer rates.",
+    summaryNe: "ग्राहकले नेपाल राष्ट्र बैंकको आधिकारिक दर र रेमिट२नेपालको ग्राहक दर सँगै हेर्न सक्छन्।",
     content: "<p>The public exchange-rate page now distinguishes official Nepal Rastra Bank rates from company customer rates.</p>",
+    contentNe: "<p>सार्वजनिक विनिमय दर पृष्ठमा अब नेपाल राष्ट्र बैंकको आधिकारिक दर र कम्पनीको ग्राहक दर छुट्याएर देखाइन्छ।</p>",
+    featuredImage: "/images/news/cover-rates.svg",
     category: "NEWS",
     status: "PUBLISHED",
     author: "Treasury Desk",
@@ -316,9 +377,15 @@ export const defaultNews = [
   },
   {
     title: "Dashain payout hours extended at selected branches",
+    titleNe: "दशैंमा छानिएका शाखामा भुक्तानी समय थपियो",
     slug: "dashain-payout-hours",
+    punchLine: "Festival hours, published before you travel.",
+    punchLineNe: "चाडपर्वको समय यात्रा गर्नुअघि नै सार्वजनिक।",
     summary: "Selected high-volume branches will operate extended hours during the festival period.",
+    summaryNe: "चाडपर्वको समयमा छानिएका व्यस्त शाखाले थप समयसम्म सेवा दिनेछन्।",
     content: "<p>Please check branch pages for holiday hours before travelling.</p>",
+    contentNe: "<p>यात्रा गर्नुअघि शाखा पृष्ठमा बिदाको समय जाँच गर्नुहोस्।</p>",
+    featuredImage: "/images/news/cover-hours.svg",
     category: "NOTICE",
     status: "PUBLISHED",
     author: "Operations",

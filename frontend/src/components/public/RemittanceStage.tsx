@@ -99,8 +99,10 @@ export function RemittanceStage({ section }: { section: CmsSection }) {
           })}
         </div>
 
-        {section.subheading ? <p className="remittance-lede">{section.subheading}</p> : null}
-        {section.description ? <p className="remittance-body">{section.description}</p> : null}
+        {section.subheading ? <p className="remittance-punch">{section.subheading}</p> : null}
+        {section.description && !/hover each letter/i.test(section.description) ? (
+          <p className="remittance-body">{section.description}</p>
+        ) : null}
 
         {section.buttonUrl ? (
           <Link className="remittance-cta" to={section.buttonUrl}>

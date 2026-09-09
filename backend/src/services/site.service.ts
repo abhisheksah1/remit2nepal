@@ -13,22 +13,117 @@ import { AboutCompany } from "../models/about-company.model.js";
 import { TeamMember } from "../models/team-member.model.js";
 import { Page } from "../models/page.model.js";
 import { publicRates } from "./exchange-rate.service.js";
-import { defaultSections } from "../database/seed-content.js";
+import { defaultNews, defaultSections } from "../database/seed-content.js";
 
 const nepalMapSeed = defaultSections.find((item) => item.key === "nepal-people");
 const remittanceSeed = defaultSections.find((item) => item.key === "remittance-stage");
+const testimonialsSeed = defaultSections.find((item) => item.key === "testimonials");
+const partnersSeed = defaultSections.find((item) => item.key === "partners");
 
 async function ensureSection(seed?: (typeof defaultSections)[number]) {
   if (!seed) return;
   try {
-    await Section.updateOne({ key: seed.key }, { $setOnInsert: { ...seed, enabled: true } }, { upsert: true });
+    await Section.updateOne({ key: seed.key }, { $setOnInsert: { ...seed, enabled: seed.enabled ?? true } }, { upsert: true });
+  } catch {
+    return;
+  }
+}
+
+function isHoverInstruction(value?: string) {
+  return /hover each letter/i.test(String(value || ""));
+}
+
+async function refreshSectionCopy() {
+  try {
+    const remittance = await Section.findOne({ key: "remittance-stage" });
+    if (remittance && isHoverInstruction(remittance.description)) {
+      remittance.description = "";
+      if (!remittance.subheading || /into NPR through a licensed/i.test(remittance.subheading)) {
+        remittance.subheading = "Earn abroad. Support home. Paid out in NPR.";
+      }
+      await remittance.save();
+    }
+
+    await Section.updateOne(
+      { key: "why", $or: [{ icon: { $exists: false } }, { icon: "" }, { icon: null }] },
+      { $set: { icon: "Why Remit2Nepal" } }
+    );
+    await Section.updateOne(
+      { key: "why", $or: [{ subheading: { $exists: false } }, { subheading: "" }, { subheading: null }] },
+      { $set: { subheading: "Regulated. Nationwide. Built for families." } }
+    );
+    await Section.updateOne(
+      { key: "news", $or: [{ subheading: { $exists: false } }, { subheading: "" }, { subheading: null }] },
+      { $set: { icon: "Desk", subheading: "Published for families and agents." } }
+    );
+    await Section.updateOne(
+      { key: "partners" },
+      {
+        $set: { enabled: true, type: "PARTNERS" },
+        $setOnInsert: {
+          heading: "Global remittance partners",
+          icon: "Our network",
+          subheading: "हाम्रा विश्वव्यापी साझेदार",
+          description: "Licensed desks that send money home.",
+          buttonLabel: "Become a Agent",
+          buttonUrl: "/partners",
+          displayOrder: 5.5
+        }
+      },
+      { upsert: true }
+    );
+    await Section.updateOne(
+      { key: "partners", heading: { $in: ["Become a partner", ""] } },
+      {
+        $set: {
+          heading: "Global remittance partners",
+          icon: "Our network",
+          subheading: "हाम्रा विश्वव्यापी साझेदार",
+          description: "Licensed desks that send money home.",
+          buttonLabel: "Become a Agent",
+          buttonUrl: "/partners",
+          displayOrder: 5.5
+        }
+      }
+    );
+
+    const published = await News.find({ slug: { $in: defaultNews.map((item) => item.slug) } });
+    await Promise.all(
+      published.map((row) => {
+        const seed = defaultNews.find((item) => item.slug === row.slug);
+        if (!seed) return null;
+        if (!row.titleNe) row.titleNe = seed.titleNe;
+        if (!row.punchLine) row.punchLine = seed.punchLine;
+        if (!row.punchLineNe) row.punchLineNe = seed.punchLineNe;
+        if (!row.summaryNe) row.summaryNe = seed.summaryNe;
+        if (!row.contentNe) row.contentNe = seed.contentNe;
+        if (!row.featuredImage) row.featuredImage = seed.featuredImage;
+        return row.isModified() ? row.save() : null;
+      })
+    );
+
+    const voices = await Section.findOne({ key: "testimonials" });
+    const voiceSeed = testimonialsSeed?.items;
+    if (voices && Array.isArray(voices.items) && Array.isArray(voiceSeed) && voices.items.length) {
+      const first = voices.items[0] as { headline?: string };
+      if (!first.headline) {
+        voices.items = voiceSeed;
+        await voices.save();
+      }
+    }
   } catch {
     return;
   }
 }
 
 export async function ensureNepalMapSection() {
-  await Promise.all([ensureSection(nepalMapSeed), ensureSection(remittanceSeed)]);
+  await Promise.all([
+    ensureSection(nepalMapSeed),
+    ensureSection(remittanceSeed),
+    ensureSection(testimonialsSeed),
+    ensureSection(partnersSeed)
+  ]);
+  await refreshSectionCopy();
 }
 
 export async function getPublicSite() {

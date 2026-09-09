@@ -168,7 +168,19 @@ async function seed() {
   await PartnershipSetting.updateOne({ key: "default" }, { $setOnInsert: { key: "default" } }, { upsert: true });
   await Section.updateOne(
     { key: "partners" },
-    { $set: { heading: "Become a partner", subheading: "International sending corridors and national payout partners across Nepal." } }
+    {
+      $set: {
+        enabled: true,
+        type: "PARTNERS",
+        heading: "Global remittance partners",
+        icon: "Our network",
+        subheading: "हाम्रा विश्वव्यापी साझेदार",
+        description: "Licensed desks that send money home.",
+        buttonLabel: "Become a Agent",
+        buttonUrl: "/partners",
+        displayOrder: 5.5
+      }
+    }
   );
 
   await AboutCompany.updateOne(

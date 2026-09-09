@@ -65,8 +65,8 @@ export const teamCatalog = createResourceService(TeamMember, {
 
 export const newsCatalog = createResourceService(News, {
   module: "news",
-  searchFields: ["title", "summary", "category"],
-  richTextFields: ["content"],
+  searchFields: ["title", "titleNe", "summary", "summaryNe", "punchLine", "category"],
+  richTextFields: ["content", "contentNe"],
   publicFilter: { status: "PUBLISHED" }
 });
 

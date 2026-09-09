@@ -3,9 +3,14 @@ import { Schema, model, type InferSchemaType } from "mongoose";
 const newsSchema = new Schema(
   {
     title: { type: String, required: true, trim: true },
+    titleNe: { type: String, default: "" },
     slug: { type: String, required: true, unique: true, lowercase: true },
+    punchLine: { type: String, default: "" },
+    punchLineNe: { type: String, default: "" },
     summary: { type: String, default: "" },
+    summaryNe: { type: String, default: "" },
     content: { type: String, default: "" },
+    contentNe: { type: String, default: "" },
     featuredImage: { type: String, default: "" },
     category: { type: String, enum: ["NEWS", "NOTICE", "ALERT"], default: "NEWS" },
     publishedAt: { type: Date },

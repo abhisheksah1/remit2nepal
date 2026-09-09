@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" fill="none">
+  <rect width="1200" height="750" fill="#151746"/>
+  <circle cx="600" cy="360" r="210" fill="#2E3192"/>
+  <circle cx="600" cy="360" r="168" fill="#1C1E5C"/>
+  <circle cx="600" cy="360" r="14" fill="#E31E24"/>
+  <path d="M600 230 V360 L710 410" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+  <rect x="430" y="590" width="340" height="56" rx="8" fill="#E31E24"/>
+  <text x="600" y="628" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="22" letter-spacing="3">EXTENDED HOURS</text>
+</svg>

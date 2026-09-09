@@ -4072,3 +4072,472 @@ select:-webkit-autofill {
     transform: none;
   }
 }
+
+.paper-desk {
+  color: #1c2250;
+}
+
+.paper-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #2e3192;
+}
+
+.paper-flag {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #e31e24;
+}
+
+.paper-masthead h2 {
+  margin: 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #2e3192;
+}
+
+.paper-deck {
+  margin: 0.45rem 0 0;
+  font-size: 1.05rem;
+  color: #2e3192;
+}
+
+.paper-all {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e31e24;
+}
+
+.paper-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.paper-lead,
+.paper-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(46, 49, 146, 0.1);
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.paper-lead:hover,
+.paper-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px -28px rgba(46, 49, 146, 0.55);
+}
+
+.paper-photo {
+  margin: 0;
+  min-height: 11rem;
+  background: #2e3192;
+}
+
+.paper-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.paper-lead .paper-photo {
+  min-height: 16rem;
+}
+
+.paper-copy {
+  padding: 1.15rem 1.2rem 1.3rem;
+}
+
+.paper-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e31e24;
+}
+
+.paper-copy h3 {
+  margin: 0.45rem 0 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: #2e3192;
+}
+
+.paper-lead .paper-copy h3 {
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+}
+
+.paper-ne,
+.prose-r2n.is-ne,
+.paper-punch.is-ne,
+.paper-summary.is-ne {
+  font-family: Hind, "Noto Serif Devanagari", "Nirmala UI", "Mangal", sans-serif;
+}
+
+.paper-ne {
+  margin: 0.4rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #25277a;
+}
+
+.paper-punch {
+  margin: 0.75rem 0 0;
+  padding-left: 0.85rem;
+  border-left: 3px solid #e31e24;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.45;
+  color: #1c2250;
+}
+
+.paper-punch.is-ne {
+  font-style: normal;
+  font-size: 1rem;
+  color: #3a3da8;
+}
+
+.paper-summary {
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #5b6576;
+}
+
+.paper-stack {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.paper-empty {
+  color: #5b6576;
+}
+
+.paper-story-photo {
+  width: 100%;
+  margin-top: 1.5rem;
+  border-radius: 0.4rem;
+}
+
+.paper-ne-block {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(46, 49, 146, 0.12);
+}
+
+@media (min-width: 900px) {
+  .paper-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.9fr);
+    align-items: stretch;
+  }
+
+  .paper-lead .paper-photo {
+    min-height: 18rem;
+  }
+
+  .paper-card {
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+  }
+
+  .paper-card .paper-photo {
+    min-height: 100%;
+  }
+
+  .paper-card .paper-copy {
+    padding: 0.95rem 1rem;
+  }
+
+  .paper-card .paper-copy h3 {
+    font-size: 1.15rem;
+  }
+}
+
+.voices {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+  background: #fff;
+}
+
+.voices-lead {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.voices-spine {
+  display: none;
+  width: 2.65rem;
+  min-height: 18rem;
+  align-items: center;
+  justify-content: center;
+  background: #2e3192;
+}
+
+.voices-spine span {
+  display: block;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}
+
+.voices-shot {
+  margin: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #e4e5f5;
+}
+
+.voices-shot.is-lead {
+  width: min(100%, 22rem);
+}
+
+.voices-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.voices-shot span {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: #2e3192;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 2.4rem;
+}
+
+.voices-copy {
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.voices-title {
+  margin: 0;
+  max-width: 18ch;
+  font-family: Outfit, system-ui, sans-serif;
+  font-size: clamp(1.65rem, 3.4vw, 2.55rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #2a2a2a;
+}
+
+.voices-title.is-small {
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  max-width: 22ch;
+}
+
+.voices-title-ne {
+  margin: 0.7rem 0 0;
+  max-width: 22ch;
+  font-family: "Noto Serif Devanagari", "Hind", "Nirmala UI", serif;
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2e3192;
+}
+
+.voices-body {
+  margin: 1.05rem 0 0;
+  max-width: 38rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #4a4a4a;
+}
+
+.voices-body-ne {
+  margin: 0.65rem 0 0;
+  max-width: 38rem;
+  font-family: Hind, "Noto Serif Devanagari", "Nirmala UI", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.75;
+  color: #2e3192;
+}
+
+.voices-by {
+  margin: 1.15rem 0 0;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: #8a8a8a;
+}
+
+.voices-more {
+  display: grid;
+  gap: 2rem 1.5rem;
+  margin-top: 2.75rem;
+}
+
+.voices-item {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .voices-lead {
+    grid-template-columns: 2.65rem minmax(16rem, 22rem) minmax(0, 1fr);
+    gap: 1.75rem 2rem;
+  }
+
+  .voices-spine {
+    display: flex;
+  }
+
+  .voices-more {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: calc(2.65rem + 2rem);
+  }
+
+  .voices-item {
+    grid-template-columns: 10.5rem minmax(0, 1fr);
+    gap: 1.15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .voices {
+    padding: 3rem 2rem 5rem;
+  }
+}
+
+.corridor-partners {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
+  border-top: 1px solid rgba(46, 49, 146, 0.06);
+}
+
+.corridor-partners-wrap {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+  padding: 3.25rem 1rem 3.6rem;
+}
+
+.corridor-partners-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-bottom: 1.75rem;
+}
+
+.corridor-partners-kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #e31e24;
+}
+
+.corridor-partners-head h2 {
+  margin: 0.45rem 0 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(1.85rem, 3.6vw, 2.7rem);
+  line-height: 1.15;
+  color: #2e3192;
+}
+
+.corridor-partners-ne {
+  margin: 0.45rem 0 0;
+  font-family: "Noto Serif Devanagari", Hind, "Nirmala UI", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #25277a;
+}
+
+.corridor-partners-deck {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: #5b6576;
+}
+
+.corridor-partners-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.7rem;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  background: #e31e24;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.corridor-partners-cta:hover {
+  background: #c4191f;
+}
+
+.corridor-logo-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.corridor-logo {
+  display: grid;
+  place-items: center;
+  min-height: 5.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(46, 49, 146, 0.08);
+  background: #fff;
+  text-decoration: none;
+}
+
+.corridor-logo img {
+  max-width: 100%;
+  max-height: 2.6rem;
+  object-fit: contain;
+}
+
+.corridor-logo span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  color: #2e3192;
+}
+
+.corridor-partners-empty {
+  color: #5b6576;
+}
+
+@media (min-width: 768px) {
+  .corridor-logo-board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .corridor-partners-wrap {
+    padding: 3.75rem 2rem 4rem;
+  }
+
+  .corridor-logo-board {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
