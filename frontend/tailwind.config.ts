@@ -6,37 +6,37 @@ export default {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#0A1628",
-          50: "#F2F5F8",
-          100: "#E4E9F0",
-          200: "#C5D0DE",
-          300: "#8FA3BC",
-          400: "#5B7394",
-          500: "#3A506B",
-          600: "#243447",
-          700: "#162233",
-          800: "#0F1A2A",
-          900: "#0A1628"
+          DEFAULT: "#2E3192",
+          50: "#F3F3FA",
+          100: "#E4E5F5",
+          200: "#C5C6EA",
+          300: "#8F91D0",
+          400: "#5B5DB8",
+          500: "#3A3DA8",
+          600: "#2E3192",
+          700: "#25277A",
+          800: "#1C1E5C",
+          900: "#151746"
         },
         gold: {
-          DEFAULT: "#C4A35A",
-          50: "#FBF7EE",
-          100: "#F4EBD4",
-          200: "#E8D5A8",
-          300: "#D8BC78",
-          400: "#C4A35A",
-          500: "#A8863D",
-          600: "#866A2E",
-          700: "#655023"
+          DEFAULT: "#E31E24",
+          50: "#FDF2F2",
+          100: "#F8D5D6",
+          200: "#F0A8AB",
+          300: "#E56B70",
+          400: "#E53B40",
+          500: "#E31E24",
+          600: "#C4191F",
+          700: "#9B1418"
         },
         cream: {
-          DEFAULT: "#F4F0E6",
-          50: "#FBF9F4",
-          100: "#F4F0E6",
-          200: "#E8E0CC"
+          DEFAULT: "#F5F7FB",
+          50: "#FBFCFE",
+          100: "#F5F7FB",
+          200: "#E6EAF3"
         },
         ink: {
-          DEFAULT: "#1A2332",
+          DEFAULT: "#1A1B4A",
           muted: "#4A5568"
         }
       },
@@ -45,11 +45,11 @@ export default {
         sans: ["Outfit", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        card: "0 18px 50px -24px rgba(10, 22, 40, 0.35)",
-        gold: "0 0 0 1px rgba(196, 163, 90, 0.28)"
+        card: "0 18px 50px -24px rgba(46, 49, 146, 0.35)",
+        gold: "0 0 0 1px rgba(227, 30, 36, 0.28)"
       },
       maxWidth: {
-        site: "1180px"
+        site: "100%"
       }
     }
   },

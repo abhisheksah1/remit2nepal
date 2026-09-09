@@ -10,7 +10,13 @@ export function csrfMiddleware(req: Request, _res: Response, next: NextFunction)
     return;
   }
   const path = req.originalUrl.split("?")[0] ?? "";
-  if (path.endsWith("/auth/login") || path.endsWith("/auth/refresh") || path.endsWith("/public/contact")) {
+  if (
+    path.endsWith("/auth/login") ||
+    path.endsWith("/auth/refresh") ||
+    path.endsWith("/public/contact") ||
+    path.endsWith("/public/partner-applications") ||
+    path.endsWith("/public/chatbot/ask")
+  ) {
     next();
     return;
   }

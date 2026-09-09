@@ -16,7 +16,8 @@ export const PERMISSIONS = [
   "settings",
   "audit_logs",
   "admins",
-  "documents"
+  "documents",
+  "chatbot"
 ] as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[number];
@@ -39,5 +40,6 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   settings: "Settings",
   audit_logs: "Audit Logs",
   admins: "Administrators",
-  documents: "Documents"
+  documents: "Documents",
+  chatbot: "Chatbot"
 };

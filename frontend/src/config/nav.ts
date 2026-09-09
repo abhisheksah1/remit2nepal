@@ -11,8 +11,10 @@ import {
   Home,
   ImageIcon,
   LayoutDashboard,
+  MessageCircle,
   Newspaper,
   PanelTop,
+  Receipt,
   Settings,
   Shield,
   ShieldCheck,
@@ -52,9 +54,12 @@ export const adminNav: AdminNavGroup[] = [
     label: "Company",
     items: [
       { label: "About", path: "/admin/about", icon: ShieldCheck, permission: "about" },
-      { label: "Management", path: "/admin/team", icon: Users, permission: "about" },
+      { label: "Board & Team", path: "/admin/team", icon: Users, permission: "about" },
       { label: "Partners", path: "/admin/partners", icon: Handshake, permission: "partners" },
+      { label: "Partnership Settings", path: "/admin/partners/settings", icon: SlidersHorizontal, permission: "partners" },
+      { label: "Partner Applications", path: "/admin/partners/applications", icon: FileText, permission: "partners" },
       { label: "Services", path: "/admin/services", icon: Wallet, permission: "services" },
+      { label: "Service Charge", path: "/admin/service-charge", icon: Receipt, permission: "services" },
       { label: "Documents", path: "/admin/documents", icon: FileText, permission: "documents" }
     ]
   },
@@ -76,6 +81,7 @@ export const adminNav: AdminNavGroup[] = [
     items: [
       { label: "News", path: "/admin/news", icon: Newspaper, permission: "news" },
       { label: "FAQ", path: "/admin/faq", icon: CircleHelp, permission: "faq" },
+      { label: "Chatbot", path: "/admin/chatbot", icon: MessageCircle, permission: "chatbot" },
       { label: "Gallery", path: "/admin/gallery", icon: GalleryHorizontal, permission: "gallery" }
     ]
   },

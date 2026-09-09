@@ -15,13 +15,17 @@ import {
   navigationRouter,
   newsRouter,
   pageRouter,
+  partnerApplicationRouter,
   partnerRouter,
+  partnershipSettingsRouter,
   sectionRouter,
+  serviceChargeRouter,
   serviceRouter,
   socialRouter,
   teamRouter
 } from "./cms.routes.js";
 import { publicRouter } from "./public.routes.js";
+import { chatbotAdminRouter, chatbotPublicRouter, chatbotQaRouter, chatbotStepRouter } from "./chatbot.routes.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { requirePasswordReady } from "../middlewares/rbac.middleware.js";
 
@@ -33,6 +37,7 @@ apiRouter.get("/health", (_req, res) => {
 
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/public", publicRouter);
+apiRouter.use("/public/chatbot", chatbotPublicRouter);
 apiRouter.get("/robots.txt", publicApi.robots);
 apiRouter.get("/sitemap.xml", publicApi.sitemap);
 
@@ -46,8 +51,11 @@ apiRouter.use("/seo", seoRouter);
 apiRouter.use("/exchange-rates", exchangeRateRouter);
 apiRouter.use("/nrb", nrbRouter);
 apiRouter.use("/services", serviceRouter);
+apiRouter.use("/service-charges", serviceChargeRouter);
 apiRouter.use("/branches", branchRouter);
 apiRouter.use("/partners", partnerRouter);
+apiRouter.use("/partnership-settings", partnershipSettingsRouter);
+apiRouter.use("/partner-applications", partnerApplicationRouter);
 apiRouter.use("/news", newsRouter);
 apiRouter.use("/faqs", faqRouter);
 apiRouter.use("/gallery", galleryRouter);
@@ -58,5 +66,8 @@ apiRouter.use("/navigation", navigationRouter);
 apiRouter.use("/social", socialRouter);
 apiRouter.use("/team", teamRouter);
 apiRouter.use("/about", aboutRouter);
+apiRouter.use("/chatbot/qa", chatbotQaRouter);
+apiRouter.use("/chatbot/steps", chatbotStepRouter);
+apiRouter.use("/chatbot", chatbotAdminRouter);
 apiRouter.use("/contact", contactRouter);
 apiRouter.use("/media", mediaRouter);

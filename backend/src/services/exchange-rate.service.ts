@@ -30,16 +30,31 @@ export async function upsertCurrency(input: {
 }
 
 export async function listCurrentRates() {
-  return ExchangeRate.find({ status: "ACTIVE" }).sort({ currencyCode: 1 }).lean();
+  const [rates, currencies] = await Promise.all([
+    ExchangeRate.find({ status: "ACTIVE" }).lean(),
+    Currency.find().select("code displayOrder").lean()
+  ]);
+  const order = new Map(currencies.map((item) => [item.code, item.displayOrder ?? 80]));
+  return rates.sort(
+    (a, b) => (order.get(a.currencyCode) ?? 80) - (order.get(b.currencyCode) ?? 80) || a.currencyCode.localeCompare(b.currencyCode)
+  );
 }
 
 export async function publicRates() {
-  const [rates, settings] = await Promise.all([
-    ExchangeRate.find({ status: "ACTIVE" }).sort({ currencyCode: 1 }).lean(),
+  const [rates, currencies, settings] = await Promise.all([
+    ExchangeRate.find({ status: "ACTIVE" }).lean(),
+    Currency.find().select("code status displayOrder").lean(),
     CompanySetting.findOne({ key: "default" }).lean()
   ]);
+  const hidden = new Set(currencies.filter((item) => item.status === "INACTIVE").map((item) => item.code));
+  const order = new Map(currencies.map((item) => [item.code, item.displayOrder ?? 80]));
+  const visible = rates
+    .filter((rate) => !hidden.has(rate.currencyCode))
+    .sort(
+      (a, b) => (order.get(a.currencyCode) ?? 80) - (order.get(b.currencyCode) ?? 80) || a.currencyCode.localeCompare(b.currencyCode)
+    );
   const mode = settings?.publicRateDisplay ?? "BOTH";
-  const latestFetch = rates.reduce<Date | undefined>((latest, rate) => {
+  const latestFetch = visible.reduce<Date | undefined>((latest, rate) => {
     if (!rate.fetchedAt) return latest;
     if (!latest || rate.fetchedAt > latest) return rate.fetchedAt;
     return latest;
@@ -51,7 +66,7 @@ export async function publicRates() {
     lastUpdated: latestFetch ?? null,
     isStale,
     source: "Nepal Rastra Bank",
-    rates: rates.map((rate) => ({
+    rates: visible.map((rate) => ({
       currency: rate.currency,
       currencyCode: rate.currencyCode,
       unit: rate.unit,

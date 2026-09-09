@@ -4,6 +4,10 @@ import type { AdminAccount, PermissionOption } from "@/types/auth";
 import type {
   AboutCompany,
   BranchItem,
+  ChatbotAgentStep,
+  ChatbotKnowledgeDoc,
+  ChatbotQaItem,
+  ChatbotSettings,
   CmsPage,
   CmsSection,
   CompanySettings,
@@ -14,8 +18,13 @@ import type {
   MediaItem,
   NavItem,
   NewsItem,
+  PartnerApplicationItem,
+  PartnerApplicationStatus,
   PartnerItem,
+  PartnershipSettings,
   SeoSettings,
+  ServiceChargePage,
+  ServiceChargeRow,
   ServiceItem,
   SocialLink,
   TeamMember
@@ -103,6 +112,22 @@ export const adminApi = {
     update: (id: string, body: unknown) => patch<PartnerItem>(`/partners/${id}`, body),
     remove: (id: string) => remove<PartnerItem>(`/partners/${id}`)
   },
+  partnership: {
+    settings: () => get<PartnershipSettings>("/partnership-settings"),
+    updateSettings: (body: unknown) => patch<PartnershipSettings>("/partnership-settings", body),
+    uploadAgreement: (slot: string, file: File) => {
+      const form = new FormData();
+      form.append("file", file);
+      return unwrap<PartnershipSettings>(api.post(`/partnership-settings/agreements/${slot}`, form));
+    }
+  },
+  partnerApplications: {
+    list: (params?: ListParams) => unwrap<Paginated<PartnerApplicationItem>>(api.get("/partner-applications", { params })),
+    get: (id: string) => get<PartnerApplicationItem>(`/partner-applications/${id}`),
+    update: (id: string, body: { status?: PartnerApplicationStatus; adminNotes?: string }) =>
+      patch<PartnerApplicationItem>(`/partner-applications/${id}`, body),
+    remove: (id: string) => remove<null>(`/partner-applications/${id}`)
+  },
   news: {
     list: (params?: ListParams) => list<NewsItem>("/news", params),
     get: (id: string) => get<NewsItem>(`/news/${id}`),
@@ -116,6 +141,15 @@ export const adminApi = {
     create: (body: unknown) => create<FaqItem>("/faqs", body),
     update: (id: string, body: unknown) => patch<FaqItem>(`/faqs/${id}`, body),
     remove: (id: string) => remove<FaqItem>(`/faqs/${id}`)
+  },
+  serviceCharges: {
+    list: (params?: ListParams) => list<ServiceChargeRow>("/service-charges", params),
+    get: (id: string) => get<ServiceChargeRow>(`/service-charges/${id}`),
+    create: (body: unknown) => create<ServiceChargeRow>("/service-charges", body),
+    update: (id: string, body: unknown) => patch<ServiceChargeRow>(`/service-charges/${id}`, body),
+    remove: (id: string) => remove<ServiceChargeRow>(`/service-charges/${id}`),
+    page: () => get<ServiceChargePage>("/service-charges/page"),
+    updatePage: (body: unknown) => patch<ServiceChargePage>("/service-charges/page", body)
   },
   gallery: {
     list: (params?: ListParams) => list<GalleryItem>("/gallery", params),
@@ -194,5 +228,30 @@ export const adminApi = {
     saveConfig: (body: unknown) => patch<NrbConfig>("/nrb/config", body),
     sync: () => create<{ status: string; currenciesUpdated?: number }>("/nrb/sync", {}),
     logs: () => get<NrbSyncLog[]>("/nrb/logs")
+  },
+  chatbot: {
+    settings: () => get<ChatbotSettings>("/chatbot/settings"),
+    updateSettings: (body: unknown) => patch<ChatbotSettings>("/chatbot/settings", body),
+    qa: {
+      list: (params?: ListParams) => list<ChatbotQaItem>("/chatbot/qa", params),
+      create: (body: unknown) => create<ChatbotQaItem>("/chatbot/qa", body),
+      update: (id: string, body: unknown) => patch<ChatbotQaItem>(`/chatbot/qa/${id}`, body),
+      remove: (id: string) => remove<ChatbotQaItem>(`/chatbot/qa/${id}`)
+    },
+    steps: {
+      list: (params?: ListParams) => list<ChatbotAgentStep>("/chatbot/steps", params),
+      create: (body: unknown) => create<ChatbotAgentStep>("/chatbot/steps", body),
+      update: (id: string, body: unknown) => patch<ChatbotAgentStep>(`/chatbot/steps/${id}`, body),
+      remove: (id: string) => remove<ChatbotAgentStep>(`/chatbot/steps/${id}`)
+    },
+    knowledge: () => get<ChatbotKnowledgeDoc[]>("/chatbot/knowledge"),
+    uploadKnowledge: (file: File, title: string, category: string) => {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("title", title);
+      form.append("category", category);
+      return unwrap<ChatbotKnowledgeDoc>(api.post("/chatbot/knowledge", form));
+    },
+    removeKnowledge: (id: string) => remove<null>(`/chatbot/knowledge/${id}`)
   }
 };

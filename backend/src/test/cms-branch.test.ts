@@ -90,4 +90,57 @@ describe("branches", () => {
     expect(listed.body.data.total).toBe(1);
     expect(listed.body.data.items[0].province).toBe("Lumbini");
   });
+
+  it("imports agents when the table is below a title row or on a later sheet", async () => {
+    const XLSX = await import("xlsx");
+    const { cookies, csrf } = await loginAs(app, "superadmin", "change-this-password");
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([["Cover"], ["Remit2Nepal agents"]]), "Cover");
+    XLSX.utils.book_append_sheet(
+      workbook,
+      XLSX.utils.aoa_to_sheet([
+        ["Remit2Nepal Pvt. Ltd."],
+        [],
+        ["S.N.", "Name of Agent", "District", "Full Address"],
+        ["1", "Dhangadhi Desk", "Kailali", "Main Road, Dhangadhi"]
+      ]),
+      "List"
+    );
+    const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" }) as Buffer;
+    const imported = await withAuth(request(app).post("/api/v1/branches/import"), cookies, csrf)
+      .attach("file", buffer, "official-list.xlsx");
+    expect(imported.status).toBe(200);
+    expect(imported.body.data.created).toBe(1);
+    const listed = await request(app).get("/api/v1/public/branches?q=Dhangadhi");
+    expect(listed.body.data.total).toBe(1);
+    expect(listed.body.data.items[0].province).toBe("Sudurpashchim");
+  });
+
+  it("imports name-only and combined district/address columns", async () => {
+    const XLSX = await import("xlsx");
+    const { cookies, csrf } = await loginAs(app, "superadmin", "change-this-password");
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(
+      workbook,
+      XLSX.utils.aoa_to_sheet([
+        ["Agent Name", "District / Address"],
+        ["Pokhara Lakeside Desk", "Lakeside Road"],
+        ["Hetauda Counter", "Makwanpur"]
+      ]),
+      "Agents"
+    );
+    const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" }) as Buffer;
+    const imported = await withAuth(request(app).post("/api/v1/branches/import"), cookies, csrf)
+      .attach("file", buffer, "combined.xlsx");
+    expect(imported.status).toBe(200);
+    expect(imported.body.data.created).toBe(2);
+    expect(imported.body.data.errors).toEqual([]);
+
+    const pokhara = await request(app).get("/api/v1/public/branches?q=Lakeside");
+    expect(pokhara.body.data.items[0].district).toBe("Kaski");
+    expect(pokhara.body.data.items[0].address).toBe("Lakeside Road");
+
+    const hetauda = await request(app).get("/api/v1/public/branches?q=Hetauda");
+    expect(hetauda.body.data.items[0].district).toBe("Makwanpur");
+  });
 });

@@ -44,6 +44,22 @@ function isAuthPath(url: string | undefined): boolean {
   return url.includes("/auth/login") || url.includes("/auth/refresh") || url.includes("/auth/logout");
 }
 
+async function readErrorBody(data: unknown): Promise<ApiErrorBody | undefined> {
+  if (!data) return undefined;
+  if (typeof data === "object" && !(data instanceof Blob) && "message" in data) {
+    return data as ApiErrorBody;
+  }
+  if (data instanceof Blob) {
+    try {
+      const text = await data.text();
+      return JSON.parse(text) as ApiErrorBody;
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiErrorBody>) => {
@@ -64,7 +80,7 @@ api.interceptors.response.use(
       }
     }
 
-    const body = error.response?.data;
+    const body = await readErrorBody(error.response?.data);
     throw new ApiError(
       body?.message || error.message || "Request failed",
       status ?? 0,

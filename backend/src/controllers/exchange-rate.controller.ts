@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/async-handler.js";
 import { sendSuccess } from "../utils/api-response.js";
 import * as rateService from "../services/exchange-rate.service.js";
 import { getNrbConfig, syncOfficialRates, updateNrbConfig } from "../services/exchange-rate-sync.service.js";
+import { startNrbExchangeRateJob } from "../jobs/nrb-exchange-rate.job.js";
 import { NrbSyncLog } from "../models/nrb-sync-log.model.js";
 import { parsePagination } from "../utils/pagination.js";
 
@@ -62,7 +63,9 @@ export const nrbConfig = asyncHandler(async (_req: Request, res: Response) => {
 });
 
 export const saveNrbConfig = asyncHandler(async (req: Request, res: Response) => {
-  sendSuccess(res, await updateNrbConfig(req.body, req.user), "NRB settings updated");
+  const config = await updateNrbConfig(req.body, req.user);
+  await startNrbExchangeRateJob();
+  sendSuccess(res, config, "NRB settings updated");
 });
 
 export const nrbSync = asyncHandler(async (req: Request, res: Response) => {

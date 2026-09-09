@@ -4,6 +4,8 @@ const teamMemberSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     title: { type: String, required: true },
+    group: { type: String, enum: ["BOARD", "TEAM"], default: "TEAM" },
+    tier: { type: String, enum: ["LEAD", "STAFF"], default: "STAFF" },
     photoUrl: { type: String, default: "" },
     bio: { type: String, default: "" },
     displayOrder: { type: Number, default: 0 },

@@ -19,7 +19,23 @@ export default function CurrentRates() {
   const { push } = useToast();
   const client = useQueryClient();
   const [editing, setEditing] = useState<ExchangeRate | null>(null);
+  const [search, setSearch] = useState("");
   const query = useQuery({ queryKey: ["admin-rates"], queryFn: adminApi.rates.list });
+  const nrb = useQuery({ queryKey: ["admin-nrb-config"], queryFn: adminApi.nrb.config });
+  const sync = useMutation({
+    mutationFn: adminApi.nrb.sync,
+    onSuccess: async (data) => {
+      push({
+        title: "Live NRB rates updated",
+        description: `${data.currenciesUpdated ?? 0} currencies from the official bulletin`,
+        tone: "success"
+      });
+      await client.invalidateQueries({ queryKey: ["admin-rates"] });
+      await client.invalidateQueries({ queryKey: ["admin-nrb-config"] });
+      await client.invalidateQueries({ queryKey: ["admin-nrb-logs"] });
+    },
+    onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
+  });
   const form = useForm<CompanyRateValues>({ resolver: zodResolver(companyRateSchema) });
 
   const save = useMutation({
@@ -32,15 +48,30 @@ export default function CurrentRates() {
     onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
   });
 
-  const rows = useMemo(() => query.data ?? [], [query.data]);
+  const rows = useMemo(() => {
+    const source = query.data ?? [];
+    const q = search.trim().toLowerCase();
+    if (!q) return source;
+    return source.filter(
+      (row) => row.currencyCode.toLowerCase().includes(q) || row.currency.toLowerCase().includes(q)
+    );
+  }, [query.data, search]);
 
   return (
     <div>
       <PageHeader
         title="Current rates"
-        description="NRB official rates and company customer rates"
+        description={`Live Nepal Rastra Bank bulletin for ${query.data?.length ?? 0} currencies. Company buy/sell can be overridden per corridor.`}
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Current Rates" }]}
+        extra={
+          <Button onClick={() => sync.mutate()} disabled={sync.isPending}>
+            {sync.isPending ? "Fetching NRB…" : "Fetch live NRB rates"}
+          </Button>
+        }
       />
+      <p className="mb-4 text-sm text-ink-muted">
+        Last NRB success {formatDateTime(nrb.data?.lastSuccessfulFetch)} · Automatic hourly fetch when enabled
+      </p>
       <DataTable
         columns={[
           { key: "code", header: "Currency", render: (row) => `${row.currencyCode} · ${row.currency}` },
@@ -75,6 +106,8 @@ export default function CurrentRates() {
         ]}
         rows={rows}
         loading={query.isLoading}
+        search={search}
+        onSearch={setSearch}
         rowKey={(row) => entityId(row) || row.currencyCode}
       />
       <FormDrawer open={Boolean(editing)} title={`Override ${editing?.currencyCode ?? ""}`} onClose={() => setEditing(null)}>

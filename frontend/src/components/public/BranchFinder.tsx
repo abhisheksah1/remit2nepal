@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { MapPin, Search, X } from "lucide-react";
 import { publicApi } from "@/api/public.api";
 import { Button } from "@/components/ui/Button";
@@ -15,13 +15,14 @@ function matchesQuery(value: string, query: string) {
 }
 
 export function BranchFinder({ compact }: { compact?: boolean }) {
-  const [q, setQ] = useState("");
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
+  const [searchParams] = useSearchParams();
+  const [q, setQ] = useState(searchParams.get("q") || "");
+  const [province, setProvince] = useState(searchParams.get("province") || "");
+  const [district, setDistrict] = useState(searchParams.get("district") || "");
 
   const query = useQuery({
     queryKey: ["public", "branches", "all"],
-    queryFn: () => publicApi.branches({ limit: 1000 })
+    queryFn: () => publicApi.branches({ limit: 5000 })
   });
 
   const agents = query.data?.items ?? [];

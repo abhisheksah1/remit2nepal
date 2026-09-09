@@ -13,7 +13,7 @@ const variants: Record<Variant, string> = {
   primary: "bg-navy text-cream hover:bg-navy-700",
   secondary: "bg-white text-navy border border-navy/15 hover:border-gold/60",
   ghost: "bg-transparent text-navy hover:bg-navy-50",
-  gold: "bg-gold text-navy hover:bg-gold-500",
+  gold: "bg-gold text-white hover:bg-gold-600",
   danger: "bg-red-700 text-white hover:bg-red-800",
   navy: "bg-navy-800 text-cream hover:bg-navy-700"
 };

@@ -116,8 +116,8 @@ export default function RateHistory() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="buy" stroke="#0A1628" name="Buy" dot={false} />
-            <Line type="monotone" dataKey="sell" stroke="#C4A35A" name="Sell" dot={false} />
+            <Line type="monotone" dataKey="buy" stroke="#2E3192" name="Buy" dot={false} />
+            <Line type="monotone" dataKey="sell" stroke="#E31E24" name="Sell" dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </Card>

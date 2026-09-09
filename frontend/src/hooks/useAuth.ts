@@ -15,7 +15,9 @@ export function useAuth() {
     queryKey: ["auth", "me"],
     queryFn: authApi.me,
     retry: false,
-    staleTime: 60_000
+    staleTime: 5 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnMount: false
   });
 
   const user: AuthUser | null = query.data?.user ?? null;

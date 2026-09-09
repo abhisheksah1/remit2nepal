@@ -12,13 +12,16 @@ import { DataTable, type Column } from "./DataTable";
 import { FormDrawer } from "./FormDrawer";
 import { PageHeader } from "./PageHeader";
 import { entityId } from "@/utils/cn";
+import { ImageUploadField } from "./ImageUploadField";
 
 export interface FieldSpec {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "url" | "date";
+  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "url" | "date" | "image";
   options?: Array<{ value: string; label: string }>;
   hint?: string;
+  folder?: string;
+  showWhen?: (values: Record<string, string | number | boolean>) => boolean;
 }
 
 export function ResourceCrud<T extends { _id?: string; status?: string }>({
@@ -98,6 +101,7 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
       push({ title: editing ? "Updated" : "Created", tone: "success" });
       setOpen(false);
       await client.invalidateQueries({ queryKey: [queryKey] });
+      await client.invalidateQueries({ queryKey: ["public"] });
     },
     onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
   });
@@ -108,6 +112,7 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
       push({ title: "Deleted", tone: "success" });
       setPendingDelete(null);
       await client.invalidateQueries({ queryKey: [queryKey] });
+      await client.invalidateQueries({ queryKey: ["public"] });
     },
     onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
   });
@@ -177,7 +182,9 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
             save.mutate();
           }}
         >
-          {fields.map((field) => (
+          {fields
+            .filter((field) => !field.showWhen || field.showWhen(values))
+            .map((field) => (
             <Field
               key={field.name}
               field={field}
@@ -248,6 +255,17 @@ function Field({
         />
         {error ? <span className="text-xs text-red-700">{error}</span> : null}
       </label>
+    );
+  }
+  if (field.type === "image") {
+    return (
+      <ImageUploadField
+        label={field.label}
+        value={String(value ?? "")}
+        folder={field.folder ?? "general"}
+        hint={field.hint}
+        onChange={onChange}
+      />
     );
   }
   if (field.type === "select") {

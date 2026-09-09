@@ -15,7 +15,7 @@ export default function BranchDetail() {
     retry: false
   });
 
-  if (query.isLoading) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (query.isLoading) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
   if (!query.data) return <NotFound />;
   const branch = query.data;
 
@@ -23,7 +23,7 @@ export default function BranchDetail() {
     <div className="mx-auto max-w-3xl px-4 py-16">
       <SeoHead title={branch.name} description={`${branch.address}, ${branch.city}`} />
       <Link to="/branches" className="text-sm text-gold">
-        ← All agents
+        ← Our Agent
       </Link>
       <p className="mt-4 text-xs uppercase tracking-wider text-gold">{branch.district}</p>
       <h1 className="mt-2 font-display text-4xl text-navy">{branch.name}</h1>

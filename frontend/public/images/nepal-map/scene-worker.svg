@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="shop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a2d3a"/>
+      <stop offset="100%" stop-color="#12131c"/>
+    </linearGradient>
+    <radialGradient id="spark" cx="0.62" cy="0.42" r="0.5">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="35%" stop-color="#ff7a18" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ff7a18" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#shop)"/>
+  <rect x="0" y="0" width="800" height="560" fill="url(#spark)"/>
+  <rect x="80" y="70" width="220" height="160" rx="6" fill="#3d4254" opacity="0.7"/>
+  <rect x="100" y="90" width="180" height="120" fill="#1a1c24"/>
+  <path d="M0 420 L800 380 L800 560 L0 560Z" fill="#1c1e28"/>
+  <rect x="520" y="200" width="40" height="220" fill="#4a5168"/>
+  <rect x="480" y="250" width="120" height="18" fill="#6a738c"/>
+  <ellipse cx="430" cy="520" rx="160" ry="36" fill="#000" opacity="0.35"/>
+  <path d="M250 430 C250 360 292 310 360 310 C428 310 470 360 470 430 L480 560 L240 560Z" fill="#3a3f4e"/>
+  <path d="M270 430 C270 380 308 348 360 348 C412 348 450 380 450 430 L456 560 L264 560Z" fill="#4c5568"/>
+  <rect x="330" y="360" width="60" height="70" fill="#2e3340"/>
+  <path d="M300 250 C300 210 326 186 360 186 C394 186 420 210 420 250 C420 278 396 300 360 300 C324 300 300 278 300 250Z" fill="#1a1a1a"/>
+  <rect x="318" y="214" width="84" height="54" rx="8" fill="#111"/>
+  <rect x="328" y="224" width="64" height="34" rx="4" fill="#5a2208"/>
+  <rect x="328" y="224" width="64" height="34" rx="4" fill="#ff7a18" opacity="0.35"/>
+  <path d="M318 250 L300 268 L318 262Z" fill="#1a1a1a"/>
+  <path d="M420 268 C460 240 520 250 560 300" fill="none" stroke="#c68642" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="566" cy="308" r="10" fill="#c9cdd6"/>
+  <g fill="#ffb347" stroke="#ffe08a" stroke-width="1">
+    <path d="M560 300 L620 240"/>
+    <path d="M562 312 L640 270"/>
+    <path d="M568 320 L630 330"/>
+    <path d="M558 292 L600 210"/>
+    <path d="M570 306 L650 300"/>
+  </g>
+  <circle cx="620" cy="270" r="6" fill="#fff3c4"/>
+  <circle cx="640" cy="250" r="4" fill="#ffcc66"/>
+  <circle cx="610" cy="310" r="3" fill="#ffe08a"/>
+</svg>

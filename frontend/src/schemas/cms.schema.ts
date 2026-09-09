@@ -65,6 +65,8 @@ export const partnerFormSchema = z.object({
   description: optionalText,
   website: optionalText,
   country: optionalText,
+  kind: z.enum(["INTERNATIONAL", "NATIONAL"]).optional(),
+  nationalType: z.enum(["COOPERATIVE", "PRIVATE_AGENT", "BANK", ""]).optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
   displayOrder: z.coerce.number().optional()
 });
@@ -117,6 +119,9 @@ export const sectionFormSchema = z.object({
     "SERVICES",
     "RATES",
     "WHY_CHOOSE",
+    "NEPAL_MAP",
+    "GALLERY",
+    "REMITTANCE",
     "PARTNERS",
     "NEWS",
     "BRANCH_FINDER",
@@ -136,6 +141,11 @@ export const sectionFormSchema = z.object({
   secondaryButtonUrl: optionalText,
   alignment: z.enum(["left", "center", "right"]).optional(),
   itemsJson: optionalText,
+  collage1: optionalText,
+  collage2: optionalText,
+  collage3: optionalText,
+  collage4: optionalText,
+  cubeWord: optionalText,
   enabled: z.boolean().optional(),
   displayOrder: z.coerce.number().optional()
 });
@@ -159,24 +169,44 @@ export const socialFormSchema = z.object({
 export const teamFormSchema = z.object({
   name: z.string().min(2),
   title: z.string().min(2),
+  group: z.enum(["BOARD", "TEAM"]).optional(),
+  tier: z.enum(["LEAD", "STAFF"]).optional(),
   photoUrl: optionalText,
   bio: optionalText,
   displayOrder: z.coerce.number().optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional()
 });
 
-export const aboutFormSchema = z.object({
-  introduction: optionalText,
-  mission: optionalText,
-  vision: optionalText,
-  history: optionalText,
-  chairmanMessage: optionalText,
-  chairmanName: optionalText,
-  chairmanTitle: optionalText,
-  chairmanPhotoUrl: optionalText,
-  coreValuesJson: optionalText,
-  statisticsJson: optionalText,
-  certifications: optionalText,
-  licenses: optionalText,
-  awards: optionalText
+export const serviceChargeRowFormSchema = z.object({
+  serial: optionalText,
+  sendingAgent: z.string().min(1, "Sending agent is required"),
+  cashPickup: optionalText,
+  bankTransfer: optionalText,
+  mergedCharge: optionalText,
+  mergePayout: z.boolean().optional(),
+  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  displayOrder: z.coerce.number().optional()
+});
+
+export const serviceChargePageFormSchema = z.object({
+  pageKicker: optionalText,
+  pageTitle: optionalText,
+  pageDescription: optionalText,
+  footnote: optionalText
+});
+
+export const chatbotQaFormSchema = z.object({
+  question: z.string().min(4),
+  answer: z.string().min(4),
+  keywords: optionalText,
+  category: optionalText,
+  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  displayOrder: z.coerce.number().optional()
+});
+
+export const chatbotStepFormSchema = z.object({
+  title: z.string().min(3),
+  body: z.string().min(8),
+  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  displayOrder: z.coerce.number().optional()
 });

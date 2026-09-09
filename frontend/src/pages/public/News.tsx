@@ -9,12 +9,12 @@ import { entityId } from "@/utils/cn";
 
 export default function News() {
   const query = useQuery({ queryKey: ["public", "news"], queryFn: () => publicApi.news() });
-  if (query.isLoading) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (query.isLoading) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
 
   return (
     <>
       <PageHero kicker="Notices" title="News and notices" description="Public notices, alerts and news from Remit2Nepal." />
-      <div className="mx-auto max-w-site px-4 py-16">
+      <div className="mx-auto max-w-site px-4 lg:px-8 py-16">
       <SeoHead title="News and notices" description="Public notices, alerts and news from Remit2Nepal." />
       <div className="space-y-4">
         {(query.data ?? []).map((item) => (

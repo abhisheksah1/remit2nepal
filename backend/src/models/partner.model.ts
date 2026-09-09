@@ -7,6 +7,8 @@ const partnerSchema = new Schema(
     description: { type: String, default: "" },
     website: { type: String, default: "" },
     country: { type: String, default: "Nepal" },
+    kind: { type: String, enum: ["INTERNATIONAL", "NATIONAL"], default: "NATIONAL" },
+    nationalType: { type: String, enum: ["COOPERATIVE", "PRIVATE_AGENT", "BANK", ""], default: "" },
     status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" },
     displayOrder: { type: Number, default: 0 }
   },

@@ -9,9 +9,9 @@ import { Skeleton } from "@/components/ui/Skeleton";
 const Login = lazy(() => import("@/pages/admin/Login"));
 const ChangePassword = lazy(() => import("@/pages/admin/ChangePassword"));
 
-function Fallback() {
+function AuthFallback() {
   return (
-    <div className="grid min-h-[50vh] place-items-center">
+    <div className="grid min-h-screen place-items-center bg-navy-50">
       <Skeleton className="h-10 w-40" />
     </div>
   );
@@ -19,18 +19,30 @@ function Fallback() {
 
 export function App() {
   return (
-    <Suspense fallback={<Fallback />}>
-      <Routes>
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin/change-password" element={<ChangePassword />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          {adminRouteElements}
-        </Route>
-        <Route path="/" element={<PublicLayout />}>
-          {publicRouteElements}
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route
+        path="/admin/login"
+        element={
+          <Suspense fallback={<AuthFallback />}>
+            <Login />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/admin/change-password"
+        element={
+          <Suspense fallback={<AuthFallback />}>
+            <ChangePassword />
+          </Suspense>
+        }
+      />
+      <Route path="/admin" element={<AdminLayout />}>
+        {adminRouteElements}
+      </Route>
+      <Route path="/" element={<PublicLayout />}>
+        {publicRouteElements}
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }

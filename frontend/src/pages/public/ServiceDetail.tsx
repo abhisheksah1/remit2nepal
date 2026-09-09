@@ -19,7 +19,7 @@ export default function ServiceDetail() {
   const fromList = (list.data ?? []).find((item) => item.slug === id || entityId(item) === id);
   const service = direct.data ?? fromList;
 
-  if (list.isLoading && !service) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (list.isLoading && !service) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
   if (!service) return <NotFound />;
 
   return (

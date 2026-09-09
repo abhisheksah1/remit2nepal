@@ -14,8 +14,8 @@ export function Topbar({
   onLogout: () => void;
 }) {
   return (
-    <header className="flex items-center justify-between border-b border-navy/10 bg-white px-4 py-3">
-      <button type="button" className="rounded-md p-2 lg:hidden" onClick={onMenu} aria-label="Open sidebar">
+    <header className="admin-topbar">
+      <button type="button" className="rounded-md p-2 text-navy lg:hidden" onClick={onMenu} aria-label="Open sidebar">
         <Menu className="h-5 w-5" />
       </button>
       <p className="hidden text-sm text-ink-muted lg:block">Secure admin session · cookie authenticated</p>
@@ -23,11 +23,11 @@ export function Topbar({
         <Link to="/" className="text-sm text-navy hover:underline" target="_blank" rel="noreferrer">
           View website
         </Link>
-        <div className="flex items-center gap-2 rounded-full border border-navy/10 px-2 py-1">
+        <div className="flex items-center gap-2 rounded-full border border-navy/10 bg-navy-50 px-2 py-1">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-navy text-xs text-gold">
             {initials(user?.fullName || "Admin")}
           </span>
-          <div className="pr-2 text-left">
+          <div className="hidden pr-2 text-left sm:block">
             <p className="text-sm font-medium text-navy">{user?.fullName}</p>
             <p className="text-xs text-ink-muted">{user?.userId}</p>
           </div>

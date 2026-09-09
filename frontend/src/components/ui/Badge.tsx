@@ -15,9 +15,9 @@ export function Badge({ children, tone = "navy" }: { children: ReactNode; tone?:
 }
 
 export function statusTone(status: string): Tone {
-  if (["ACTIVE", "PUBLISHED", "LIVE", "SUCCESS", "REPLIED"].includes(status)) return "green";
+  if (["ACTIVE", "PUBLISHED", "LIVE", "SUCCESS", "REPLIED", "APPROVED"].includes(status)) return "green";
   if (["INACTIVE", "DRAFT", "ARCHIVED"].includes(status)) return "muted";
-  if (["FAILED", "LOCKED", "ALERT", "MAINTENANCE"].includes(status)) return "red";
-  if (["NEW", "NOTICE"].includes(status)) return "gold";
+  if (["FAILED", "LOCKED", "ALERT", "MAINTENANCE", "REJECTED"].includes(status)) return "red";
+  if (["NEW", "NOTICE", "SUBMITTED"].includes(status)) return "gold";
   return "navy";
 }

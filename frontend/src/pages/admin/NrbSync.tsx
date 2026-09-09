@@ -59,7 +59,7 @@ export default function NrbSync() {
     <div>
       <PageHeader
         title="NRB sync"
-        description="Official Nepal Rastra Bank exchange-rate integration"
+        description="Fetches the official NRB forex bulletin for every published currency worldwide and stores it as the live desk reference."
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "NRB Sync" }]}
         extra={
           <Button onClick={() => sync.mutate()} disabled={sync.isPending}>

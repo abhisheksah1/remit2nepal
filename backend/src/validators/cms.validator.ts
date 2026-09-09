@@ -65,6 +65,8 @@ export const partnerSchema = z.object({
   description: z.string().optional(),
   website: z.string().optional(),
   country: z.string().optional(),
+  kind: z.enum(["INTERNATIONAL", "NATIONAL"]).optional(),
+  nationalType: z.enum(["COOPERATIVE", "PRIVATE_AGENT", "BANK", ""]).optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
   displayOrder: z.number().optional()
 });
@@ -117,6 +119,9 @@ export const sectionSchema = z.object({
     "SERVICES",
     "RATES",
     "WHY_CHOOSE",
+    "NEPAL_MAP",
+    "GALLERY",
+    "REMITTANCE",
     "PARTNERS",
     "NEWS",
     "BRANCH_FINDER",
@@ -159,8 +164,28 @@ export const socialSchema = z.object({
 export const teamSchema = z.object({
   name: z.string().min(2),
   title: z.string().min(2),
+  group: z.enum(["BOARD", "TEAM"]).optional(),
+  tier: z.enum(["LEAD", "STAFF"]).optional(),
   photoUrl: z.string().optional(),
   bio: z.string().optional(),
   displayOrder: z.number().optional(),
   status: z.enum(["ACTIVE", "INACTIVE"]).optional()
+});
+
+export const serviceChargeRowSchema = z.object({
+  serial: z.string().optional(),
+  sendingAgent: z.string().min(1),
+  cashPickup: z.string().optional(),
+  bankTransfer: z.string().optional(),
+  mergedCharge: z.string().optional(),
+  mergePayout: z.boolean().optional(),
+  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  displayOrder: z.number().optional()
+});
+
+export const serviceChargePageSchema = z.object({
+  pageKicker: z.string().optional(),
+  pageTitle: z.string().optional(),
+  pageDescription: z.string().optional(),
+  footnote: z.string().optional()
 });

@@ -17,7 +17,7 @@ export default function Homepage() {
     <div>
       <PageHeader
         title="Homepage"
-        description="Control which homepage sections are visible and in which order. Edit content in Sections."
+        description="Turn sections on or off and change their order. Edit headings, photos, and buttons in Sections. Nepal people map and Gallery share the same collage photos."
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Homepage" }]}
       />
       <DataTable

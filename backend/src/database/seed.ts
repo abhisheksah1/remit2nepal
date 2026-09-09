@@ -15,10 +15,14 @@ import { Branch } from "../models/branch.model.js";
 import { Faq } from "../models/faq.model.js";
 import { News } from "../models/news.model.js";
 import { Partner } from "../models/partner.model.js";
+import { PartnershipSetting } from "../models/partnership-setting.model.js";
 import { AboutCompany } from "../models/about-company.model.js";
 import { TeamMember } from "../models/team-member.model.js";
 import { SocialLink } from "../models/social-link.model.js";
 import { Page } from "../models/page.model.js";
+import { ChatbotQa } from "../models/chatbot-qa.model.js";
+import { ChatbotAgentStep } from "../models/chatbot-agent-step.model.js";
+import { ChatbotSetting } from "../models/chatbot-setting.model.js";
 import { PERMISSIONS, PERMISSION_LABELS } from "../constants/permissions.js";
 import { hashSecret } from "../services/token.service.js";
 import {
@@ -31,6 +35,7 @@ import {
   defaultSections,
   defaultServices
 } from "./seed-content.js";
+import { defaultChatbotQuestions, defaultChatbotSteps } from "../constants/chatbot.js";
 
 async function seed() {
   await connectDatabase();
@@ -118,11 +123,13 @@ async function seed() {
       $setOnInsert: {
         enabled: true,
         automaticFetchEnabled: true,
-        fetchFrequencyCron: "0 */4 * * *",
         retryCount: env.NRB_RETRY_COUNT,
         timeoutMs: env.NRB_TIMEOUT_MS,
         sourceUrl: env.NRB_API_URL,
         hasApiKey: Boolean(env.NRB_API_KEY)
+      },
+      $set: {
+        fetchFrequencyCron: "0 * * * *"
       }
     },
     { upsert: true }
@@ -152,6 +159,17 @@ async function seed() {
   for (const item of defaultPartners) {
     await Partner.updateOne({ name: item.name }, { $setOnInsert: { ...item, status: "ACTIVE" } }, { upsert: true });
   }
+  await Partner.updateMany({ kind: { $exists: false }, country: { $regex: /nepal/i } }, { $set: { kind: "NATIONAL" } });
+  await Partner.updateMany({ kind: { $exists: false }, country: { $not: { $regex: /nepal/i } } }, { $set: { kind: "INTERNATIONAL" } });
+  await Partner.updateMany(
+    { kind: "NATIONAL", $or: [{ nationalType: { $exists: false } }, { nationalType: "" }] },
+    { $set: { nationalType: "BANK" } }
+  );
+  await PartnershipSetting.updateOne({ key: "default" }, { $setOnInsert: { key: "default" } }, { upsert: true });
+  await Section.updateOne(
+    { key: "partners" },
+    { $set: { heading: "Become a partner", subheading: "International sending corridors and national payout partners across Nepal." } }
+  );
 
   await AboutCompany.updateOne(
     { key: "default" },
@@ -167,6 +185,12 @@ async function seed() {
         chairmanTitle: "Chairman",
         chairmanMessage:
           "<p>Trust is earned in every payout. We built Remit2Nepal around transparent rates, licensed operations, and people who answer the phone.</p>",
+        heroKicker: "Our institution",
+        heroTitle: "Built for families who wait on a transfer",
+        heroDescription: "Licensed remittance for people sending from abroad and families receiving across Nepal.",
+        bestOfHeading: "Best of Remit2Nepal",
+        bestOfSubheading: "Licensed operations, a nationwide payout desk, and rates you can check against NRB.",
+        galleryImages: [],
         coreValues: [
           { title: "Integrity", description: "Publish what we charge and honour what we promise." },
           { title: "Security", description: "Protect customer data and payout identity checks." },
@@ -187,16 +211,32 @@ async function seed() {
     { upsert: true }
   );
 
-  await TeamMember.updateOne(
-    { name: "Rajendra Adhikari" },
-    { $setOnInsert: { name: "Rajendra Adhikari", title: "Chairman", bio: "Oversees governance and licensed operations.", displayOrder: 1, status: "ACTIVE" } },
-    { upsert: true }
-  );
-  await TeamMember.updateOne(
-    { name: "Meera Shrestha" },
-    { $setOnInsert: { name: "Meera Shrestha", title: "Chief Executive Officer", bio: "Leads nationwide payout operations and partner corridors.", displayOrder: 2, status: "ACTIVE" } },
-    { upsert: true }
-  );
+  const leadership = [
+    { name: "Rajendra Adhikari", title: "Chairman", group: "BOARD", bio: "Oversees governance and licensed operations.", displayOrder: 1 },
+    { name: "Sushila Karki", title: "Board Director", group: "BOARD", bio: "Guides compliance, audit, and shareholder accountability.", displayOrder: 2 },
+    { name: "Bikash Thapa", title: "Independent Director", group: "BOARD", bio: "Advises on risk, NRB reporting, and payout integrity.", displayOrder: 3 },
+    { name: "Meera Shrestha", title: "Chief Executive Officer", group: "TEAM", tier: "LEAD", bio: "Leads nationwide payout operations and partner corridors.", displayOrder: 4 },
+    { name: "Anil Gurung", title: "Head of Operations", group: "TEAM", tier: "LEAD", bio: "Runs branch desks, agent settlement, and same-day payouts.", displayOrder: 5 },
+    { name: "Priya Basnet", title: "Compliance Officer", group: "TEAM", tier: "LEAD", bio: "Owns KYC, AML screening, and regulatory filings.", displayOrder: 6 },
+    { name: "Nabin Rai", title: "Payout Executive", group: "TEAM", tier: "STAFF", bio: "Supports same-day payouts and branch follow-up.", displayOrder: 7 },
+    { name: "Sabina Magar", title: "Customer Desk", group: "TEAM", tier: "STAFF", bio: "Helps families track transfers and branch visits.", displayOrder: 8 }
+  ] as const;
+  for (const person of leadership) {
+    await TeamMember.updateOne(
+      { name: person.name },
+      {
+        $set: { group: person.group, title: person.title, tier: "tier" in person ? person.tier : "STAFF" },
+        $setOnInsert: {
+          name: person.name,
+          bio: person.bio,
+          displayOrder: person.displayOrder,
+          status: "ACTIVE",
+          photoUrl: ""
+        }
+      },
+      { upsert: true }
+    );
+  }
 
   const socials = [
     { platform: "facebook", label: "Facebook", url: "https://facebook.com/remit2nepal", displayOrder: 1 },
@@ -233,6 +273,14 @@ async function seed() {
     },
     { upsert: true }
   );
+
+  await ChatbotSetting.updateOne({ key: "default" }, { $setOnInsert: { key: "default" } }, { upsert: true });
+  if ((await ChatbotQa.countDocuments()) === 0) {
+    await ChatbotQa.insertMany(defaultChatbotQuestions.map((item) => ({ ...item, status: "ACTIVE" })));
+  }
+  if ((await ChatbotAgentStep.countDocuments()) === 0) {
+    await ChatbotAgentStep.insertMany(defaultChatbotSteps.map((item) => ({ ...item, status: "ACTIVE" })));
+  }
 
   logger.info("Seed complete");
   await disconnectDatabase();

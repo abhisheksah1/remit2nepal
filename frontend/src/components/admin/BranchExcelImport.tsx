@@ -19,7 +19,10 @@ export function BranchExcelImport() {
 
   const download = useMutation({
     mutationFn: async () => {
-      const response = await api.get<Blob>("/branches/import/template", { responseType: "blob" });
+      const response = await api.get<Blob>("/branches/import/template", {
+        responseType: "blob",
+        timeout: 60_000
+      });
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
@@ -34,19 +37,30 @@ export function BranchExcelImport() {
     mutationFn: async (file: File) => {
       const form = new FormData();
       form.append("file", file);
-      return unwrap<ImportResult>(api.post("/branches/import", form));
+      return unwrap<ImportResult>(api.post("/branches/import", form, { timeout: 120_000 }));
     },
     onSuccess: async (result) => {
       await client.invalidateQueries({ queryKey: ["admin-branches"] });
       await client.invalidateQueries({ queryKey: ["public", "branches"] });
       const failed = result.errors.length;
+      const sample = result.errors[0] ? ` Row ${result.errors[0].row}: ${result.errors[0].message}` : "";
+      const saved = result.created + result.updated;
       push({
-        title: `Imported ${result.created} new, updated ${result.updated}`,
-        description: failed ? `${failed} row${failed === 1 ? "" : "s"} need attention.` : "Agent list is up to date.",
-        tone: failed ? "error" : "success"
+        title: saved
+          ? `Saved ${result.created} new, updated ${result.updated}`
+          : "No agents were saved",
+        description: failed
+          ? `${failed} row${failed === 1 ? "" : "s"} skipped.${sample}`
+          : "Agents now appear in Admin and on the public branch page.",
+        tone: saved && !failed ? "success" : saved ? "info" : "error"
       });
     },
-    onError: (error) => push({ title: getErrorMessage(error, "Excel import failed"), tone: "error" })
+    onError: (error) =>
+      push({
+        title: getErrorMessage(error, "Excel import failed"),
+        description: "Use columns Agent Name, District and Address. Download the template if needed.",
+        tone: "error"
+      })
   });
 
   return (
@@ -62,7 +76,7 @@ export function BranchExcelImport() {
       <input
         ref={inputRef}
         type="file"
-        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
         className="sr-only"
         onChange={(event) => {
           const file = event.target.files?.[0];

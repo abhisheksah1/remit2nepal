@@ -24,6 +24,7 @@ import * as aboutService from "../services/about.service.js";
 import * as contactService from "../services/contact.service.js";
 import * as mediaService from "../services/media.service.js";
 import * as siteService from "../services/site.service.js";
+import * as serviceChargeService from "../services/service-charge.service.js";
 import { publicRates } from "../services/exchange-rate.service.js";
 import { env } from "../config/env.js";
 import { AppError } from "../utils/app-error.js";
@@ -160,6 +161,21 @@ export const about = {
   update: asyncHandler(async (req, res) => sendSuccess(res, await aboutService.updateAbout(req.body, req), "About updated"))
 };
 
+export const serviceCharges = {
+  list: listHandler(serviceChargeService.serviceChargeCatalog),
+  get: getHandler(serviceChargeService.serviceChargeCatalog),
+  create: createHandler(serviceChargeService.serviceChargeCatalog),
+  update: updateHandler(serviceChargeService.serviceChargeCatalog),
+  remove: deleteHandler(serviceChargeService.serviceChargeCatalog)
+};
+
+export const serviceChargePage = {
+  get: asyncHandler(async (_req, res) => sendSuccess(res, await serviceChargeService.getServiceChargePage())),
+  update: asyncHandler(async (req, res) =>
+    sendSuccess(res, await serviceChargeService.updateServiceChargePage(req.body, req), "Service charge page updated")
+  )
+};
+
 export const contact = {
   list: asyncHandler(async (req, res) => {
     const { page, limit } = parsePagination(req.query as Record<string, unknown>);
@@ -196,6 +212,7 @@ export const publicApi = {
   service: asyncHandler(async (req, res) => sendSuccess(res, await serviceCatalog.get(req.params.id as string))),
   news: asyncHandler(async (req, res) => sendSuccess(res, await publicNews(req.query.category as string | undefined))),
   faqs: asyncHandler(async (_req, res) => sendSuccess(res, await siteService.getPublicFaqs())),
+  serviceCharges: asyncHandler(async (_req, res) => sendSuccess(res, await serviceChargeService.getPublicServiceCharges())),
   gallery: asyncHandler(async (_req, res) => sendSuccess(res, await siteService.getPublicGallery())),
   documents: asyncHandler(async (_req, res) => sendSuccess(res, await publicDocuments())),
   partners: asyncHandler(async (_req, res) => sendSuccess(res, await partnerCatalog.publicList())),

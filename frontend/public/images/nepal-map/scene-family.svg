@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skyF" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f3c98a"/>
+      <stop offset="100%" stop-color="#f7e6c8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#skyF)"/>
+  <rect x="0" y="340" width="800" height="220" fill="#c9b089"/>
+  <rect x="0" y="340" width="800" height="18" fill="#a88962"/>
+  <g transform="translate(470,118)">
+    <rect x="70" y="150" width="150" height="90" fill="#6b3a2a"/>
+    <polygon points="40,150 145,70 250,150" fill="#8b4518"/>
+    <polygon points="58,132 145,88 232,132" fill="#c4191f"/>
+    <polygon points="72,118 145,82 218,118" fill="#6b3a2a"/>
+    <polygon points="88,104 145,76 202,104" fill="#c4191f"/>
+    <rect x="128" y="168" width="36" height="72" fill="#3a2218"/>
+    <circle cx="145" cy="78" r="7" fill="#c9a227"/>
+  </g>
+  <circle cx="620" cy="90" r="36" fill="#f4e4b0" opacity="0.85"/>
+  <ellipse cx="300" cy="530" rx="200" ry="50" fill="#000" opacity="0.08"/>
+  <path d="M210 430 C210 360 248 318 318 318 C388 318 426 360 426 430 L430 560 L206 560Z" fill="#c4191f"/>
+  <path d="M226 448 C250 400 300 392 360 430 C380 446 400 490 404 560 L226 560Z" fill="#0f6b4c"/>
+  <path d="M240 430 C256 400 300 392 350 418" fill="none" stroke="#c9a227" stroke-width="6"/>
+  <circle cx="318" cy="250" r="62" fill="#c68642"/>
+  <path d="M262 248 C270 200 292 178 318 176 C348 178 372 202 376 250 C360 278 276 278 262 248Z" fill="#1a1208"/>
+  <circle cx="318" cy="168" r="18" fill="#c9a227"/>
+  <circle cx="278" cy="268" r="10" fill="#c9a227"/>
+  <circle cx="358" cy="268" r="10" fill="#c9a227"/>
+  <circle cx="294" cy="242" r="5" fill="#3a2416"/>
+  <circle cx="342" cy="242" r="5" fill="#3a2416"/>
+  <path d="M294 268 Q318 286 342 268" fill="none" stroke="#8a4b2a" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="430" cy="390" r="48" fill="#c68642"/>
+  <path d="M388 392 C392 352 408 336 430 334 C454 336 472 354 474 392 C458 414 404 414 388 392Z" fill="#1a1208"/>
+  <path d="M392 430 C392 400 408 384 430 384 C452 384 468 400 468 430 L470 520 L390 520Z" fill="#e31e24"/>
+  <path d="M400 430 C408 412 430 408 452 428 L454 520 L398 520Z" fill="#f4e6c8"/>
+  <circle cx="414" cy="384" r="3.5" fill="#3a2416"/>
+  <circle cx="444" cy="384" r="3.5" fill="#3a2416"/>
+  <path d="M414 402 Q430 412 444 402" fill="none" stroke="#8a4b2a" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M400 318 C410 300 430 298 448 318" fill="none" stroke="#c68642" stroke-width="14" stroke-linecap="round"/>
+</svg>

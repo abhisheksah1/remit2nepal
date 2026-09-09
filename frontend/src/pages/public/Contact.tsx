@@ -33,7 +33,7 @@ export default function Contact() {
         title="How can we help?"
         description="Use this form for branch hours, rate queries and corporate remittance. Do not send transfer passwords or one-time codes."
       />
-      <div className="mx-auto grid max-w-site gap-10 px-4 py-16 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="mx-auto grid max-w-site gap-10 px-4 lg:px-8 py-16 lg:grid-cols-[0.9fr_1.1fr]">
       <SeoHead title="Contact Remit2Nepal" description="Speak with the relationship desk about branches, rates and transfers." />
       <div>
         <Card className="space-y-2 text-sm">

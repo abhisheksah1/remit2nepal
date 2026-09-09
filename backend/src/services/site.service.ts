@@ -13,8 +13,26 @@ import { AboutCompany } from "../models/about-company.model.js";
 import { TeamMember } from "../models/team-member.model.js";
 import { Page } from "../models/page.model.js";
 import { publicRates } from "./exchange-rate.service.js";
+import { defaultSections } from "../database/seed-content.js";
+
+const nepalMapSeed = defaultSections.find((item) => item.key === "nepal-people");
+const remittanceSeed = defaultSections.find((item) => item.key === "remittance-stage");
+
+async function ensureSection(seed?: (typeof defaultSections)[number]) {
+  if (!seed) return;
+  try {
+    await Section.updateOne({ key: seed.key }, { $setOnInsert: { ...seed, enabled: true } }, { upsert: true });
+  } catch {
+    return;
+  }
+}
+
+export async function ensureNepalMapSection() {
+  await Promise.all([ensureSection(nepalMapSeed), ensureSection(remittanceSeed)]);
+}
 
 export async function getPublicSite() {
+  await ensureNepalMapSection();
   const [settings, seo, navigation, social, sections, services, partners, news, about, team] = await Promise.all([
     CompanySetting.findOne({ key: "default" }).lean(),
     SeoSetting.findOne({ key: "global" }).lean(),
@@ -43,8 +61,8 @@ export async function getPublicSite() {
 }
 
 export async function getHomePayload() {
-  const [site, rates] = await Promise.all([getPublicSite(), publicRates()]);
-  return { ...site, rates };
+  const [site, rates, gallery] = await Promise.all([getPublicSite(), publicRates(), getPublicGallery()]);
+  return { ...site, rates, gallery };
 }
 
 export async function getPublishedPage(slug: string) {
@@ -70,7 +88,7 @@ export function robotsTxt(canonical?: string) {
 export async function sitemapXml(baseUrl: string) {
   const pages = await Page.find({ status: "PUBLISHED" }).lean();
   const news = await News.find({ status: "PUBLISHED" }).lean();
-  const staticPaths = ["/", "/about", "/services", "/exchange-rate", "/branches", "/partners", "/news", "/faq", "/gallery", "/contact"];
+  const staticPaths = ["/", "/about", "/about/board", "/about/team", "/about/compliance", "/services", "/service-charge", "/exchange-rate", "/branches", "/partners", "/partners/apply/national", "/news", "/faq", "/gallery", "/contact"];
   const urls = [
     ...staticPaths.map((path) => `${baseUrl}${path}`),
     ...pages.map((page) => `${baseUrl}/${page.slug}`),

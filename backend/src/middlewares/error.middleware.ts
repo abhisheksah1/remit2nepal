@@ -18,6 +18,16 @@ export const errorMiddleware: ErrorRequestHandler = (err, _req, res, _next) => {
     return;
   }
 
+  if ((err as { name?: string }).name === "MulterError") {
+    const code = (err as { code?: string }).code;
+    res.status(400).json({
+      success: false,
+      message: code === "LIMIT_FILE_SIZE" ? "File is too large" : err instanceof Error ? err.message : "Upload failed",
+      errors: []
+    });
+    return;
+  }
+
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       success: false,

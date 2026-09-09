@@ -1,12 +1,12 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Sidebar } from "@/components/admin/Sidebar";
 import { Topbar } from "@/components/admin/Topbar";
 import { PermissionGate } from "@/components/admin/PermissionGate";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/hooks/usePermission";
 import { adminNav } from "@/config/nav";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { SkeletonLines } from "@/components/ui/Skeleton";
 import type { PermissionKey } from "@/types/api";
 
 function permissionForPath(pathname: string): PermissionKey | undefined {
@@ -20,10 +20,10 @@ export function AdminLayout() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  if (isLoading) {
+  if (isLoading && !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-navy-50">
-        <Skeleton className="h-12 w-48" />
+        <SkeletonLines rows={3} />
       </div>
     );
   }
@@ -39,17 +39,19 @@ export function AdminLayout() {
   const required = permissionForPath(location.pathname);
 
   return (
-    <div className="admin-shell flex min-h-screen">
+    <div className="admin-shell">
       <Sidebar user={user} open={open} onClose={() => setOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="admin-main">
         <Topbar user={user} onMenu={() => setOpen(true)} onLogout={() => void logout()} />
-        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+        <div className="admin-content">
           {required && !hasPermission(user, required) ? (
             <PermissionGate user={user} permission={required}>
               {null}
             </PermissionGate>
           ) : (
-            <Outlet context={user} />
+            <Suspense fallback={<SkeletonLines rows={6} />}>
+              <Outlet context={user} />
+            </Suspense>
           )}
         </div>
       </div>

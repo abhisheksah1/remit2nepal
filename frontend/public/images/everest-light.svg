@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMax meet">
+  <path fill="rgba(255,255,255,0.10)" d="M0 240 L0 168 L160 142 L280 158 L420 108 L540 138 L640 72 L720 18 L800 78 L900 58 L1020 112 L1160 86 L1280 128 L1440 104 L1440 240Z"/>
+  <path fill="rgba(255,255,255,0.14)" d="M0 240 L0 186 L200 162 L360 178 L520 142 L640 168 L720 96 L820 164 L980 148 L1140 176 L1320 158 L1440 174 L1440 240Z"/>
+  <path fill="rgba(255,255,255,0.18)" d="M0 240 L0 214 L240 198 L480 216 L720 192 L980 214 L1220 200 L1440 218 L1440 240Z"/>
+  <path fill="rgba(255,255,255,0.42)" d="M688 62 L720 18 L762 70 L736 86 L718 68 L702 82Z"/>
+  <path fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.4" stroke-linejoin="round" d="M640 72 L720 18 L800 78"/>
+</svg>

@@ -56,6 +56,8 @@ export const env = parsed.data;
 export const isProduction = env.NODE_ENV === "production";
 export const isTest = env.NODE_ENV === "test";
 export const corsOrigins = env.CORS_ORIGIN.split(",").map((origin) => origin.trim()).filter(Boolean);
+export { projectRoot };
 export const uploadRoot = path.isAbsolute(env.UPLOAD_DIR)
   ? env.UPLOAD_DIR
   : path.resolve(projectRoot, env.UPLOAD_DIR);
+export const privateUploadRoot = path.resolve(projectRoot, "private-uploads");

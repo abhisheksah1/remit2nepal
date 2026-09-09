@@ -58,4 +58,5 @@ export type PermissionKey =
   | "settings"
   | "audit_logs"
   | "admins"
-  | "documents";
+  | "documents"
+  | "chatbot";

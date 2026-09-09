@@ -10,6 +10,7 @@ import { AppError } from "../utils/app-error.js";
 import { logger } from "../config/logger.js";
 import { createNrbProvider } from "../integrations/nrb/nrb.provider.js";
 import type { ExchangeRateProvider, ExchangeRateQuote } from "../integrations/exchange-rate-provider.js";
+import { metaForCurrency } from "../constants/currency-meta.js";
 
 function sourceHash(quote: ExchangeRateQuote, kind: string): string {
   return crypto
@@ -101,13 +102,17 @@ export async function syncOfficialRates(
   let currenciesUpdated = 0;
 
   for (const quote of result.quotes) {
+      const meta = metaForCurrency(quote.currencyCode);
       await Currency.updateOne(
         { code: quote.currencyCode },
         {
           $setOnInsert: {
             code: quote.currencyCode,
             status: "ACTIVE",
-            displayOrder: 100
+            displayOrder: meta.displayOrder,
+            country: meta.country,
+            flag: meta.flag,
+            symbol: meta.symbol
           },
           $set: { name: quote.currencyName, unit: quote.unit }
         },

@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Banknote, Briefcase, Building2, Globe, Send, ShieldCheck, Smartphone } from "lucide-react";
-import type { CmsSection, NewsItem, PartnerItem, ServiceItem, StatItem, WhyItem } from "@/types/content";
+import { Banknote, Briefcase, Building2, Globe, Send, ShieldCheck, Smartphone } from "lucide-react";
+import type { CmsSection, GalleryItem, NewsItem, PartnerItem, ServiceItem, StatItem } from "@/types/content";
 import type { PublicRatesPayload } from "@/types/rates";
 import { Hero } from "./Hero";
+import { WhyChoose } from "./WhyChoose";
+import { NepalStory } from "./NepalPeopleMap";
+import { RemittanceStage } from "./RemittanceStage";
+import { TransferDesk } from "./TransferDesk";
 import { RateTable } from "./RateTable";
 import { BranchFinder } from "./BranchFinder";
 import { Button } from "@/components/ui/Button";
-import { entityId } from "@/utils/cn";
+import { entityId, mediaUrl } from "@/utils/cn";
 import { formatDate } from "@/utils/format";
+import { groupPartners, nationalTypeLabel } from "@/utils/partners";
 
 const icons = {
   globe: Globe,
@@ -23,53 +28,59 @@ export function SectionRenderer({
   services,
   partners,
   news,
-  rates
+  rates,
+  stats,
+  gallery
 }: {
   section: CmsSection;
   services: ServiceItem[];
   partners: PartnerItem[];
   news: NewsItem[];
   rates?: PublicRatesPayload;
+  stats?: StatItem[];
+  gallery?: GalleryItem[];
 }) {
   switch (section.type) {
     case "HERO":
-      return <Hero section={section} />;
+      return <Hero section={section} stats={stats} />;
     case "STATS":
-      return <StatsSection section={section} />;
+      return null;
     case "SERVICES":
       return <ServicesSection section={section} services={services} />;
     case "RATES":
       return rates ? (
-        <section className="mx-auto max-w-site px-4 py-16">
+        <section className="mx-auto max-w-site px-4 py-8 lg:px-8 sm:py-16">
           <SectionHeading section={section} />
-          <div className="glass-panel rounded-3xl p-4 sm:p-6">
-            <RateTable payload={rates} compact />
-          </div>
-          {section.buttonUrl ? (
-            <div className="mt-6">
-              <Link to={section.buttonUrl} className="inline-flex items-center gap-2 text-sm font-medium text-navy">
-                {section.buttonLabel || "Full rate table"} <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="rates-board">
+            <TransferDesk rates={rates} />
+            <div className="glass-panel rounded-3xl p-4 sm:p-6">
+              <RateTable payload={rates} compact />
             </div>
-          ) : null}
+          </div>
         </section>
       ) : null;
     case "WHY_CHOOSE":
-      return <WhySection section={section} />;
+      return <WhyChoose section={section} />;
+    case "REMITTANCE":
+      return <RemittanceStage section={section} />;
+    case "NEPAL_MAP":
+      return <NepalStory section={section} gallery={gallery} />;
+    case "GALLERY":
+      return <GalleryPreview section={section} gallery={gallery ?? []} />;
     case "PARTNERS":
       return <PartnersSection section={section} partners={partners} />;
     case "NEWS":
       return <NewsSection section={section} news={news} />;
     case "BRANCH_FINDER":
       return (
-        <section className="mx-auto max-w-site px-4 py-16">
+        <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
           <SectionHeading section={section} />
           <BranchFinder compact />
         </section>
       );
     case "CONTACT_CTA":
       return (
-        <section className="mx-auto max-w-site px-4 py-8">
+        <section className="mx-auto max-w-site px-4 lg:px-8 py-8">
           <div className="relative overflow-hidden rounded-3xl bg-navy px-8 py-12 text-cream md:flex md:items-center md:justify-between">
             <div className="hero-mesh opacity-40" />
             <div className="relative">
@@ -86,7 +97,7 @@ export function SectionRenderer({
       );
     default:
       return section.heading ? (
-        <section className="mx-auto max-w-site px-4 py-16">
+        <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
           <SectionHeading section={section} />
           <div className="prose-r2n" dangerouslySetInnerHTML={{ __html: section.description }} />
         </section>
@@ -104,25 +115,9 @@ function SectionHeading({ section }: { section: CmsSection }) {
   );
 }
 
-function StatsSection({ section }: { section: CmsSection }) {
-  const items = Array.isArray(section.items) ? (section.items as StatItem[]) : [];
-  return (
-    <section className="relative">
-      <div className="mx-auto grid max-w-site gap-8 px-4 py-14 sm:grid-cols-3 lg:grid-cols-5">
-        {items.map((item) => (
-          <div key={item.label} className="text-center">
-            <p className="font-display text-3xl text-navy">{item.value}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-gold">{item.label}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function ServicesSection({ section, services }: { section: CmsSection; services: ServiceItem[] }) {
   return (
-    <section className="mx-auto max-w-site px-4 py-16">
+    <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
       <SectionHeading section={section} />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {services.slice(0, 6).map((service) => {
@@ -144,36 +139,48 @@ function ServicesSection({ section, services }: { section: CmsSection; services:
   );
 }
 
-function WhySection({ section }: { section: CmsSection }) {
-  const items = Array.isArray(section.items) ? (section.items as WhyItem[]) : [];
-  return (
-    <section className="relative overflow-hidden bg-navy text-cream">
-      <div className="hero-mesh opacity-30" />
-      <div className="relative mx-auto max-w-site px-4 py-16">
-        <h2 className="font-display text-3xl sm:text-4xl">{section.heading}</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => (
-            <div key={item.title} className="border-t border-gold/40 pt-5">
-              <h3 className="font-display text-xl text-gold">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-cream/80">{item.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function PartnersSection({ section, partners }: { section: CmsSection; partners: PartnerItem[] }) {
+  const { international, national } = groupPartners(partners);
+  const groups = [
+    { title: "International Partner", items: international, href: "/partners/apply/international" },
+    { title: "National Partner", items: national, href: "/partners/apply/national" }
+  ];
+
   return (
-    <section className="mx-auto max-w-site px-4 py-16">
+    <section className="mx-auto max-w-site px-4 py-16 lg:px-8">
       <SectionHeading section={section} />
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {partners.map((partner) => (
-          <div key={entityId(partner)} className="lift-card glass-panel flex min-h-[7rem] items-center justify-center rounded-2xl px-4 text-center">
-            <p className="font-medium text-navy">{partner.name}</p>
+      <div className="grid gap-8 lg:grid-cols-2">
+        {groups.map((group) => (
+          <div key={group.title} className="min-w-0">
+            <div className="flex items-end justify-between gap-3">
+              <h3 className="font-display text-2xl text-navy">{group.title}</h3>
+              <Link to={group.href} className="shrink-0 text-sm text-gold underline-offset-4 hover:underline">
+                Become a partner
+              </Link>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {group.items.length ? (
+                group.items.slice(0, 6).map((partner) => (
+                  <div key={entityId(partner)} className="lift-card glass-panel flex min-h-[6.5rem] items-center justify-center rounded-2xl px-3 text-center">
+                    <div>
+                      <p className="font-medium text-navy">{partner.name}</p>
+                      {nationalTypeLabel(partner.nationalType) ? (
+                        <p className="mt-1 text-[11px] uppercase tracking-wider text-gold">{nationalTypeLabel(partner.nationalType)}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-2 text-sm text-ink-muted">Partners in this track will appear here.</p>
+              )}
+            </div>
           </div>
         ))}
+      </div>
+      <div className="mt-8">
+        <Link to="/partners">
+          <Button variant="secondary">View partnership tracks</Button>
+        </Link>
       </div>
     </section>
   );
@@ -181,7 +188,7 @@ function PartnersSection({ section, partners }: { section: CmsSection; partners:
 
 function NewsSection({ section, news }: { section: CmsSection; news: NewsItem[] }) {
   return (
-    <section className="mx-auto max-w-site px-4 py-16">
+    <section className="mx-auto max-w-site px-4 lg:px-8 py-16">
       <SectionHeading section={section} />
       <div className="grid gap-5 md:grid-cols-2">
         {news.slice(0, 4).map((item) => (
@@ -194,5 +201,32 @@ function NewsSection({ section, news }: { section: CmsSection; news: NewsItem[] 
         ))}
       </div>
     </section>
+  );
+}
+
+function GalleryPreview({ section, gallery }: { section: CmsSection; gallery: GalleryItem[] }) {
+  return (
+    <>
+      <NepalStory section={section} gallery={gallery} />
+      {gallery.length ? (
+        <section className="mx-auto max-w-site px-4 pb-16 lg:px-8">
+          <div className="gallery-map-grid">
+            {gallery.slice(0, 6).map((item) => (
+              <figure key={entityId(item)} className="overflow-hidden rounded-2xl border border-navy/10 bg-white">
+                <img src={mediaUrl(item.imageUrl)} alt={item.altText || item.title} className="h-48 w-full object-cover" />
+                <figcaption className="p-4">
+                  <p className="font-medium text-navy">{item.title}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link to={section.buttonUrl || "/gallery"}>
+              <Button variant="gold">{section.buttonLabel || "Open gallery"}</Button>
+            </Link>
+          </div>
+        </section>
+      ) : null}
+    </>
   );
 }

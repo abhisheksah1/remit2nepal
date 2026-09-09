@@ -38,6 +38,9 @@ export function createApp() {
     autoLogging: !isProduction && !isTest
   });
   app.use(httpLogger);
+  app.use("/uploads/private", (_req, res) => {
+    res.status(404).end();
+  });
   app.use("/uploads", express.static(uploadRoot));
   app.get("/health", (_req, res) => res.json({ success: true, message: "OK", data: { status: "healthy" } }));
   app.use("/api/v1", apiRateLimiter, csrfMiddleware, maintenanceMiddleware, apiRouter);

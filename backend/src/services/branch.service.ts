@@ -28,7 +28,7 @@ export async function searchBranches(params: {
     ];
   }
   const page = Math.max(1, Number(params.page ?? 1) || 1);
-  const limit = Math.min(1000, Math.max(1, Number(params.limit ?? 1000) || 1000));
+  const limit = Math.min(5000, Math.max(1, Number(params.limit ?? 5000) || 5000));
   const [items, total] = await Promise.all([
     Branch.find(filter).sort({ displayOrder: 1, name: 1 }).skip((page - 1) * limit).limit(limit).lean(),
     Branch.countDocuments(filter)

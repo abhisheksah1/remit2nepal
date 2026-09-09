@@ -11,7 +11,7 @@ export default function Faq() {
   const [open, setOpen] = useState<string | null>(null);
   const categories = useMemo(() => Array.from(new Set((query.data ?? []).map((item) => item.category || "General"))), [query.data]);
 
-  if (query.isLoading) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (query.isLoading) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
 
   return (
     <>

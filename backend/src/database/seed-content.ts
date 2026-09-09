@@ -16,14 +16,15 @@ export const defaultNavigation = [
   { label: "About Us", path: "/about", displayOrder: 2, location: "HEADER" },
   { label: "Services", path: "/services", displayOrder: 3, location: "HEADER" },
   { label: "Exchange Rate", path: "/exchange-rate", displayOrder: 4, location: "HEADER" },
-  { label: "Branches", path: "/branches", displayOrder: 5, location: "HEADER" },
-  { label: "Partners", path: "/partners", displayOrder: 6, location: "HEADER" },
+  { label: "Our Agent", path: "/branches", displayOrder: 5, location: "HEADER" },
+  { label: "Become a Agent", path: "/partners", displayOrder: 6, location: "HEADER" },
   { label: "News & Notices", path: "/news", displayOrder: 7, location: "HEADER" },
   { label: "FAQ", path: "/faq", displayOrder: 8, location: "HEADER" },
   { label: "Gallery", path: "/gallery", displayOrder: 9, location: "HEADER" },
   { label: "Contact Us", path: "/contact", displayOrder: 10, location: "HEADER" },
   { label: "Privacy Policy", path: "/privacy", displayOrder: 1, location: "FOOTER" },
-  { label: "Terms of Service", path: "/terms", displayOrder: 2, location: "FOOTER" }
+  { label: "Terms of Service", path: "/terms", displayOrder: 2, location: "FOOTER" },
+  { label: "Service Charge", path: "/service-charge", displayOrder: 3, location: "FOOTER" }
 ];
 
 export const defaultSections = [
@@ -38,15 +39,9 @@ export const defaultSections = [
     overlay: true,
     buttonLabel: "View Exchange Rate",
     buttonUrl: "/exchange-rate",
-    secondaryButtonLabel: "Find a Branch",
+    secondaryButtonLabel: "Our Agent",
     secondaryButtonUrl: "/branches",
-    displayOrder: 1,
-    items: [
-      { label: "Years of Experience", value: "18+" },
-      { label: "Branches", value: "120+" },
-      { label: "Corridors", value: "25 countries" },
-      { label: "Families served", value: "1.2M+" }
-    ]
+    displayOrder: 1
   },
   {
     key: "stats",
@@ -78,6 +73,20 @@ export const defaultSections = [
     displayOrder: 4
   },
   {
+    key: "remittance-stage",
+    type: "REMITTANCE",
+    heading: "Remittance to Nepal",
+    subheading: "Earn abroad, support home — into NPR through a licensed nationwide payout network.",
+    description: "Hover each letter. The word is the work: regulated corridors, published rates, and families waiting on the other side.",
+    icon: "Licensed transfer",
+    overlay: true,
+    alignment: "center",
+    buttonLabel: "View exchange rate",
+    buttonUrl: "/exchange-rate",
+    displayOrder: 4.5,
+    items: [{ word: "REMITTANCE" }]
+  },
+  {
     key: "why",
     type: "WHY_CHOOSE",
     heading: "Why families choose Remit2Nepal",
@@ -92,10 +101,31 @@ export const defaultSections = [
     ]
   },
   {
+    key: "nepal-people",
+    type: "NEPAL_MAP",
+    heading: "People and families across Nepal",
+    subheading: "Earners abroad, families at home — from the Himalaya to the Terai.",
+    description: "Illustrated scenes of Nepali families, workers, and payouts — clipped to the map of Nepal.",
+    icon: "Our Nepal",
+    backgroundUrl: "/images/nepal-map/cityscape.svg",
+    overlay: true,
+    alignment: "center",
+    buttonLabel: "View gallery",
+    buttonUrl: "/gallery",
+    displayOrder: 6,
+    items: [
+      { imageUrl: "/images/nepal-map/scene-office.svg", alt: "Nepali professional on a call", title: "Working abroad" },
+      { imageUrl: "/images/nepal-map/scene-family.svg", alt: "Nepali mother and child at home", title: "Family in Nepal" },
+      { imageUrl: "/images/nepal-map/scene-worker.svg", alt: "Nepali industrial worker", title: "Building Nepal" },
+      { imageUrl: "/images/nepal-map/scene-payout.svg", alt: "Receiving remittance in Nepal", title: "Funds received" }
+    ]
+  },
+  {
     key: "partners",
     type: "PARTNERS",
-    heading: "Banks and payout partners",
-    displayOrder: 6
+    heading: "Become a partner",
+    subheading: "International sending corridors and national payout partners across Nepal.",
+    displayOrder: 7
   },
   {
     key: "news",
@@ -103,14 +133,14 @@ export const defaultSections = [
     heading: "News and notices",
     buttonLabel: "All notices",
     buttonUrl: "/news",
-    displayOrder: 7
+    displayOrder: 8
   },
   {
     key: "branches",
     type: "BRANCH_FINDER",
     heading: "Find a branch near you",
     subheading: "Search by province, district, city, or branch name.",
-    displayOrder: 8
+    displayOrder: 9
   },
   {
     key: "cta",
@@ -119,7 +149,7 @@ export const defaultSections = [
     description: "Our relationship desk assists with branch hours, rate queries, and corporate remittance.",
     buttonLabel: "Contact Us",
     buttonUrl: "/contact",
-    displayOrder: 9
+    displayOrder: 10
   }
 ];
 
@@ -297,7 +327,9 @@ export const defaultNews = [
 ];
 
 export const defaultPartners = [
-  { name: "Nepal Bank Limited", country: "Nepal", description: "Payout and account credit partner.", website: "https://www.nepalbank.com.np", displayOrder: 1 },
-  { name: "Nabil Bank", country: "Nepal", description: "Bank deposit corridor partner.", website: "https://www.nabilbank.com", displayOrder: 2 },
-  { name: "Global IME Bank", country: "Nepal", description: "Nationwide account payout partner.", website: "https://www.globalimebank.com", displayOrder: 3 }
+  { name: "Nepal Bank Limited", country: "Nepal", kind: "NATIONAL", description: "Payout and account credit partner.", website: "https://www.nepalbank.com.np", displayOrder: 1 },
+  { name: "Nabil Bank", country: "Nepal", kind: "NATIONAL", description: "Bank deposit corridor partner.", website: "https://www.nabilbank.com", displayOrder: 2 },
+  { name: "Global IME Bank", country: "Nepal", kind: "NATIONAL", description: "Nationwide account payout partner.", website: "https://www.globalimebank.com", displayOrder: 3 },
+  { name: "Gulf Exchange", country: "United Arab Emirates", kind: "INTERNATIONAL", description: "Sending corridor partner from the UAE.", website: "", displayOrder: 4 },
+  { name: "Qatar Exchange", country: "Qatar", kind: "INTERNATIONAL", description: "Sending corridor partner from Qatar.", website: "", displayOrder: 5 }
 ];

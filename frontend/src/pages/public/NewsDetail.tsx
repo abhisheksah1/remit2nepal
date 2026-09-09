@@ -9,7 +9,7 @@ import NotFound from "./NotFound";
 export default function NewsDetail() {
   const { slug = "" } = useParams();
   const query = useQuery({ queryKey: ["public", "news"], queryFn: () => publicApi.news() });
-  if (query.isLoading) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (query.isLoading) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
   const item = (query.data ?? []).find((entry) => entry.slug === slug);
   if (!item) return <NotFound />;
 

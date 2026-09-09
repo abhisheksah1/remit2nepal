@@ -1,9 +1,13 @@
+import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
 import { Header } from "@/components/public/Header";
 import { Footer } from "@/components/public/Footer";
 import { SiteAtmosphere } from "@/components/public/SiteAtmosphere";
+import { ScrollReveal } from "@/components/public/ScrollReveal";
+import { SmoothScroll } from "@/components/public/SmoothScroll";
+import { ChatWidget } from "@/components/public/ChatWidget";
 import { SeoHead } from "@/components/public/SeoHead";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { MaintenancePage } from "./MaintenancePage";
@@ -42,14 +46,19 @@ export function PublicLayout() {
   }
 
   return (
-    <div className="relative z-10 flex min-h-screen flex-col">
+    <div className="site-shell relative z-10 flex min-h-screen flex-col">
       <SeoHead seo={site.data?.seo} />
       <SiteAtmosphere />
+      <ScrollReveal />
+      <SmoothScroll />
       <Header settings={settings} items={site.data?.navigation ?? []} />
-      <main key={location.pathname} className="page-enter relative z-10 flex-1">
-        <Outlet context={site.data} />
+      <main className="page-enter relative z-0 min-w-0 flex-1 overflow-x-clip">
+        <Suspense fallback={<div className="mx-auto max-w-site px-4 py-16 lg:px-8"><Skeleton className="h-72 w-full" /></div>}>
+          <Outlet context={site.data} />
+        </Suspense>
       </main>
       <Footer settings={settings} items={site.data?.navigation ?? []} social={site.data?.social ?? []} />
+      <ChatWidget />
     </div>
   );
 }

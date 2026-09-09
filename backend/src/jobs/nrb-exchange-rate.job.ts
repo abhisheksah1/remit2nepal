@@ -7,7 +7,7 @@ let task: cron.ScheduledTask | undefined;
 
 export async function startNrbExchangeRateJob(): Promise<void> {
   const config = await NrbConfig.findOne({ key: "default" });
-  const expression = config?.fetchFrequencyCron || "0 */4 * * *";
+  const expression = config?.fetchFrequencyCron || "0 * * * *";
   if (task) task.stop();
   task = cron.schedule(expression, async () => {
     const latest = await NrbConfig.findOne({ key: "default" });

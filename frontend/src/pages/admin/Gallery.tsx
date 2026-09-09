@@ -7,6 +7,7 @@ export default function Gallery() {
   return (
     <ResourceCrud<GalleryItem>
       title="Gallery"
+      description="Upload photos of Nepali people, branches, and events. They fill the Nepal map on Home and Gallery."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Gallery" }]}
       queryKey="admin-gallery"
       list={adminApi.gallery.list}
@@ -22,8 +23,8 @@ export default function Gallery() {
       fields={[
         { name: "title", label: "Title" },
         { name: "description", label: "Description", type: "textarea" },
-        { name: "category", label: "Category" },
-        { name: "imageUrl", label: "Image URL" },
+        { name: "category", label: "Category", hint: "Use People, Branch, or Event so the Nepal map can group photos." },
+        { name: "imageUrl", label: "Photo", type: "image", folder: "gallery", hint: "Upload a real photo. It also appears inside the Nepal map collage." },
         { name: "embedUrl", label: "Embed URL" },
         { name: "altText", label: "Alt text" },
         { name: "status", label: "Status", type: "select", options: [

@@ -9,7 +9,7 @@ import { entityId } from "@/utils/cn";
 
 export default function Services() {
   const query = useQuery({ queryKey: ["public", "services"], queryFn: publicApi.services });
-  if (query.isLoading) return <div className="mx-auto max-w-site px-4 py-16"><SkeletonLines /></div>;
+  if (query.isLoading) return <div className="mx-auto max-w-site px-4 lg:px-8 py-16"><SkeletonLines /></div>;
   const items = query.data ?? [];
   if (!items.length) return <EmptyState title="Services will appear here" />;
 
@@ -20,7 +20,7 @@ export default function Services() {
         title="Services for every kind of transfer"
         description="From a single cash pickup in Kathmandu to payroll for a company with staff in seven provinces."
       />
-      <div className="mx-auto max-w-site px-4 py-16">
+      <div className="mx-auto max-w-site px-4 lg:px-8 py-16">
       <SeoHead title="Remittance services" description="International remittance, cash pickup, bank deposit and corporate payouts." />
       <div className="grid gap-5 md:grid-cols-2">
         {items.map((service) => (
