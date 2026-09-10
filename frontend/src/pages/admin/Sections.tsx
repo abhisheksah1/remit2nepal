@@ -61,8 +61,8 @@ const hasDescription = isType(
   "NEPAL_MAP",
   "CUSTOM"
 );
-const hasPrimaryButton = isType("HERO", "REMITTANCE", "PARTNERS", "RATES", "NEWS", "CONTACT_CTA", "NEPAL_MAP", "GALLERY");
-const hasSecondaryButton = isHero;
+const hasPrimaryButton = isType("HERO", "REMITTANCE", "PARTNERS", "RATES", "NEWS", "CONTACT_CTA", "NEPAL_MAP", "GALLERY", "SERVICES");
+const hasSecondaryButton = (values: FormValues) => isHero(values) || isRemittance(values);
 const whenEditing = (_values: FormValues, editing: boolean) => editing;
 
 const types = [
@@ -84,28 +84,49 @@ const types = [
 
 function cubeWordFrom(item?: CmsSection) {
   const items = Array.isArray(item?.items) ? item.items : [];
-  const row = items[0];
-  if (row && typeof row === "object" && "word" in row) {
-    return String((row as { word?: string }).word ?? "");
+  for (const row of items) {
+    if (row && typeof row === "object" && "word" in row) {
+      const word = String((row as { word?: string }).word ?? "").trim();
+      if (word) return word;
+    }
   }
   return "";
+}
+
+function pointsJsonFrom(item?: CmsSection) {
+  if (item?.type !== "REMITTANCE") return "[]";
+  const items = Array.isArray(item.items) ? item.items : [];
+  const points = items.filter((row) => row && typeof row === "object" && "title" in row && !("word" in row));
+  return JSON.stringify(points);
+}
+
+function isHeroSceneRow(row: unknown) {
+  if (!row || typeof row !== "object") return false;
+  const item = row as Record<string, unknown>;
+  return Boolean(item.kicker || item.note || item.strong);
 }
 
 function itemsJsonFrom(item?: CmsSection) {
   const items = Array.isArray(item?.items) ? item.items : [];
   if (item?.type === "HERO") {
-    const chips = items.filter((row) => row && typeof row === "object" && "title" in row && !("value" in row));
+    const chips = items.filter((row) => row && typeof row === "object" && "title" in row && !("value" in row) && !isHeroSceneRow(row));
     return JSON.stringify(chips);
   }
   if (item?.type === "REMITTANCE") return "[]";
   return JSON.stringify(items);
 }
 
+function sceneJsonFrom(item?: CmsSection) {
+  if (item?.type !== "HERO") return "[]";
+  const items = Array.isArray(item.items) ? item.items : [];
+  return JSON.stringify(items.filter(isHeroSceneRow));
+}
+
 export default function Sections() {
   return (
     <ResourceCrud<CmsSection>
       title="Sections"
-      description="Edit homepage copy, buttons, and cards. Only fields that appear on the public site are shown."
+      description="Edit homepage copy, buttons, and cards. Open the Hero block to change the first screen. Numbers under it are in Hero stats."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Sections" }]}
       queryKey="admin-sections"
       list={adminApi.sections.list}
@@ -130,7 +151,7 @@ export default function Sections() {
           name: "subheading",
           label: "Kicker",
           group: "Copy",
-          hint: "Small line above the hero title.",
+          hint: "Small badge above the hero title, for example Global Remittance • Fast • Secure.",
           showWhen: isHero
         },
         {
@@ -144,7 +165,7 @@ export default function Sections() {
           name: "heading",
           label: "Title",
           group: "Copy",
-          hint: "Main headline on the homepage.",
+          hint: "Main headline. On the hero, use // to split navy and red lines, e.g. Receiving from abroad. // Paying families in Nepal.",
           showWhen: hasHeading
         },
         {
@@ -152,7 +173,7 @@ export default function Sections() {
           id: "punch",
           label: "Punch line",
           group: "Copy",
-          hint: "Line under the heading. Partners: Nepali line. Remittance: line under the cubes.",
+          hint: "Line under the heading. Partners: Nepali line. Remittance: punch line under the cubes.",
           showWhen: hasPunch
         },
         {
@@ -160,7 +181,7 @@ export default function Sections() {
           label: "Intro",
           type: "textarea",
           group: "Copy",
-          hint: "Short paragraph under the title. Leave empty if the punch line is enough.",
+          hint: "Paragraph under the title. Leave empty to hide it.",
           showWhen: hasDescription
         },
         {
@@ -170,30 +191,66 @@ export default function Sections() {
           hint: "Word spelled on the cubes, for example REMITTANCE.",
           showWhen: isRemittance
         },
+        {
+          name: "pointsJson",
+          id: "items-remittance-points",
+          label: "How it works",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add point",
+          emptyItem: { title: "", description: "" },
+          itemFields: [
+            { name: "title", label: "Title" },
+            { name: "description", label: "Short explanation", type: "textarea" }
+          ],
+          hint: "Helpful facts under the punch line, for example Bank deposit or Cash pickup.",
+          showWhen: isRemittance
+        },
+        {
+          name: "backgroundUrl",
+          id: "remittance-photo",
+          label: "Background photo",
+          type: "image",
+          folder: "sections",
+          group: "On the page",
+          hint: "Optional. Leave empty to keep the paper and map scene.",
+          showWhen: isRemittance
+        },
+        {
+          name: "overlay",
+          id: "remittance-overlay",
+          label: "Fade the background",
+          type: "checkbox",
+          group: "On the page",
+          showWhen: isRemittance
+        },
 
         {
           name: "buttonLabel",
           label: "Button text",
           group: "Buttons",
+          hint: "Leave empty to hide this button.",
           showWhen: hasPrimaryButton
         },
         {
           name: "buttonUrl",
           label: "Button link",
           group: "Buttons",
-          hint: "Page path, for example /exchange-rate or /partners.",
+          hint: "Page path, hash, or URL, for example /contact, #how-it-works, or https://.",
           showWhen: hasPrimaryButton
         },
         {
           name: "secondaryButtonLabel",
           label: "Second button text",
           group: "Buttons",
+          hint: "Leave empty to hide this button.",
           showWhen: hasSecondaryButton
         },
         {
           name: "secondaryButtonUrl",
           label: "Second button link",
           group: "Buttons",
+          hint: "Page path, hash, or URL.",
           showWhen: hasSecondaryButton
         },
 
@@ -206,7 +263,47 @@ export default function Sections() {
           addLabel: "Add chip",
           emptyItem: { title: "" },
           itemFields: [{ name: "title", label: "Chip text" }],
-          hint: "Pills under the hero buttons.",
+          hint: "Pills under the hero buttons, for example Secure Transfers.",
+          showWhen: isHero
+        },
+        {
+          name: "sceneJson",
+          id: "items-hero-scene",
+          label: "Globe cards",
+          type: "list",
+          group: "On the page",
+          addLabel: "Add card",
+          emptyItem: { kicker: "", title: "", note: "" },
+          itemFields: [
+            { name: "kicker", label: "Small label" },
+            { name: "title", label: "Main line" },
+            { name: "note", label: "Note" }
+          ],
+          hint: "Optional floating cards on the globe. Leave empty to keep the default scene. Up to four cards.",
+          showWhen: isHero
+        },
+        {
+          name: "backgroundUrl",
+          label: "Background photo",
+          type: "image",
+          folder: "sections",
+          group: "On the page",
+          hint: "Optional. Replaces the mountain silhouette behind the hero copy.",
+          showWhen: isHero
+        },
+        {
+          name: "overlay",
+          label: "Fade the background photo",
+          type: "checkbox",
+          group: "On the page",
+          showWhen: isHero
+        },
+        {
+          name: "statsNote",
+          label: "Hero stats",
+          type: "note",
+          group: "On the page",
+          hint: "The numbers under the hero come from the Hero stats block in this list, not from this form.",
           showWhen: isHero
         },
         {
@@ -245,9 +342,11 @@ export default function Sections() {
           type: "list",
           group: "On the page",
           addLabel: "Add story",
-          emptyItem: { name: "", headline: "", headlineNe: "", quote: "", quoteNe: "", imageUrl: "" },
+          emptyItem: { name: "", title: "", location: "", headline: "", headlineNe: "", quote: "", quoteNe: "", imageUrl: "" },
           itemFields: [
             { name: "name", label: "Name" },
+            { name: "title", label: "Role" },
+            { name: "location", label: "Location" },
             { name: "headline", label: "Headline (English)" },
             { name: "headlineNe", label: "शीर्षक (नेपाली)" },
             { name: "quote", label: "Quote (English)", type: "textarea" },
@@ -270,7 +369,7 @@ export default function Sections() {
           label: "Service cards",
           type: "note",
           group: "On the page",
-          hint: "Cards come from Admin → Services. This block only controls the heading.",
+          hint: "Cards come from Admin → Services. This block controls the heading, punch line, and optional button.",
           showWhen: isServices
         },
         {
@@ -338,9 +437,12 @@ export default function Sections() {
         secondaryButtonUrl: item?.secondaryButtonUrl ?? "",
         alignment: item?.alignment ?? "left",
         itemsJson: itemsJsonFrom(item),
+        sceneJson: sceneJsonFrom(item),
+        pointsJson: pointsJsonFrom(item),
         overlay: item?.overlay ?? true,
         enabled: item?.enabled ?? true,
         displayOrder: item?.displayOrder ?? 0,
+        statsNote: "",
         partnersNote: "",
         servicesNote: "",
         newsNote: "",
@@ -364,8 +466,36 @@ export default function Sections() {
           });
         }
         const cubeWord = String(values.cubeWord ?? "").trim();
-        if (cubeWord && values.type === "REMITTANCE") {
-          items = [{ word: cubeWord }];
+        if (values.type === "REMITTANCE") {
+          let points: unknown = [];
+          try {
+            points = JSON.parse(String(values.pointsJson || "[]"));
+          } catch {
+            points = [];
+          }
+          const pointRows = Array.isArray(points)
+            ? points.filter((row) => {
+                if (!row || typeof row !== "object") return false;
+                return Object.values(row as Record<string, unknown>).some((value) => String(value ?? "").trim());
+              })
+            : [];
+          items = cubeWord ? [{ word: cubeWord }, ...pointRows] : pointRows;
+        }
+        if (values.type === "HERO") {
+          let scenes: unknown = [];
+          try {
+            scenes = JSON.parse(String(values.sceneJson || "[]"));
+          } catch {
+            scenes = [];
+          }
+          const chips = Array.isArray(items) ? items : [];
+          const sceneRows = Array.isArray(scenes)
+            ? scenes.filter((row) => {
+                if (!row || typeof row !== "object") return false;
+                return Object.values(row as Record<string, unknown>).some((value) => String(value ?? "").trim());
+              })
+            : [];
+          items = [...chips, ...sceneRows];
         }
         return {
           key: values.key,

@@ -1,6 +1,6 @@
 import { unwrap, api } from "./client";
 import type { Paginated } from "@/types/api";
-import type { BranchItem, CmsPage, DocumentItem, FaqItem, GalleryItem, NewsItem, PartnerItem, PublicChatbot, ChatbotAskResult, PublicPartnership, PublicServiceCharges, ServiceItem } from "@/types/content";
+import type { BannerItem, BranchItem, CmsPage, DocumentItem, FaqItem, GalleryItem, NewsItem, PartnerItem, PublicChatbot, ChatbotAskResult, PublicPartnership, PublicServiceCharges, ServiceItem } from "@/types/content";
 import type { HomePayload, PublicSite } from "@/types/site";
 import type { PublicRatesPayload } from "@/types/rates";
 
@@ -14,6 +14,7 @@ export const publicApi = {
   services: () => unwrap<ServiceItem[]>(api.get("/public/services")),
   service: (id: string) => unwrap<ServiceItem>(api.get(`/public/services/${id}`)),
   news: (category?: string) => unwrap<NewsItem[]>(api.get("/public/news", { params: { category } })),
+  banners: () => unwrap<BannerItem[]>(api.get("/public/banners")),
   faqs: () => unwrap<FaqItem[]>(api.get("/public/faqs")),
   serviceCharges: () => unwrap<PublicServiceCharges>(api.get("/public/service-charges")),
   gallery: () => unwrap<GalleryItem[]>(api.get("/public/gallery")),

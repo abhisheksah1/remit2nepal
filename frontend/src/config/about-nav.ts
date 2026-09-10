@@ -5,6 +5,8 @@ export const ABOUT_NAV = [
   { label: "Compliance", path: "/about/compliance" }
 ] as const;
 
+export const ABOUT_DROPDOWN = ABOUT_NAV.filter((link) => link.path !== "/about/compliance");
+
 export function isAboutPath(path: string): boolean {
   return path === "/about" || path.startsWith("/about/");
 }

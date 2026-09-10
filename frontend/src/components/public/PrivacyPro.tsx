@@ -211,9 +211,9 @@ export function PrivacyPro({
           <section>
             <Heading id="who-we-are" n="1">Who We Are</Heading>
             <p>
-              {company} (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) provides remittance and money transfer services.
-              We are committed to handling personal information responsibly and in accordance with applicable privacy and
-              data protection requirements.
+              {company} (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is a remittance receiving company in Nepal.
+              We pay out transfers sent from abroad and are committed to handling personal information responsibly and in
+              accordance with applicable privacy and data protection requirements.
             </p>
             <dl className="ppro-dl">
               <div>
@@ -265,7 +265,7 @@ export function PrivacyPro({
               </article>
               <article>
                 <h3>Transaction Information</h3>
-                <p>When you send or receive money through our remittance services, this may include:</p>
+                <p>When remittance is sent from abroad and paid out in Nepal, this may include:</p>
                 <ul>
                   <li>Sender and recipient information</li>
                   <li>Transfer amount, currency, and destination</li>
@@ -299,7 +299,7 @@ export function PrivacyPro({
             <div className="ppro-stack">
               <article>
                 <h3>Directly From You</h3>
-                <p>For example, when you contact customer support, submit a form, use the chat assistant, apply to become an agent, or send or receive money through our remittance services.</p>
+                <p>For example, when you contact customer support, submit a form, use the chat assistant, apply to become an agent, or collect remittance sent from abroad.</p>
               </article>
               <article>
                 <h3>Automatically</h3>

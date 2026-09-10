@@ -6,6 +6,7 @@ import { auditRouter, dashboardRouter, seoRouter, settingsRouter } from "./ops.r
 import { exchangeRateRouter, nrbRouter } from "./exchange-rate.routes.js";
 import {
   aboutRouter,
+  bannerRouter,
   branchRouter,
   contactRouter,
   documentRouter,
@@ -58,6 +59,7 @@ apiRouter.use("/partners", partnerRouter);
 apiRouter.use("/partnership-settings", partnershipSettingsRouter);
 apiRouter.use("/partner-applications", partnerApplicationRouter);
 apiRouter.use("/news", newsRouter);
+apiRouter.use("/banners", bannerRouter);
 apiRouter.use("/faqs", faqRouter);
 apiRouter.use("/remittances", remittanceRouter);
 apiRouter.use("/gallery", galleryRouter);

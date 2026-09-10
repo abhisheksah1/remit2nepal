@@ -7,6 +7,7 @@ const serviceSchema = new Schema(
     shortDescription: { type: String, required: true },
     fullDescription: { type: String, default: "" },
     icon: { type: String, default: "banknote" },
+    accentColor: { type: String, default: "" },
     imageUrl: { type: String, default: "" },
     features: [{ type: String }],
     countryAvailability: [{ type: String }],

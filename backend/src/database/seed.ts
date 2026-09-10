@@ -14,6 +14,7 @@ import { Service } from "../models/service.model.js";
 import { Branch } from "../models/branch.model.js";
 import { Faq } from "../models/faq.model.js";
 import { News } from "../models/news.model.js";
+import { Banner } from "../models/banner.model.js";
 import { Partner } from "../models/partner.model.js";
 import { PartnershipSetting } from "../models/partnership-setting.model.js";
 import { AboutCompany } from "../models/about-company.model.js";
@@ -30,10 +31,17 @@ import {
   defaultCurrencies,
   defaultFaqs,
   defaultNavigation,
+  defaultBanners,
   defaultNews,
   defaultPartners,
   defaultSections,
-  defaultServices
+  defaultServices,
+  receivingAboutCopy,
+  receivingCompanyCopy,
+  receivingHeroCopy,
+  receivingPartnersCopy,
+  receivingRemittanceCopy,
+  receivingSeoCopy
 } from "./seed-content.js";
 import { defaultChatbotQuestions, defaultChatbotSteps } from "../constants/chatbot.js";
 
@@ -81,15 +89,14 @@ async function seed() {
       $setOnInsert: {
         key: "default",
         companyName: "Remit2Nepal",
-        tagline: "Secure remittance. Nationwide payout.",
+        tagline: receivingCompanyCopy.tagline,
         phone: "+977-1-5550100",
         email: "hello@remit2nepal.com",
         address: "New Baneshwor, Kathmandu, Nepal",
         officeHours: "Sunday–Friday, 10:00–17:00",
         emergencyContact: "+977-9800000000",
         headerCta: { label: "Send Enquiry", url: "/contact", enabled: true },
-        footerAbout:
-          "Remit2Nepal is a licensed remittance company serving families and businesses with regulated payouts across Nepal.",
+        footerAbout: receivingCompanyCopy.footerAbout,
         copyrightText: "© Remit2Nepal. All rights reserved.",
         legalLinks: [
           { label: "Privacy Policy", url: "/privacy" },
@@ -106,10 +113,9 @@ async function seed() {
     { key: "global" },
     {
       $setOnInsert: {
-        siteTitle: "Remit2Nepal | Licensed Remittance",
-        metaDescription:
-          "Licensed remittance to Nepal with official NRB-referenced rates, nationwide branches, and secure payout services.",
-        keywords: "remittance, Nepal, NRB, money transfer, cash pickup",
+        siteTitle: receivingSeoCopy.siteTitle,
+        metaDescription: receivingSeoCopy.metaDescription,
+        keywords: receivingSeoCopy.keywords,
         robots: "index,follow",
         canonicalUrl: env.FRONTEND_URL
       }
@@ -156,6 +162,9 @@ async function seed() {
   for (const item of defaultNews) {
     await News.updateOne({ slug: item.slug }, { $setOnInsert: item }, { upsert: true });
   }
+  for (const item of defaultBanners) {
+    await Banner.updateOne({ kind: item.kind, title: item.title }, { $setOnInsert: item }, { upsert: true });
+  }
   for (const item of defaultPartners) {
     await Partner.updateOne({ name: item.name }, { $setOnInsert: { ...item, status: "ACTIVE" } }, { upsert: true });
   }
@@ -167,18 +176,38 @@ async function seed() {
   );
   await PartnershipSetting.updateOne({ key: "default" }, { $setOnInsert: { key: "default" } }, { upsert: true });
   await Section.updateOne(
+    { key: "hero", heading: "Trusted remittance to every corner of Nepal" },
+    { $set: receivingHeroCopy }
+  );
+  await Section.updateOne(
+    { key: "hero", heading: "Moving Money. // Connecting Lives." },
+    { $set: receivingHeroCopy }
+  );
+  await Section.updateOne(
+    { key: "services", $or: [{ buttonLabel: "" }, { buttonLabel: { $exists: false } }] },
+    {
+      $set: {
+        icon: "What we do",
+        buttonLabel: "All services",
+        buttonUrl: "/services"
+      }
+    }
+  );
+  await Section.updateOne(
+    { key: "remittance-stage", icon: "Licensed transfer" },
+    { $set: receivingRemittanceCopy }
+  );
+  await Section.updateOne(
+    { key: "remittance-stage", icon: "Send home" },
+    { $set: receivingRemittanceCopy }
+  );
+  await Section.updateOne(
     { key: "partners" },
     {
       $set: {
         enabled: true,
         type: "PARTNERS",
-        heading: "Global remittance partners",
-        icon: "Our network",
-        subheading: "हाम्रा विश्वव्यापी साझेदार",
-        description: "Licensed desks that send money home.",
-        buttonLabel: "Become a Agent",
-        buttonUrl: "/partners",
-        displayOrder: 5.5
+        ...receivingPartnersCopy
       }
     }
   );
@@ -187,107 +216,49 @@ async function seed() {
     { key: "default" },
     {
       $setOnInsert: {
-        introduction:
-          "We are a trusted remittance company dedicated to making international money transfers easier, faster, and more reliable. Our goal is to remove the complexity from sending money across borders and provide a seamless experience for individuals, families, businesses, and communities.",
-        whoBody:
-          "With technology, transparency, and customer care at the heart of everything we do, we help people send money with confidence and stay connected across countries.",
-        whoHighlights: [
-          { title: "Fast & Reliable Transfers", description: "", icon: "zap" },
-          { title: "Secure Transactions", description: "", icon: "lock" },
-          { title: "Global Connectivity", description: "", icon: "globe" },
-          { title: "Customer First", description: "", icon: "heart" }
-        ],
-        mission:
-          "Our mission is to make cross-border money transfers simple, secure, and accessible for everyone. We work to deliver a reliable remittance experience powered by modern technology, transparent processes, and exceptional customer service.",
+        ...receivingAboutCopy,
         missionKicker: "Purpose",
         missionHeading: "Our Mission",
-        missionBody:
-          "We believe sending money should be more than a transaction—it should be a simple way to support families, build opportunities, and stay connected.",
-        missionPoints: [
-          { title: "Simple", description: "Easy-to-use money transfer experience." },
-          { title: "Secure", description: "Protecting every transaction and customer." },
-          { title: "Reliable", description: "Delivering money with confidence and transparency." }
-        ],
-        vision:
-          "Our vision is to create a world where sending money across borders is effortless, trusted, and accessible to everyone.",
         visionKicker: "Future",
         visionHeading: "Our Vision",
-        visionBody:
-          "We aspire to become a leading remittance partner by combining innovative technology, human-centered service, and a commitment to transparency—making global financial connections easier for millions of people.",
-        visionChips: ["Global Access", "Smart Technology", "Stronger Connections"],
         whyKicker: "Why Remit2Nepal",
         whyHeading: "Why Choose Us?",
-        whySubheading:
-          "Everything we do is designed around one simple goal: making your money transfer experience safer, faster, and easier.",
-        whyItems: [
-          { title: "Fast Transfers", description: "Send money quickly and conveniently across borders.", icon: "zap" },
-          { title: "Secure & Protected", description: "Advanced security measures help keep your money and information protected.", icon: "shield" },
-          { title: "Transparent Pricing", description: "Clear fees and exchange rates with no unnecessary surprises.", icon: "banknote" },
-          { title: "Easy to Use", description: "A simple and intuitive experience designed for everyone.", icon: "sparkles" },
-          { title: "Trusted Service", description: "Reliable support whenever you need assistance.", icon: "check" },
-          { title: "Global Reach", description: "Helping people connect financially across countries and communities.", icon: "globe" }
-        ],
         valuesKicker: "Culture",
         valuesHeading: "What We Stand For",
-        valuesSubheading: "Our values guide every decision we make and every service we provide.",
-        history:
-          "<p>Founded to serve migrant workers and their families, Remit2Nepal expanded from Kathmandu into a nationwide branch and partner network.</p>",
+        valuesSubheading: "Our values guide every decision we make and every payout we complete.",
         chairmanName: "Rajendra Adhikari",
         chairmanTitle: "Chairman",
-        chairmanMessage:
-          "<p>Trust is earned in every payout. We built Remit2Nepal around transparent rates, licensed operations, and people who answer the phone.</p>",
         heroKicker: "About Remit2Nepal",
-        heroTitle: "Connecting People. // Moving Money. // Building Trust.",
-        heroDescription:
-          "We make international money transfers simple, secure, fast, and accessible—helping people stay connected with the ones who matter most, wherever they are in the world.",
-        heroPrimaryLabel: "Send Money",
-        heroPrimaryUrl: "/contact",
         heroSecondaryLabel: "Learn More About Us",
         heroSecondaryUrl: "#who-we-are",
         storyKicker: "Our story",
         storyHeading: "Who We Are",
         stepsKicker: "How we work",
-        stepsHeading: "Simple. // Secure. // Seamless.",
-        steps: [
-          { title: "Start", description: "Choose the country and enter the amount you want to send." },
-          { title: "Verify", description: "Complete the required information securely." },
-          { title: "Send", description: "Confirm your transfer using your preferred payment method." },
-          { title: "Connect", description: "Your recipient receives the money safely and conveniently." }
-        ],
+        stepsHeading: "Receive. // Confirm. // Pay out.",
         teamAboutKicker: "Team work",
         teamAboutHeading: "Together, We Make a Difference",
-        teamAboutIntro:
-          "Great service starts with great people. Our team brings together technology, financial expertise, customer service, and a shared commitment to making international money transfers better.",
-        teamAboutBody:
-          "We work together across teams and borders to create simple solutions, solve problems, support our customers, and continuously improve the way money moves around the world.",
-        teamMotto: "One Team • One Goal • Global Impact",
         teamAboutLinkLabel: "Meet the full team",
         teamAboutLinkUrl: "/about/team",
         commitmentKicker: "Promise",
         commitmentHeading: "Our Commitment to You",
         commitmentBody:
-          "Your trust means everything to us. We are committed to providing a secure, transparent, and dependable remittance experience while continuously improving our services to meet the changing needs of our customers.",
+          "Your trust means everything to us. We are committed to a clear, dependable payout experience for families collecting remittance in Nepal.",
         commitmentItems: ["Security", "Transparency", "Reliability", "Customer Support", "Continuous Innovation"],
         storyBandKicker: "Every payout",
         storyBandHeading: "Because Every Transfer Has a Story.",
         storyBandBody:
-          "Behind every transfer is a family, a dream, an opportunity, or someone who matters. We help make those connections possible—one transfer at a time.",
-        ctaHeading: "Move Money. Stay Connected.",
-        ctaBody: "Experience a simpler, safer, and more reliable way to send money across borders.",
-        ctaPrimaryLabel: "Send Money",
-        ctaPrimaryUrl: "/contact",
+          "Behind every payout is a family in Nepal waiting on money sent from abroad. We help make those connections possible — one collection at a time.",
         ctaSecondaryLabel: "Contact Us",
         ctaSecondaryUrl: "/contact",
         bestOfHeading: "Best of Remit2Nepal",
-        bestOfSubheading: "Licensed operations, a nationwide payout desk, and rates you can check against NRB.",
         galleryImages: [],
         coreValues: [
           { title: "Trust", description: "We build lasting relationships through honesty, transparency, and reliability.", icon: "shield" },
           { title: "Security", description: "We take the protection of your money and information seriously.", icon: "lock" },
           { title: "Customer First", description: "Your needs and experience are at the center of everything we do.", icon: "heart" },
-          { title: "Innovation", description: "We continuously improve our technology and services to make transfers easier.", icon: "sparkles" },
+          { title: "Innovation", description: "We continuously improve our technology and services to make collection in Nepal clearer.", icon: "sparkles" },
           { title: "Transparency", description: "We believe customers deserve clear information and straightforward transactions.", icon: "check" },
-          { title: "Community", description: "We help strengthen connections between families, communities, and countries.", icon: "users" }
+          { title: "Community", description: "We help strengthen connections between families abroad and homes in Nepal.", icon: "users" }
         ],
         statistics: [
           { label: "Years of Experience", value: "18+" },
@@ -295,17 +266,18 @@ async function seed() {
           { label: "Countries Served", value: "25" },
           { label: "Customers", value: "1.2M+" },
           { label: "Partners", value: "40+" }
-        ],
-        licenses: ["NRB Remittance License"],
-        certifications: ["ISO-aligned information security practices"],
-        awards: ["National remittance service recognition"]
+        ]
       }
     },
     { upsert: true }
   );
+  await AboutCompany.updateOne(
+    { key: "default", heroPrimaryLabel: { $in: ["Send Money", "Send money"] } },
+    { $set: receivingAboutCopy }
+  );
 
   const leadership = [
-    { name: "Rajendra Adhikari", title: "Chairman", group: "BOARD", bio: "Oversees governance and licensed operations.", displayOrder: 1 },
+    { name: "Rajendra Adhikari", title: "Chairman", group: "BOARD", bio: "Oversees governance and the nationwide payout desk.", displayOrder: 1 },
     { name: "Sushila Karki", title: "Board Director", group: "BOARD", bio: "Guides compliance, audit, and shareholder accountability.", displayOrder: 2 },
     { name: "Bikash Thapa", title: "Independent Director", group: "BOARD", bio: "Advises on risk, NRB reporting, and payout integrity.", displayOrder: 3 },
     { name: "Meera Shrestha", title: "Chief Executive Officer", group: "TEAM", tier: "LEAD", bio: "Leads nationwide payout operations and partner corridors.", displayOrder: 4 },

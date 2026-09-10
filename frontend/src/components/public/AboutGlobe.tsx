@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { StatItem } from "@/types/content";
 
 const MAP_W = 800;
@@ -73,16 +74,17 @@ function NepalPulse({ x }: { x: number }) {
 }
 
 export function AboutGlobe({ stats = [] }: { stats?: StatItem[] }) {
-  const first = stats[0];
-  const second = stats[1];
+  const figures = stats.filter((item) => item.value && item.label).slice(0, 5);
 
   return (
-    <div className="apro-globe" aria-hidden>
-      <span className="apro-globe-atm" />
-      <span className="apro-globe-halo" />
-      <span className="apro-globe-ring" />
-      <span className="apro-globe-ring is-inner" />
-      <div className="apro-globe-sphere">
+    <div className={figures.length ? "apro-globe has-sats" : "apro-globe"}>
+      <div className="apro-globe-scene" aria-hidden>
+        <span className="apro-globe-atm" />
+        <span className="apro-globe-halo" />
+        <span className="apro-globe-ring" />
+        <span className="apro-globe-ring is-inner" />
+        <span className="apro-globe-ring is-sats" />
+        <div className="apro-globe-sphere">
         <div className="apro-globe-spin">
           <svg viewBox={`0 0 ${MAP_W * 2} ${MAP_H}`} preserveAspectRatio="none">
             <defs>
@@ -127,21 +129,32 @@ export function AboutGlobe({ stats = [] }: { stats?: StatItem[] }) {
         </svg>
         <span className="apro-globe-shade" />
       </div>
-      <span className="apro-globe-coin is-npr">रू</span>
-      <span className="apro-globe-coin is-usd">$</span>
-      <span className="apro-globe-coin is-gbp">£</span>
-      <span className="apro-globe-coin is-aed">د.إ</span>
-      {first ? (
-        <p className="apro-globe-pill is-top">
-          <strong>{first.value}</strong>
-          <span>{first.label}</span>
-        </p>
-      ) : null}
-      {second ? (
-        <p className="apro-globe-pill is-bot">
-          <strong>{second.value}</strong>
-          <span>{second.label}</span>
-        </p>
+      {figures.length ? null : (
+        <>
+          <span className="apro-globe-coin is-npr">रू</span>
+          <span className="apro-globe-coin is-usd">$</span>
+          <span className="apro-globe-coin is-gbp">£</span>
+          <span className="apro-globe-coin is-aed">د.إ</span>
+        </>
+      )}
+      </div>
+      {figures.length ? (
+        <ul className="apro-globe-sats">
+          {figures.map((item, index) => (
+            <li
+              key={`${item.label}-${item.value}`}
+              className={`apro-globe-sat is-${index + 1}`}
+              style={{ "--sat-a": `${-18 + (360 / figures.length) * index}deg` } as CSSProperties}
+            >
+              <div className="apro-globe-sat-hold">
+                <p className="apro-globe-stat">
+                  <strong>{item.value}</strong>
+                  <span>{item.label}</span>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : null}
     </div>
   );

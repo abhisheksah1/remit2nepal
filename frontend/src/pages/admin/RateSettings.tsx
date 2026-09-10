@@ -14,6 +14,7 @@ import { StatusCell } from "@/components/admin/ResourceCrud";
 import { useToast } from "@/components/ui/Toast";
 import { entityId } from "@/utils/cn";
 import { useState } from "react";
+import { CurrencyFlag } from "@/components/public/CurrencyFlag";
 
 export default function RateSettings() {
   const { push } = useToast();
@@ -68,7 +69,16 @@ export default function RateSettings() {
       </div>
       <DataTable
         columns={[
-          { key: "code", header: "Code", render: (row) => row.code },
+          {
+            key: "code",
+            header: "Currency",
+            render: (row) => (
+              <span className="inline-flex items-center gap-2">
+                <CurrencyFlag code={row.code} country={row.country || row.name} />
+                {row.code}
+              </span>
+            )
+          },
           { key: "name", header: "Name", render: (row) => row.name },
           { key: "unit", header: "Unit", render: (row) => row.unit },
           { key: "status", header: "Status", render: (row) => <StatusCell value={row.status} /> }

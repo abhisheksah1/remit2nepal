@@ -2,19 +2,26 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, Phone, ShieldCheck, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CompanySettings, NavItem } from "@/types/content";
-import { ABOUT_NAV, isAboutPath } from "@/config/about-nav";
+import { ABOUT_DROPDOWN, ABOUT_NAV, isAboutPath } from "@/config/about-nav";
 import { PUBLIC_NAV, publicNavLabel } from "@/config/public-labels";
 import { BRAND } from "@/constants/brand";
 import { RateTicker } from "./RateTicker";
 import { cn } from "@/utils/cn";
 
-const PINNED_NAV = [
-  { label: "About", path: "/about" },
+const PRIMARY_NAV = [
+  { label: "About Us", path: "/about" },
+  { label: "Services", path: "/services" },
+  { label: "Exchange Rate", path: "/exchange-rate" },
   { label: PUBLIC_NAV.becomeAgent.label, path: PUBLIC_NAV.becomeAgent.path },
-  { label: "Contact", path: "/contact" }
+  { label: "Compliance", path: "/about/compliance" },
+  { label: "Contact Us", path: "/contact" }
 ] as const;
 
-const PINNED_PATHS = new Set<string>(PINNED_NAV.map((item) => item.path));
+const PRIMARY_PATHS = new Set<string>(PRIMARY_NAV.map((item) => item.path));
+
+function isAboutMenuPath(path: string) {
+  return isAboutPath(path) && path !== "/about/compliance";
+}
 
 export function Header({
   settings,
@@ -30,7 +37,7 @@ export function Header({
   const [scrolled, setScrolled] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
   const nav = items.filter((item) => item.location === "HEADER" && item.enabled && item.path !== "/");
-  const drawerNav = nav.filter((item) => !PINNED_PATHS.has(item.path));
+  const drawerExtra = nav.filter((item) => !PRIMARY_PATHS.has(item.path) && !isAboutPath(item.path));
   const company = settings?.companyName || BRAND.name;
   const logoSrc = settings?.logoUrl || BRAND.logo;
 
@@ -129,12 +136,12 @@ export function Header({
 
           <div className="nav-cluster">
             <nav className="nav-pins" aria-label="Primary">
-              {PINNED_NAV.map((item) =>
+              {PRIMARY_NAV.map((item) =>
                 item.path === "/about" ? (
                   <div
                     key={item.path}
                     ref={aboutRef}
-                    className={cn("nav-flyout nav-flyout-end", aboutOpen && "is-open")}
+                    className={cn("nav-flyout", aboutOpen && "is-open")}
                     onMouseEnter={() => setAboutOpen(true)}
                     onMouseLeave={() => setAboutOpen(false)}
                     onBlur={(event) => {
@@ -145,14 +152,14 @@ export function Header({
                       to="/about"
                       aria-expanded={aboutOpen}
                       aria-haspopup="menu"
-                      className={() => cn("nav-link", isAboutPath(location.pathname) && "is-active")}
+                      className={() => cn("nav-link", isAboutMenuPath(location.pathname) && "is-active")}
                       onFocus={() => setAboutOpen(true)}
                     >
                       {item.label}
                       <ChevronDown className="nav-flyout-caret" aria-hidden />
                     </NavLink>
                     <div className="nav-flyout-menu" role="menu">
-                      {ABOUT_NAV.map((link) => (
+                      {ABOUT_DROPDOWN.map((link) => (
                         <NavLink
                           key={link.path}
                           to={link.path}
@@ -204,22 +211,11 @@ export function Header({
       <nav className="nav-drawer-panel" aria-label="More pages">
         <p className="nav-drawer-head">Menu</p>
         <div className="nav-drawer-pinned">
-          <p className="nav-drawer-label">About</p>
-          {ABOUT_NAV.map((link) => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              end={link.path === "/about"}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) => cn("mobile-link", isActive && "is-active")}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          {PINNED_NAV.filter((item) => item.path !== "/about").map((item) => (
+          {PRIMARY_NAV.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
+              end={item.path === "/about"}
               onClick={() => setOpen(false)}
               className={({ isActive }) => cn("mobile-link", isActive && "is-active")}
             >
@@ -228,7 +224,17 @@ export function Header({
           ))}
         </div>
         <div className="nav-drawer-links">
-          {drawerNav.map((item, index) => (
+          {ABOUT_NAV.filter((link) => link.path !== "/about" && link.path !== "/about/compliance").map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={() => setOpen(false)}
+              className={({ isActive }) => cn("mobile-link", isActive && "is-active")}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+          {drawerExtra.map((item, index) => (
             <NavLink
               key={item._id}
               to={item.path}

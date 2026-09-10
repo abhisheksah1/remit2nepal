@@ -27,31 +27,154 @@ export const defaultNavigation = [
   { label: "Service Charge", path: "/service-charge", displayOrder: 3, location: "FOOTER" }
 ];
 
+export const receivingHeroCopy = {
+  heading: "Receiving from abroad. // Paying families in Nepal.",
+  subheading: "Remittance receiving company in Nepal",
+  description:
+    "Remit2Nepal receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
+  buttonLabel: "Track",
+  buttonUrl: "/track",
+  secondaryButtonLabel: "How It Works",
+  secondaryButtonUrl: "#how-it-works",
+  items: [
+    { title: "Cash pickup" },
+    { title: "Bank deposit" },
+    { title: "Wallet credit" },
+    { title: "Nationwide payout" }
+  ]
+};
+
+export const receivingRemittanceCopy = {
+  heading: "Remittance to Nepal",
+  subheading: "Sent from abroad. Collected in Nepal.",
+  description:
+    "When a transfer is sent from overseas, Remit2Nepal pays it out in Nepal as cash pickup, bank deposit, or wallet. Check today’s rate before you collect.",
+  icon: "Receive in Nepal",
+  buttonLabel: "View exchange rate",
+  buttonUrl: "/exchange-rate",
+  secondaryButtonLabel: "Our Agent",
+  secondaryButtonUrl: "/branches",
+  items: [
+    { word: "REMITTANCE" },
+    { title: "Bank deposit", description: "Credit to a Nepali bank account when the name and number match." },
+    { title: "Cash pickup", description: "Collect at a Remit2Nepal branch or agent." },
+    { title: "NPR payout", description: "Receive the amount in Nepali rupees." },
+    { title: "Published rates", description: "See the rate on the exchange rate page before you collect." }
+  ]
+};
+
+export const receivingWhyCopy = {
+  heading: "Why families choose Remit2Nepal",
+  icon: "Why Remit2Nepal",
+  subheading: "Nationwide payout. Built for families.",
+  items: [
+    { title: "Secure", description: "Documented payout processes and protected customer data." },
+    { title: "Fast", description: "Same-day payout corridors with live branch and partner status." },
+    { title: "Reliable", description: "A nationwide payout map that still works when you need it most." },
+    { title: "Nationwide Network", description: "Urban hubs and district branches across all seven provinces." },
+    { title: "Competitive Rates", description: "Transparent buy/sell pricing with NRB comparison." },
+    { title: "Trusted Service", description: "A receiving desk that pays families across Nepal." }
+  ]
+};
+
+export const receivingPartnersCopy = {
+  heading: "Global remittance partners",
+  icon: "Our network",
+  subheading: "हाम्रा विश्वव्यापी साझेदार",
+  description: "Overseas partners send remittance. We pay families in Nepal.",
+  buttonLabel: "Become a Agent",
+  buttonUrl: "/partners",
+  displayOrder: 5.5
+};
+
+export const receivingCompanyCopy = {
+  tagline: "Remitting Happiness...",
+  footerAbout:
+    "Remit2Nepal is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."
+};
+
+export const receivingSeoCopy = {
+  siteTitle: "Remit2Nepal | Remittance receiving in Nepal",
+  metaDescription:
+    "Remit2Nepal receives remittance sent from abroad and pays families in Nepal through cash pickup, bank deposit, and wallet, with published NRB-referenced rates.",
+  keywords: "remittance, Nepal, receive, payout, cash pickup, bank deposit, wallet"
+};
+
+export const receivingAboutCopy = {
+  introduction:
+    "Remit2Nepal is a remittance receiving company in Nepal. We pay out money that families receive from relatives working abroad — as cash pickup, bank deposit, or wallet across the country.",
+  whoBody:
+    "Our work starts when a transfer is sent from overseas. We identify the payout, confirm the beneficiary, and complete the payment in Nepal with published rates and clear branch hours.",
+  whoHighlights: [
+    { title: "Nationwide payout", description: "", icon: "globe" },
+    { title: "Cash, bank, and wallet", description: "", icon: "banknote" },
+    { title: "Published rates", description: "", icon: "check" },
+    { title: "Family first", description: "", icon: "heart" }
+  ],
+  mission:
+    "To receive remittance from abroad and pay families in Nepal quickly, clearly, and with care.",
+  missionBody:
+    "Every payout is a household waiting at home. We keep collection simple for beneficiaries in Nepal.",
+  missionPoints: [
+    { title: "Receive", description: "Accept transfers sent from overseas partners." },
+    { title: "Pay out", description: "Cash pickup, bank deposit, or wallet in Nepal." },
+    { title: "Care", description: "Staff who explain each step at the counter." }
+  ],
+  vision:
+    "To be the payout desk families in Nepal trust when money is sent from abroad.",
+  visionBody:
+    "We want every beneficiary in Nepal to collect with confidence — clear rates, a nearby desk, and a process that is easy to follow.",
+  visionChips: ["Payout in Nepal", "Sent from abroad", "Families first"],
+  whySubheading:
+    "Remit2Nepal receives remittance from abroad and pays it to families across Nepal.",
+  whyItems: [
+    { title: "Fast payout", description: "Collect the same day when the transfer is ready.", icon: "zap" },
+    { title: "Secure collection", description: "ID checks at the counter before we pay.", icon: "shield" },
+    { title: "Clear rates", description: "Published NPR rates you can check before you collect.", icon: "banknote" },
+    { title: "Easy to collect", description: "Branch, agent, bank deposit, or wallet.", icon: "sparkles" },
+    { title: "Trusted desk", description: "Staff who explain each step at payout.", icon: "check" },
+    { title: "Built for Nepal", description: "A receiving network across the country.", icon: "globe" }
+  ],
+  heroTitle: "Receiving from abroad. // Paying families in Nepal.",
+  heroDescription:
+    "Remit2Nepal receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
+  heroPrimaryLabel: "Track",
+  heroPrimaryUrl: "/track",
+  steps: [
+    { title: "Sent abroad", description: "A relative or partner sends the transfer from overseas." },
+    { title: "We receive it", description: "Remit2Nepal receives the payout instruction in Nepal." },
+    { title: "Confirm", description: "The beneficiary is identified before payment." },
+    { title: "Collect", description: "Cash pickup, bank deposit, or wallet — paid out in NPR." }
+  ],
+  teamAboutIntro:
+    "Great service starts with great people. Our team runs the payout desk, branches, and partner corridors so families in Nepal can collect remittance sent from abroad.",
+  teamAboutBody:
+    "We work together across the receiving network to complete payouts, support beneficiaries, and keep collection in Nepal clear and dependable.",
+  teamMotto: "One Team • One Goal • Families in Nepal",
+  ctaHeading: "Collect in Nepal. Stay connected.",
+  ctaBody: "Ask about a payout, branch hours, or today’s rate. Remit2Nepal receives remittance sent from abroad.",
+  ctaPrimaryLabel: "Track",
+  ctaPrimaryUrl: "/track",
+  bestOfSubheading: "A nationwide payout desk and rates you can check against NRB.",
+  chairmanMessage:
+    "<p>Trust is earned in every payout. We built Remit2Nepal around transparent rates and people who answer the phone.</p>",
+  history:
+    "<p>Founded to serve families in Nepal who receive remittance from relatives working abroad, Remit2Nepal expanded from Kathmandu into a nationwide branch and partner payout network.</p>"
+};
+
 export const defaultSections = [
   {
     key: "hero",
     type: "HERO",
-    heading: "Trusted remittance to every corner of Nepal",
-    subheading: "Licensed. Secure. Nationwide.",
-    description:
-      "Remit2Nepal delivers regulated money transfer with transparent rates, verified branches, and a network built for families who depend on funds arriving on time.",
-    backgroundUrl: "/images/send-remittance.png",
+    ...receivingHeroCopy,
+    backgroundUrl: "",
     overlay: true,
-    buttonLabel: "View Exchange Rate",
-    buttonUrl: "/exchange-rate",
-    secondaryButtonLabel: "Our Agent",
-    secondaryButtonUrl: "/branches",
-    displayOrder: 1,
-    items: [
-      { title: "Licensed operator" },
-      { title: "NRB-referenced rates" },
-      { title: "Nationwide payout" }
-    ]
+    displayOrder: 1
   },
   {
     key: "stats",
     type: "STATS",
-    heading: "A national payment network with global reach",
+    heading: "A nationwide payout network for remittance from abroad",
     displayOrder: 2,
     items: [
       { label: "Years of Experience", value: "18+" },
@@ -64,8 +187,11 @@ export const defaultSections = [
   {
     key: "services",
     type: "SERVICES",
-    heading: "Remittance services designed for real journeys",
-    subheading: "From cash pickup in Kathmandu to bank deposit in a remote municipality.",
+    heading: "How families collect remittance in Nepal",
+    icon: "What we do",
+    subheading: "Cash pickup, bank deposit, and wallet payout for transfers sent from abroad.",
+    buttonLabel: "All services",
+    buttonUrl: "/services",
     displayOrder: 3
   },
   {
@@ -80,38 +206,22 @@ export const defaultSections = [
   {
     key: "remittance-stage",
     type: "REMITTANCE",
-    heading: "Remittance to Nepal",
-    subheading: "Earn abroad. Support home. Paid out in NPR.",
-    description: "",
-    icon: "Licensed transfer",
+    ...receivingRemittanceCopy,
     overlay: true,
     alignment: "center",
-    buttonLabel: "View exchange rate",
-    buttonUrl: "/exchange-rate",
-    displayOrder: 4.5,
-    items: [{ word: "REMITTANCE" }]
+    displayOrder: 4.5
   },
   {
     key: "why",
     type: "WHY_CHOOSE",
-    heading: "Why families choose Remit2Nepal",
-    icon: "Why Remit2Nepal",
-    subheading: "Regulated. Nationwide. Built for families.",
-    displayOrder: 5,
-    items: [
-      { title: "Secure", description: "Regulated operations, audited processes, and protected customer data." },
-      { title: "Fast", description: "Same-day payout corridors with live branch and partner status." },
-      { title: "Reliable", description: "A nationwide payout map that still works when you need it most." },
-      { title: "Nationwide Network", description: "Urban hubs and district branches across all seven provinces." },
-      { title: "Competitive Rates", description: "Transparent buy/sell pricing with NRB comparison." },
-      { title: "Trusted Service", description: "Licensed remittance with published documents and notices." }
-    ]
+    ...receivingWhyCopy,
+    displayOrder: 5
   },
   {
     key: "nepal-people",
     type: "NEPAL_MAP",
     heading: "People and families across Nepal",
-    subheading: "Earners abroad, families at home — from the Himalaya to the Terai.",
+    subheading: "Money sent from abroad. Families collecting at home — from the Himalaya to the Terai.",
     description: "",
     icon: "Our Nepal",
     backgroundUrl: "",
@@ -131,13 +241,7 @@ export const defaultSections = [
   {
     key: "partners",
     type: "PARTNERS",
-    heading: "Global remittance partners",
-    icon: "Our network",
-    subheading: "हाम्रा विश्वव्यापी साझेदार",
-    description: "Licensed desks that send money home.",
-    buttonLabel: "Become a Agent",
-    buttonUrl: "/partners",
-    displayOrder: 5.5
+    ...receivingPartnersCopy
   },
   {
     key: "news",
@@ -154,7 +258,7 @@ export const defaultSections = [
     type: "TESTIMONIALS",
     heading: "Stories from the corridor",
     icon: "Testimonials",
-    subheading: "Families who send. Families who receive.",
+    subheading: "Families who send from abroad. Families who collect in Nepal.",
     alignment: "center",
     displayOrder: 8,
     items: [
@@ -200,8 +304,8 @@ export const defaultSections = [
   {
     key: "cta",
     type: "CONTACT_CTA",
-    heading: "Need help with a transfer?",
-    description: "Our relationship desk assists with branch hours, rate queries, and corporate remittance.",
+    heading: "Need help with a payout?",
+    description: "Our desk assists with branch hours, collection questions, and corporate remittance into Nepal.",
     buttonLabel: "Contact Us",
     buttonUrl: "/contact",
     displayOrder: 10
@@ -212,19 +316,21 @@ export const defaultServices = [
   {
     title: "International Remittance",
     slug: "international-remittance",
-    shortDescription: "Inbound transfers from major corridors into Nepal with documented compliance.",
-    fullDescription: "<p>Send funds to Nepal through licensed corridors with verified identification and payout tracking.</p>",
+    shortDescription: "Inbound remittance from overseas corridors, paid out in Nepal.",
+    fullDescription: "<p>Remit2Nepal receives transfers sent from abroad and pays beneficiaries in Nepal with identification and payout tracking.</p>",
     icon: "globe",
-    features: ["Licensed corridors", "ID verification", "Payout tracking"],
+    accentColor: "#F5A623",
+    features: ["Inbound corridors", "ID verification", "Payout tracking"],
     countryAvailability: ["UAE", "Qatar", "Saudi Arabia", "Malaysia", "UK", "USA", "Australia"],
     displayOrder: 1
   },
   {
     title: "Money Transfer",
     slug: "money-transfer",
-    shortDescription: "Person-to-person transfers with SMS notification and receipt copies.",
-    fullDescription: "<p>Simple P2P money transfer with reference numbers and beneficiary verification.</p>",
+    shortDescription: "Person-to-person remittance into Nepal with SMS notification and receipt copies.",
+    fullDescription: "<p>Simple inbound money transfer with reference numbers and beneficiary verification at payout.</p>",
     icon: "send",
+    accentColor: "#6D28D9",
     features: ["Reference number", "SMS alert", "Beneficiary check"],
     displayOrder: 2
   },
@@ -234,6 +340,7 @@ export const defaultServices = [
     shortDescription: "Collect cash at Remit2Nepal branches with original ID.",
     fullDescription: "<p>Walk-in cash payout during published branch hours.</p>",
     icon: "banknote",
+    accentColor: "#2E3192",
     features: ["Same-day payout", "ID required", "Nationwide branches"],
     displayOrder: 3
   },
@@ -243,6 +350,7 @@ export const defaultServices = [
     shortDescription: "Direct credit to Nepali bank accounts through partner banks.",
     fullDescription: "<p>Deposit to commercial bank accounts with account-name matching.</p>",
     icon: "building-2",
+    accentColor: "#E31E24",
     features: ["Account credit", "Name match", "Partner banks"],
     displayOrder: 4
   },
@@ -252,6 +360,7 @@ export const defaultServices = [
     shortDescription: "Payout to supported digital wallets where available.",
     fullDescription: "<p>Wallet payout for customers who prefer digital collection.</p>",
     icon: "smartphone",
+    accentColor: "#0EA5E9",
     features: ["Digital payout", "Supported wallets", "Transaction SMS"],
     displayOrder: 5
   },
@@ -261,6 +370,7 @@ export const defaultServices = [
     shortDescription: "Payroll and vendor payouts for companies with dedicated operations support.",
     fullDescription: "<p>Bulk payouts, reporting, and relationship management for employers.</p>",
     icon: "briefcase",
+    accentColor: "#059669",
     features: ["Bulk payout", "Reporting", "Relationship manager"],
     displayOrder: 6
   }
@@ -390,6 +500,27 @@ export const defaultNews = [
     status: "PUBLISHED",
     author: "Operations",
     publishedAt: new Date()
+  }
+];
+
+export const defaultBanners = [
+  {
+    title: "Cookies on this site",
+    subtitle: "",
+    body: "We store a small preference on this device so we do not keep showing the same notice.",
+    imageUrl: "",
+    altText: "",
+    kind: "COOKIE",
+    position: "BOTTOM",
+    pageScope: "ALL",
+    pagePath: "",
+    linkUrl: "/privacy",
+    buttonLabel: "Accept",
+    secondaryButtonLabel: "Essential only",
+    frequency: "ONCE",
+    dismissible: true,
+    status: "ACTIVE",
+    displayOrder: 0
   }
 ];
 

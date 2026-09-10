@@ -6,6 +6,7 @@ export const serviceSchema = z.object({
   shortDescription: z.string().min(8),
   fullDescription: z.string().optional(),
   icon: z.string().optional(),
+  accentColor: z.string().optional(),
   imageUrl: z.string().optional(),
   features: z.array(z.string()).optional(),
   countryAvailability: z.array(z.string()).optional(),
@@ -194,6 +195,28 @@ export const serviceChargePageSchema = z.object({
   pageTitle: z.string().optional(),
   pageDescription: z.string().optional(),
   footnote: z.string().optional()
+});
+
+export const bannerSchema = z.object({
+  title: z.string().min(2),
+  subtitle: z.string().optional(),
+  body: z.string().optional(),
+  imageUrl: z.string().optional(),
+  imageRatio: z.enum(["9:16", "1:1", "16:9"]).optional(),
+  altText: z.string().optional(),
+  kind: z.enum(["FESTIVAL", "OFFER", "ANNOUNCEMENT", "COOKIE"]).optional(),
+  position: z.enum(["TOP", "BOTTOM", "LEFT", "RIGHT", "CENTER", "POPUP"]).optional(),
+  pageScope: z.enum(["ALL", "HOME", "CUSTOM"]).optional(),
+  pagePath: z.string().optional(),
+  linkUrl: z.string().optional(),
+  buttonLabel: z.string().optional(),
+  secondaryButtonLabel: z.string().optional(),
+  frequency: z.enum(["ONCE", "SESSION", "EVERY_VISIT"]).optional(),
+  dismissible: z.boolean().optional(),
+  startsAt: z.string().optional().or(z.literal("")),
+  endsAt: z.string().optional().or(z.literal("")),
+  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  displayOrder: z.coerce.number().optional()
 });
 
 export const remittanceSchema = z.object({

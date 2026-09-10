@@ -50,7 +50,7 @@ export const defaultChatbotQuestions = [
   {
     question: "Who are the directors?",
     answer:
-      "The Board of Directors sets policy, watches licensed operations, and keeps payouts accountable. Open Board of Directors to see each director.",
+      "The Board of Directors sets policy and keeps the payout desk accountable. Open Board of Directors to see each director.",
     keywords: "director, directors, board, chairman, chairperson, governance, who is chairman",
     category: "About",
     displayOrder: 7

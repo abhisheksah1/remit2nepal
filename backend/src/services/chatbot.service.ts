@@ -125,6 +125,16 @@ export async function ensureChatbotDefaults() {
   }
   if (settings.isModified()) await settings.save();
 
+  await ChatbotQa.updateOne(
+    { question: "Who are the directors?", answer: /licensed operations/i },
+    {
+      $set: {
+        answer:
+          "The Board of Directors sets policy and keeps the payout desk accountable. Open Board of Directors to see each director."
+      }
+    }
+  );
+
   if ((await ChatbotAgentStep.countDocuments()) === 0) {
     await ChatbotAgentStep.insertMany(defaultChatbotSteps.map((item) => ({ ...item, status: "ACTIVE" })));
   }

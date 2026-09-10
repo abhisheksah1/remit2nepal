@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import type { CmsSection, PartnerItem } from "@/types/content";
 import { PUBLIC_NAV } from "@/config/public-labels";
 import { entityId, mediaUrl } from "@/utils/cn";
-import { partnerLogoFocus } from "@/utils/partners";
 
 function PartnerLogos({
   partners,
@@ -17,7 +16,7 @@ function PartnerLogos({
       {partners.map((partner, index) => {
         const tile = (
           <span className="corridor-logo-mark">
-            <img src={mediaUrl(partner.logoUrl)} alt="" style={{ objectPosition: partnerLogoFocus(partner.name) }} />
+            <img src={mediaUrl(partner.logoUrl)} alt="" />
           </span>
         );
         return (

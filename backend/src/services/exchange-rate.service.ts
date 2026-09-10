@@ -43,11 +43,12 @@ export async function listCurrentRates() {
 export async function publicRates() {
   const [rates, currencies, settings] = await Promise.all([
     ExchangeRate.find({ status: "ACTIVE" }).lean(),
-    Currency.find().select("code status displayOrder").lean(),
+    Currency.find().select("code status displayOrder country flag symbol").lean(),
     CompanySetting.findOne({ key: "default" }).lean()
   ]);
   const hidden = new Set(currencies.filter((item) => item.status === "INACTIVE").map((item) => item.code));
   const order = new Map(currencies.map((item) => [item.code, item.displayOrder ?? 80]));
+  const meta = new Map(currencies.map((item) => [item.code, item]));
   const visible = rates
     .filter((rate) => !hidden.has(rate.currencyCode))
     .sort(
@@ -66,19 +67,25 @@ export async function publicRates() {
     lastUpdated: latestFetch ?? null,
     isStale,
     source: "Nepal Rastra Bank",
-    rates: visible.map((rate) => ({
-      currency: rate.currency,
-      currencyCode: rate.currencyCode,
-      unit: rate.unit,
-      nrbBuyRate: mode === "COMPANY" ? undefined : rate.nrbBuyRate,
-      nrbSellRate: mode === "COMPANY" ? undefined : rate.nrbSellRate,
-      companyBuyRate: mode === "NRB" ? undefined : rate.companyBuyRate,
-      companySellRate: mode === "NRB" ? undefined : rate.companySellRate,
-      officialRate: rate.officialRate,
-      sourceDate: rate.sourceDate,
-      effectiveDate: rate.effectiveDate,
-      fetchedAt: rate.fetchedAt
-    }))
+    rates: visible.map((rate) => {
+      const info = meta.get(rate.currencyCode);
+      return {
+        currency: rate.currency,
+        currencyCode: rate.currencyCode,
+        unit: rate.unit,
+        country: info?.country || "",
+        flag: info?.flag || "",
+        symbol: info?.symbol || "",
+        nrbBuyRate: mode === "COMPANY" ? undefined : rate.nrbBuyRate,
+        nrbSellRate: mode === "COMPANY" ? undefined : rate.nrbSellRate,
+        companyBuyRate: mode === "NRB" ? undefined : rate.companyBuyRate,
+        companySellRate: mode === "NRB" ? undefined : rate.companySellRate,
+        officialRate: rate.officialRate,
+        sourceDate: rate.sourceDate,
+        effectiveDate: rate.effectiveDate,
+        fetchedAt: rate.fetchedAt
+      };
+    })
   };
 }
 

@@ -24,7 +24,7 @@ export function ScrollReveal() {
     );
 
     nodes.forEach((node) => {
-      if (node.classList.contains("hero-stage") || node.classList.contains("reveal-skip") || node.classList.contains("page-hero") || node.classList.contains("cdesk") || node.classList.contains("agent-desk") || node.classList.contains("agent-hero") || node.classList.contains("board-desk") || node.classList.contains("ba-desk") || node.classList.contains("ba-hero") || node.classList.contains("apply-desk") || node.classList.contains("apply-hero")) {
+      if (node.classList.contains("hero-stage") || node.classList.contains("reveal-skip") || node.classList.contains("page-hero") || node.classList.contains("cdesk") || node.classList.contains("agent-desk") || node.classList.contains("agent-hero") || node.classList.contains("board-desk") || node.classList.contains("ba-desk") || node.classList.contains("ba-hero") || node.classList.contains("apply-desk") || node.classList.contains("apply-hero") || node.classList.contains("cpro") || node.classList.contains("page-dock")) {
         node.classList.add("is-revealed");
         return;
       }

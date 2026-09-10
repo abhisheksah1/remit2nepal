@@ -249,7 +249,7 @@ export default function About() {
       >
         <AdminBlock title="Hero">
           <Input label="Kicker" value={form.heroKicker} onChange={(event) => setField("heroKicker", event.target.value)} />
-          <Input label="Title" value={form.heroTitle} onChange={(event) => setField("heroTitle", event.target.value)} hint="Use // to break lines, e.g. Connecting People. // Moving Money." />
+          <Input label="Title" value={form.heroTitle} onChange={(event) => setField("heroTitle", event.target.value)} hint="Use // to break lines, e.g. Receiving from abroad. // Paying families in Nepal." />
           <Textarea label="Description" value={form.heroDescription} onChange={(event) => setField("heroDescription", event.target.value)} />
           <div className="grid gap-3 sm:grid-cols-2">
             <Input label="Primary button" value={form.heroPrimaryLabel} onChange={(event) => setField("heroPrimaryLabel", event.target.value)} />

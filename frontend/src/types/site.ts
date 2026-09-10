@@ -1,4 +1,4 @@
-import type { AboutCompany, CmsSection, CompanySettings, GalleryItem, NavItem, NewsItem, PartnerItem, SeoSettings, ServiceItem, SocialLink, TeamMember } from "./content";
+import type { AboutCompany, BannerItem, CmsSection, CompanySettings, GalleryItem, NavItem, NewsItem, PartnerItem, SeoSettings, ServiceItem, SocialLink, TeamMember } from "./content";
 import type { PublicRatesPayload } from "./rates";
 
 export interface PublicSite {
@@ -12,6 +12,7 @@ export interface PublicSite {
   news: NewsItem[];
   about: AboutCompany | null;
   team: TeamMember[];
+  banners?: BannerItem[];
 }
 
 export interface HomePayload extends PublicSite {

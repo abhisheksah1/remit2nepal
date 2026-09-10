@@ -11,7 +11,7 @@ export function RateTicker() {
   });
   const rates = query.data?.rates ?? [];
   if (!rates.length) {
-    return <p className="truncate tracking-[0.18em] text-cream/70">Treasury desk · Licensed remittance corridors</p>;
+    return <p className="truncate tracking-[0.18em] text-cream/70">Treasury desk · Receiving remittance in Nepal</p>;
   }
   const row = (
     <>

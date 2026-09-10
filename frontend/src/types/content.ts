@@ -143,6 +143,7 @@ export interface ServiceItem extends EntityId {
   shortDescription: string;
   fullDescription: string;
   icon: string;
+  accentColor?: string;
   imageUrl: string;
   features: string[];
   countryAvailability: string[];
@@ -242,6 +243,34 @@ export interface ServiceChargePage {
 export interface PublicServiceCharges {
   page: ServiceChargePage;
   rows: ServiceChargeRow[];
+}
+
+export type BannerKind = "FESTIVAL" | "OFFER" | "ANNOUNCEMENT" | "COOKIE";
+export type BannerPosition = "TOP" | "BOTTOM" | "LEFT" | "RIGHT" | "CENTER" | "POPUP";
+export type BannerPageScope = "ALL" | "HOME" | "CUSTOM";
+export type BannerFrequency = "ONCE" | "SESSION" | "EVERY_VISIT";
+export type BannerRatio = "9:16" | "1:1" | "16:9";
+
+export interface BannerItem extends EntityId {
+  title: string;
+  subtitle: string;
+  body: string;
+  imageUrl: string;
+  imageRatio?: BannerRatio;
+  altText: string;
+  kind: BannerKind;
+  position: BannerPosition;
+  pageScope: BannerPageScope;
+  pagePath: string;
+  linkUrl: string;
+  buttonLabel: string;
+  secondaryButtonLabel: string;
+  frequency: BannerFrequency;
+  dismissible: boolean;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  status: StatusFlag;
+  displayOrder: number;
 }
 
 export interface GalleryItem extends EntityId {

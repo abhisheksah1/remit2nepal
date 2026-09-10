@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
 import { formatDateTime, formatNpr } from "@/utils/format";
 import type { PublicRatesPayload } from "@/types/rates";
+import { CurrencyFlag } from "./CurrencyFlag";
 
 const FEATURED = ["USD", "AED", "EUR", "GBP", "QAR", "SAR"];
 
@@ -40,7 +41,7 @@ export function TransferDesk({
     <div className="transfer-desk">
       <div className="transfer-desk-head">
         <div>
-          <p>Send to Nepal</p>
+          <p>Receive in Nepal</p>
           <small>Live customer rate · {activeCode} → NPR</small>
         </div>
         <span className={payload?.isStale ? "is-stale" : undefined}>
@@ -50,8 +51,8 @@ export function TransferDesk({
 
       <div className="transfer-desk-body">
         <fieldset className="transfer-field">
-          <legend>You send from abroad</legend>
-          <div className="transfer-pills" role="radiogroup" aria-label="Popular send currencies">
+          <legend>Amount sent from abroad</legend>
+          <div className="transfer-pills" role="radiogroup" aria-label="Currencies sent from abroad">
             {pills.map((item) => (
               <button
                 key={item.currencyCode}
@@ -61,6 +62,7 @@ export function TransferDesk({
                 className={item.currencyCode === activeCode ? "is-active" : undefined}
                 onClick={() => setCode(item.currencyCode)}
               >
+                <CurrencyFlag code={item.currencyCode} country={item.country || item.currency} />
                 {item.currencyCode}
               </button>
             ))}
@@ -75,15 +77,18 @@ export function TransferDesk({
               >
                 {list.map((item) => (
                   <option key={item.currencyCode} value={item.currencyCode}>
-                    {item.currencyCode} · {item.currency}
+                    {item.currencyCode} · {item.country || item.currency}
                   </option>
                 ))}
               </select>
             </label>
           ) : null}
           <label className="transfer-amount">
-            <span className="sr-only">Amount to send in {activeCode}</span>
-            <em>{activeCode}</em>
+            <span className="sr-only">Amount sent from abroad in {activeCode}</span>
+            <em>
+              <CurrencyFlag code={activeCode} country={selected?.country || selected?.currency} />
+              {activeCode}
+            </em>
             <input
               inputMode="decimal"
               value={amount}
@@ -109,9 +114,12 @@ export function TransferDesk({
         </div>
 
         <div className="transfer-field">
-          <span>Family receives in Nepal</span>
+          <span>You receive in Nepal</span>
           <div className="transfer-receive">
-            <em>NPR</em>
+            <em>
+              <CurrencyFlag code="NPR" country="Nepal" />
+              NPR
+            </em>
             <strong>{received != null ? formatNpr(received, 0) : "—"}</strong>
           </div>
         </div>

@@ -33,15 +33,6 @@ export function groupPartners(partners: PartnerItem[]) {
   return { international, national, cooperative, privateAgent, bank };
 }
 
-/** Crop wordmark files to the graphic mark inside homepage partner tiles. */
-export function partnerLogoFocus(name: string): string {
-  const key = name.toLowerCase().replace(/['’]/g, "");
-  if (key.includes("transfast")) return "right center";
-  if (key.includes("saad")) return "top center";
-  if (key.includes("mirq")) return "left center";
-  return "left center";
-}
-
 export function agreementSlotFor(kind: PartnerKind, nationalType?: ApplicationNationalType | ""): AgreementSlot {
   if (kind === "INTERNATIONAL") return "international";
   return nationalType === "PRIVATE_AGENT" ? "privateAgent" : "cooperative";

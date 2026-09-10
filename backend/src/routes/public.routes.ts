@@ -19,6 +19,7 @@ publicRouter.get("/branches/:id", publicApi.branch);
 publicRouter.get("/services", publicApi.services);
 publicRouter.get("/services/:id", publicApi.service);
 publicRouter.get("/news", publicApi.news);
+publicRouter.get("/banners", publicApi.banners);
 publicRouter.get("/faqs", publicApi.faqs);
 publicRouter.get("/service-charges", publicApi.serviceCharges);
 publicRouter.get("/gallery", publicApi.gallery);

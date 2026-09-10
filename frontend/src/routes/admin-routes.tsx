@@ -7,6 +7,7 @@ const loaders = {
   "/admin/pages": () => import("@/pages/admin/Pages"),
   "/admin/sections": () => import("@/pages/admin/Sections"),
   "/admin/header-footer": () => import("@/pages/admin/HeaderFooter"),
+  "/admin/banners": () => import("@/pages/admin/Banners"),
   "/admin/about": () => import("@/pages/admin/About"),
   "/admin/team": () => import("@/pages/admin/Team"),
   "/admin/partners": () => import("@/pages/admin/Partners"),
@@ -43,6 +44,7 @@ const Homepage = lazy(loaders["/admin/homepage"]);
 const Pages = lazy(loaders["/admin/pages"]);
 const Sections = lazy(loaders["/admin/sections"]);
 const HeaderFooter = lazy(loaders["/admin/header-footer"]);
+const Banners = lazy(loaders["/admin/banners"]);
 const About = lazy(loaders["/admin/about"]);
 const Team = lazy(loaders["/admin/team"]);
 const Partners = lazy(loaders["/admin/partners"]);
@@ -75,6 +77,7 @@ export const adminRouteElements = (
     <Route path="pages" element={<Pages />} />
     <Route path="sections" element={<Sections />} />
     <Route path="header-footer" element={<HeaderFooter />} />
+    <Route path="banners" element={<Banners />} />
     <Route path="about" element={<About />} />
     <Route path="team" element={<Team />} />
     <Route path="partners" element={<Partners />} />

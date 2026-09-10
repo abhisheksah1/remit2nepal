@@ -5,6 +5,8 @@ import { parsePagination } from "../utils/pagination.js";
 import { branchCatalog, branchFilterMeta, searchBranches } from "../services/branch.service.js";
 import { createService, serviceCatalog } from "../services/service-catalog.service.js";
 import {
+  bannerCatalog,
+  cleanBannerInput,
   createNews,
   createPage,
   documentCatalog,
@@ -15,6 +17,7 @@ import {
   pageCatalog,
   partnerCatalog,
   publicDocuments,
+  publicBanners,
   publicNews,
   sectionCatalog,
   socialCatalog,
@@ -96,6 +99,18 @@ export const news = {
   create: asyncHandler(async (req, res) => sendSuccess(res, await createNews(req.body, req), "Created", 201)),
   update: updateHandler(newsCatalog),
   remove: deleteHandler(newsCatalog)
+};
+
+export const banners = {
+  list: listHandler(bannerCatalog),
+  get: getHandler(bannerCatalog),
+  create: asyncHandler(async (req, res) =>
+    sendSuccess(res, await bannerCatalog.create(cleanBannerInput(req.body), req), "Created", 201)
+  ),
+  update: asyncHandler(async (req, res) =>
+    sendSuccess(res, await bannerCatalog.update(req.params.id as string, cleanBannerInput(req.body), req), "Updated")
+  ),
+  remove: deleteHandler(bannerCatalog)
 };
 
 export const faqs = {
@@ -227,6 +242,7 @@ export const publicApi = {
   services: asyncHandler(async (_req, res) => sendSuccess(res, await serviceCatalog.publicList())),
   service: asyncHandler(async (req, res) => sendSuccess(res, await serviceCatalog.get(req.params.id as string))),
   news: asyncHandler(async (req, res) => sendSuccess(res, await publicNews(req.query.category as string | undefined))),
+  banners: asyncHandler(async (_req, res) => sendSuccess(res, await publicBanners())),
   faqs: asyncHandler(async (_req, res) => sendSuccess(res, await siteService.getPublicFaqs())),
   serviceCharges: asyncHandler(async (_req, res) => sendSuccess(res, await serviceChargeService.getPublicServiceCharges())),
   gallery: asyncHandler(async (_req, res) => sendSuccess(res, await siteService.getPublicGallery())),

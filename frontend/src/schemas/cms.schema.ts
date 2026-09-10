@@ -8,6 +8,7 @@ export const serviceFormSchema = z.object({
   shortDescription: z.string().min(8),
   fullDescription: optionalText,
   icon: optionalText,
+  accentColor: optionalText,
   imageUrl: optionalText,
   features: optionalText,
   countryAvailability: optionalText,
@@ -157,6 +158,8 @@ export const sectionFormSchema = z.object({
   secondaryButtonUrl: optionalText,
   alignment: z.enum(["left", "center", "right"]).optional(),
   itemsJson: optionalText,
+  sceneJson: optionalText,
+  pointsJson: optionalText,
   collage1: optionalText,
   collage2: optionalText,
   collage3: optionalText,
@@ -210,6 +213,37 @@ export const serviceChargePageFormSchema = z.object({
   pageDescription: optionalText,
   footnote: optionalText
 });
+
+export const bannerFormSchema = z
+  .object({
+    title: z.string().min(2, "Title is required"),
+    subtitle: optionalText,
+    body: optionalText,
+    imageUrl: optionalText,
+    imageRatio: z.enum(["9:16", "1:1", "16:9"]).default("16:9"),
+    altText: optionalText,
+    kind: z.enum(["FESTIVAL", "OFFER", "ANNOUNCEMENT", "COOKIE"]),
+    position: z.enum(["TOP", "BOTTOM", "LEFT", "RIGHT", "CENTER", "POPUP"]),
+    pageScope: z.enum(["ALL", "HOME", "CUSTOM"]),
+    pagePath: optionalText,
+    linkUrl: optionalText,
+    buttonLabel: optionalText,
+    secondaryButtonLabel: optionalText,
+    frequency: z.enum(["ONCE", "SESSION", "EVERY_VISIT"]),
+    dismissible: z.boolean().optional(),
+    startsAt: optionalText,
+    endsAt: optionalText,
+    status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+    displayOrder: z.coerce.number().optional()
+  })
+  .superRefine((value, ctx) => {
+    if (value.kind !== "COOKIE" && !String(value.imageUrl || "").trim()) {
+      ctx.addIssue({ code: "custom", path: ["imageUrl"], message: "Upload the banner design image" });
+    }
+    if (value.pageScope === "CUSTOM" && !String(value.pagePath || "").trim()) {
+      ctx.addIssue({ code: "custom", path: ["pagePath"], message: "Enter the page path, for example /about" });
+    }
+  });
 
 export const chatbotQaFormSchema = z.object({
   question: z.string().min(4),

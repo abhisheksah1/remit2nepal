@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
 import type { ZodType } from "zod";
 import type { ListParams, Paginated } from "@/types/api";
@@ -29,6 +30,8 @@ export interface FieldSpec {
   itemFields?: ListItemField[];
   addLabel?: string;
   emptyItem?: Record<string, string>;
+  ratioField?: string;
+  previewFit?: "cover" | "contain";
 }
 
 function groupedFields(fields: FieldSpec[]) {
@@ -93,11 +96,33 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
   const [values, setValues] = useState<Record<string, string | number | boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pendingDelete, setPendingDelete] = useState<T | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openedFromUrl = useRef(false);
 
   const query = useQuery({
     queryKey: [queryKey, page, search],
-    queryFn: () => list({ page, limit: 20, search })
+    queryFn: () => list({ page, limit: 50, search })
   });
+
+  useEffect(() => {
+    if (openedFromUrl.current || !query.data?.items?.length) return;
+    const edit = searchParams.get("edit") || searchParams.get("key");
+    if (!edit) return;
+    const row = query.data.items.find((item) => {
+      if (entityId(item) === edit) return true;
+      return "key" in (item as object) && String((item as { key?: string }).key) === edit;
+    });
+    if (!row) return;
+    openedFromUrl.current = true;
+    setEditing(row);
+    setValues(toForm(row));
+    setErrors({});
+    setOpen(true);
+    const next = new URLSearchParams(searchParams);
+    next.delete("edit");
+    next.delete("key");
+    setSearchParams(next, { replace: true });
+  }, [query.data, searchParams, setSearchParams, toForm]);
 
   const save = useMutation({
     mutationFn: async () => {
@@ -213,9 +238,11 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
                 key={field.id ?? `${field.name}-${field.label}`}
                 field={field}
                 value={values[field.name]}
+                ratioValue={field.ratioField ? values[field.ratioField] : undefined}
                 error={errors[field.name]}
                 disabled={field.disabledWhen?.(values, Boolean(editing))}
                 onChange={(next) => setValues((current) => ({ ...current, [field.name]: next }))}
+                onMeta={(patch) => setValues((current) => ({ ...current, ...patch }))}
               />
             ));
             if (!group.name) {
@@ -259,15 +286,19 @@ export function ResourceCrud<T extends { _id?: string; status?: string }>({
 function Field({
   field,
   value,
+  ratioValue,
   error,
   disabled,
-  onChange
+  onChange,
+  onMeta
 }: {
   field: FieldSpec;
   value: string | number | boolean | undefined;
+  ratioValue?: string | number | boolean;
   error?: string;
   disabled?: boolean;
   onChange: (value: string | number | boolean) => void;
+  onMeta?: (patch: Record<string, string | number | boolean>) => void;
 }) {
   const id = field.name;
   if (field.type === "note") {
@@ -329,7 +360,14 @@ function Field({
         value={String(value ?? "")}
         folder={field.folder ?? "general"}
         hint={field.hint}
+        fit={field.previewFit ?? "cover"}
+        ratio={typeof ratioValue === "string" ? ratioValue : undefined}
         onChange={onChange}
+        onRatioDetected={
+          field.ratioField
+            ? (next) => onMeta?.({ [field.ratioField as string]: next })
+            : undefined
+        }
       />
     );
   }

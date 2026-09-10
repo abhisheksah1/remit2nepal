@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { BrandPunch } from "./AboutBlocks";
-import { AboutGlobe } from "./AboutGlobe";
 import { AboutWorld } from "./AboutWorld";
+import { HeroNetwork } from "./HeroNetwork";
 import { Button } from "@/components/ui/Button";
-import { ABOUT_DEFAULTS, aboutLine, aboutList, aboutValues } from "@/content/about-defaults";
+import { ABOUT_DEFAULTS, aboutChips, aboutHighlights, aboutLine, aboutList, aboutMissionPoints, aboutSteps, aboutValues, aboutWhy } from "@/content/about-defaults";
 import type { AboutCompany } from "@/types/content";
 import { aboutIcon } from "@/utils/about-icons";
 import { cn, mediaUrl } from "@/utils/cn";
@@ -34,11 +34,11 @@ export function AboutPro({ about }: { about: AboutCompany }) {
   const d = ABOUT_DEFAULTS;
   const values = aboutValues(about.coreValues, d.coreValues);
   const stats = about.statistics?.length ? about.statistics : [];
-  const highlights = aboutList(about.whoHighlights, d.whoHighlights);
-  const missionPoints = aboutList(about.missionPoints, d.missionPoints);
-  const whyItems = aboutList(about.whyItems, d.whyItems);
-  const steps = aboutList(about.steps, d.steps);
-  const visionChips = aboutList(about.visionChips, d.visionChips);
+  const highlights = aboutHighlights(about.whoHighlights, d.whoHighlights);
+  const missionPoints = aboutMissionPoints(about.missionPoints, d.missionPoints);
+  const whyItems = aboutWhy(about.whyItems, d.whyItems);
+  const steps = aboutSteps(about.steps, d.steps);
+  const visionChips = aboutChips(about.visionChips, d.visionChips);
   const commitmentItems = aboutList(about.commitmentItems, d.commitmentItems);
   const whoImage = about.heroImageUrl || "/images/nepal-map/scene-family.svg";
   const missionImage = about.missionImageUrl || "/images/nepal-map/scene-payout.svg";
@@ -62,7 +62,7 @@ export function AboutPro({ about }: { about: AboutCompany }) {
               </Action>
             </div>
           </div>
-          <AboutGlobe stats={stats} />
+          <HeroNetwork />
         </div>
       </section>
 

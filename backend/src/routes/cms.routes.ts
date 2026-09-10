@@ -3,6 +3,7 @@ import * as cms from "../controllers/cms.controller.js";
 import * as branchImport from "../controllers/branch-import.controller.js";
 import { crudRouter } from "./crud.router.js";
 import {
+  bannerSchema,
   branchSchema,
   documentSchema,
   faqSchema,
@@ -47,6 +48,7 @@ partnerApplicationRouter.get("/:id", partnershipAdmin.getApplication);
 partnerApplicationRouter.patch("/:id", validate(partnerApplicationUpdateSchema), partnershipAdmin.updateApplication);
 partnerApplicationRouter.delete("/:id", partnershipAdmin.removeApplication);
 export const newsRouter = crudRouter(cms.news, newsSchema, "news");
+export const bannerRouter = crudRouter(cms.banners, bannerSchema, "website_cms");
 export const faqRouter = crudRouter(cms.faqs, faqSchema, "faq");
 export const remittanceRouter = crudRouter(cms.remittances, remittanceSchema, "remittances");
 export const galleryRouter = crudRouter(cms.gallery, gallerySchema, "gallery");

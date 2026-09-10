@@ -1,3 +1,6 @@
+import type { ReactNode } from "react";
+import { cn } from "@/utils/cn";
+
 export function PageHero({
   kicker,
   title,
@@ -8,13 +11,41 @@ export function PageHero({
   description?: string;
 }) {
   return (
-    <section className="page-hero relative overflow-hidden text-cream">
-      <div className="hero-mesh opacity-30" />
-      <div className="relative mx-auto max-w-site px-4 py-14 lg:px-8 sm:py-16">
-        <p className="text-xs uppercase tracking-[0.28em] text-gold">{kicker}</p>
-        <h1 className="mt-3 max-w-3xl font-display text-4xl leading-tight sm:text-5xl">{title}</h1>
-        {description ? <p className="mt-4 max-w-2xl text-cream/85">{description}</p> : null}
+    <section className="ba-hero reveal-skip" aria-labelledby="page-hero-title">
+      <div className="ba-hero-copy is-page">
+        <p>{kicker}</p>
+        <h1 id="page-hero-title">{title}</h1>
+        {description ? <span>{description}</span> : null}
       </div>
     </section>
+  );
+}
+
+export function PageStage({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className="ba-stage">
+      <div className={cn("page-dock", className)}>{children}</div>
+    </div>
+  );
+}
+
+export function InteriorPage({
+  kicker,
+  title,
+  description,
+  children,
+  dockClassName
+}: {
+  kicker: string;
+  title: string;
+  description?: string;
+  children: ReactNode;
+  dockClassName?: string;
+}) {
+  return (
+    <div className="ba-desk reveal-skip">
+      <PageHero kicker={kicker} title={title} description={description} />
+      <PageStage className={dockClassName}>{children}</PageStage>
+    </div>
   );
 }

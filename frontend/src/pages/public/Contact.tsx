@@ -1,3 +1,4 @@
+import { useEffect, useRef, type CSSProperties } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,16 +11,19 @@ import { SeoHead } from "@/components/public/SeoHead";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toast";
+import { heroTitleParts } from "@/utils/hero";
 
 function telHref(value: string) {
   return `tel:${value.replace(/[^\d+]/g, "")}`;
 }
 
 export default function Contact() {
+  const root = useRef<HTMLElement>(null);
   const { push } = useToast();
   const [params] = useSearchParams();
   const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site });
   const settings = site.data?.settings;
+  const titleParts = heroTitleParts("How can we // help?");
   const form = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -33,7 +37,7 @@ export default function Contact() {
   const mutation = useMutation({
     mutationFn: (values: ContactValues) => publicApi.contact(values),
     onSuccess: () => {
-      push({ title: "Message received", description: "A relationship officer will respond during office hours.", tone: "success" });
+      push({ title: "Message received", description: "The desk will reply during office hours.", tone: "success" });
       form.reset();
     },
     onError: (error) => push({ title: getErrorMessage(error), tone: "error" })
@@ -49,20 +53,39 @@ export default function Contact() {
       : null
   ].filter(Boolean) as { icon: typeof MapPin; label: string; value: string; href?: string }[];
 
+  useEffect(() => {
+    const node = root.current;
+    if (!node) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      node.classList.add("is-in");
+      return undefined;
+    }
+    const frame = window.requestAnimationFrame(() => node.classList.add("is-in"));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <>
-      <SeoHead title="Contact Remit2Nepal" description="Speak with the relationship desk about branches, rates and transfers." />
-      <section className="cdesk" aria-labelledby="contact-title">
+      <SeoHead title="Contact Remit2Nepal" description="Ask about branches, rates, and transfers. Do not send passwords or one-time codes." />
+      <section ref={root} className="cdesk reveal-skip" aria-labelledby="contact-title">
         <div className="cdesk-sky" aria-hidden>
+          <span className="cdesk-glow is-blue" />
+          <span className="cdesk-glow is-red" />
           <span className="cdesk-mesh" />
           <div className="cdesk-mountains" />
         </div>
 
         <header className="cdesk-head">
-          <p className="cdesk-kicker">Relationship desk</p>
-          <h1 id="contact-title">How can we help?</h1>
+          <p className="cdesk-kicker">Contact us</p>
+          <h1 id="contact-title">
+            {titleParts.map((part, index) => (
+              <span key={`${part.tone}-${index}`} className={part.tone}>
+                {part.text}
+              </span>
+            ))}
+          </h1>
           <p className="cdesk-lede">
-            Use this form for branch hours, rate queries and corporate remittance. Do not send transfer passwords or
+            Use this form for branch hours, rate questions, and payout questions. Do not send transfer passwords or
             one-time codes.
           </p>
         </header>
@@ -72,12 +95,12 @@ export default function Contact() {
             <p className="cdesk-card-kicker">Reach us</p>
             {facts.length ? (
               <ul>
-                {facts.map((item) => {
+                {facts.map((item, index) => {
                   const Icon = item.icon;
                   return (
-                    <li key={item.label}>
+                    <li key={item.label} style={{ "--i": index } as CSSProperties}>
                       <span className="cdesk-ico" aria-hidden>
-                        <Icon strokeWidth={2.4} />
+                        <Icon strokeWidth={2.2} />
                       </span>
                       <span className="cdesk-copy">
                         <span className="cdesk-label">{item.label}</span>
@@ -102,7 +125,7 @@ export default function Contact() {
             <div className="cdesk-card cdesk-form is-closed">
               <p className="cdesk-card-kicker">Enquiry form</p>
               <h2>Form temporarily closed</h2>
-              <p>Please call the relationship desk during office hours.</p>
+              <p>Please call the desk during office hours.</p>
               {settings.phone ? (
                 <a className="cdesk-submit" href={telHref(settings.phone)}>
                   Call desk <ArrowRight />
@@ -126,6 +149,7 @@ export default function Contact() {
                 {mutation.isPending ? "Sending…" : "Send message"}
                 <ArrowRight />
               </button>
+              <p className="cdesk-note">Replies go out during published office hours.</p>
             </form>
           )}
         </div>

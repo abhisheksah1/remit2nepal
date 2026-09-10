@@ -10,6 +10,7 @@ import {
   Handshake,
   Home,
   ImageIcon,
+  ImagePlus,
   LayoutDashboard,
   MessageCircle,
   Newspaper,
@@ -48,7 +49,8 @@ export const adminNav: AdminNavGroup[] = [
       { label: "Homepage", path: "/admin/homepage", icon: Home, permission: "website_cms" },
       { label: "Pages", path: "/admin/pages", icon: FileText, permission: "website_cms" },
       { label: "Sections", path: "/admin/sections", icon: PanelTop, permission: "website_cms" },
-      { label: "Header & Footer", path: "/admin/header-footer", icon: Globe, permission: "website_cms" }
+      { label: "Header & Footer", path: "/admin/header-footer", icon: Globe, permission: "website_cms" },
+      { label: "Banners", path: "/admin/banners", icon: ImagePlus, permission: "website_cms" }
     ]
   },
   {

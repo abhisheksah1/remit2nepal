@@ -128,7 +128,7 @@ export function CompliancePro({
   const hasRegistry = Boolean(regulator || licenses.length || companyName || address);
 
   return (
-    <div className="about-pro cpro">
+    <div className="about-pro cpro reveal-skip">
       <section className="cpro-hero" aria-labelledby="cpro-title">
         <div className="apro-wrap cpro-hero-grid">
           <div>

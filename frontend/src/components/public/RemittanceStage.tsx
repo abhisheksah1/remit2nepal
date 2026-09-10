@@ -1,21 +1,10 @@
-import { useId, type CSSProperties } from "react";
+import { useEffect, useId, useRef, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { NEPAL_MAP_VIEWBOX, NEPAL_PROVINCES } from "@/constants/nepalMap";
 import type { CmsSection } from "@/types/content";
 import { cn, mediaUrl } from "@/utils/cn";
-
-function cubeWord(section: CmsSection) {
-  const items = Array.isArray(section.items) ? section.items : [];
-  for (const item of items) {
-    if (!item || typeof item !== "object") continue;
-    const row = item as { word?: string; title?: string };
-    const value = String(row.word || "").trim();
-    if (value) return value.toUpperCase();
-  }
-  const heading = (section.heading || "").trim();
-  if (heading && heading.length <= 16 && !heading.includes(" ")) return heading.toUpperCase();
-  return "REMITTANCE";
-}
+import { heroTitleParts } from "@/utils/hero";
+import { remittancePoints, remittanceWord } from "@/utils/remittance";
 
 function NprRoll({ className, label, gid }: { className?: string; label: string; gid: string }) {
   return (
@@ -42,14 +31,60 @@ function NprRoll({ className, label, gid }: { className?: string; label: string;
   );
 }
 
+function StageLink({ to, className, children }: { to: string; className: string; children: ReactNode }) {
+  const href = to.trim() || "/";
+  if (href.startsWith("#") || /^https?:\/\//i.test(href)) {
+    return (
+      <a href={href} className={className} {...(/^https?:\/\//i.test(href) ? { target: "_blank", rel: "noreferrer" } : {})}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export function RemittanceStage({ section }: { section: CmsSection }) {
+  const root = useRef<HTMLElement>(null);
   const uid = useId().replace(/:/g, "");
-  const word = cubeWord(section);
+  const word = remittanceWord(section.items, section.heading);
   const letters = Array.from(word);
-  const showTitle = (section.heading || "").trim() && (section.heading || "").trim().toUpperCase() !== word;
+  const points = remittancePoints(section.items);
+  const kicker = section.icon?.trim();
+  const heading = section.heading?.trim();
+  const showTitle = Boolean(heading) && heading.toUpperCase() !== word;
+  const titleParts = heroTitleParts(showTitle ? heading : "");
+  const punch = section.subheading?.trim();
+  const lede = section.description?.trim() && !/hover each letter/i.test(section.description) ? section.description.trim() : "";
+  const primaryLabel = section.buttonLabel?.trim();
+  const primaryUrl = section.buttonUrl?.trim() || "/exchange-rate";
+  const secondaryLabel = section.secondaryButtonLabel?.trim();
+  const secondaryUrl = section.secondaryButtonUrl?.trim() || "/branches";
+
+  useEffect(() => {
+    const node = root.current;
+    if (!node) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      node.classList.add("is-in");
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        node.classList.add("is-in");
+        observer.disconnect();
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -4% 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="remittance-stage reveal-skip" aria-labelledby={`${section.key}-word`}>
+    <section ref={root} className="remittance-stage reveal-skip" aria-labelledby={`${section.key}-heading`}>
       <div
         className="remittance-paper"
         style={section.backgroundUrl ? { backgroundImage: `url(${mediaUrl(section.backgroundUrl)})` } : undefined}
@@ -65,7 +100,7 @@ export function RemittanceStage({ section }: { section: CmsSection }) {
           <path key={province.id} d={province.d} />
         ))}
       </svg>
-      {section.overlay ? <div className="remittance-wash" aria-hidden /> : null}
+      {section.overlay !== false ? <div className="remittance-wash" aria-hidden /> : null}
 
       <NprRoll className="remittance-roll is-tl" label="1000" gid={`${uid}-a`} />
       <NprRoll className="remittance-roll is-tr" label="500" gid={`${uid}-b`} />
@@ -74,14 +109,23 @@ export function RemittanceStage({ section }: { section: CmsSection }) {
 
       <div className="remittance-wrap">
         <header className="remittance-copy">
-          <p className="remittance-kicker">{section.icon || "Licensed transfer"}</p>
-          {showTitle ? <p className="remittance-title">{section.heading}</p> : null}
-          <h2 id={`${section.key}-word`} className="sr-only">
-            {word}
-          </h2>
+          {kicker ? <p className="remittance-kicker">{kicker}</p> : null}
+          {showTitle ? (
+            <h2 id={`${section.key}-heading`} className="remittance-title">
+              {titleParts.map((part, index) => (
+                <span key={`${part.tone}-${index}`} className={part.tone}>
+                  {part.text}
+                </span>
+              ))}
+            </h2>
+          ) : (
+            <h2 id={`${section.key}-heading`} className="sr-only">
+              {word}
+            </h2>
+          )}
         </header>
 
-        <div className="remittance-word" aria-hidden="true">
+        <div className="remittance-word" aria-hidden={showTitle ? true : undefined}>
           {letters.map((letter, index) => {
             const mid = (letters.length - 1) / 2;
             const arc = Math.round((index - mid) * (index - mid) * 1.15);
@@ -89,7 +133,8 @@ export function RemittanceStage({ section }: { section: CmsSection }) {
             const style = {
               transitionDelay: `${80 + index * 70}ms`,
               "--tilt": `${tilt}deg`,
-              "--arc": `${arc}px`
+              "--arc": `${arc}px`,
+              "--i": index
             } as CSSProperties;
             return (
               <span key={`${letter}-${index}`} className={cn("remittance-cube", letter === " " && "is-gap")} style={style}>
@@ -99,18 +144,35 @@ export function RemittanceStage({ section }: { section: CmsSection }) {
           })}
         </div>
 
-        {section.subheading ? <p className="remittance-punch">{section.subheading}</p> : null}
-        {section.description && !/hover each letter/i.test(section.description) ? (
-          <p className="remittance-body">{section.description}</p>
+        {punch ? <p className="remittance-punch">{punch}</p> : null}
+        {lede ? <p className="remittance-body">{lede}</p> : null}
+
+        {points.length ? (
+          <ul className="remittance-points">
+            {points.map((point, index) => (
+              <li key={point.title} className="remittance-point" style={{ "--i": index } as CSSProperties}>
+                <strong>{point.title}</strong>
+                {point.description ? <span>{point.description}</span> : null}
+              </li>
+            ))}
+          </ul>
         ) : null}
 
-        {section.buttonUrl ? (
-          <Link className="remittance-cta" to={section.buttonUrl}>
-            {section.buttonLabel || "View exchange rate"}
-          </Link>
+        {primaryLabel || secondaryLabel ? (
+          <div className="remittance-actions">
+            {primaryLabel ? (
+              <StageLink to={primaryUrl} className="remittance-cta">
+                {primaryLabel}
+              </StageLink>
+            ) : null}
+            {secondaryLabel ? (
+              <StageLink to={secondaryUrl} className="remittance-cta is-ghost">
+                {secondaryLabel}
+              </StageLink>
+            ) : null}
+          </div>
         ) : null}
       </div>
     </section>
   );
 }
-

@@ -3,6 +3,7 @@ import type { ListParams, Paginated } from "@/types/api";
 import type { AdminAccount, PermissionOption } from "@/types/auth";
 import type {
   AboutCompany,
+  BannerItem,
   BranchItem,
   ChatbotAgentStep,
   ChatbotKnowledgeDoc,
@@ -128,6 +129,13 @@ export const adminApi = {
     update: (id: string, body: { status?: PartnerApplicationStatus; adminNotes?: string }) =>
       patch<PartnerApplicationItem>(`/partner-applications/${id}`, body),
     remove: (id: string) => remove<null>(`/partner-applications/${id}`)
+  },
+  banners: {
+    list: (params?: ListParams) => list<BannerItem>("/banners", params),
+    get: (id: string) => get<BannerItem>(`/banners/${id}`),
+    create: (body: unknown) => create<BannerItem>("/banners", body),
+    update: (id: string, body: unknown) => patch<BannerItem>(`/banners/${id}`, body),
+    remove: (id: string) => remove<BannerItem>(`/banners/${id}`)
   },
   news: {
     list: (params?: ListParams) => list<NewsItem>("/news", params),

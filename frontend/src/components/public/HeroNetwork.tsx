@@ -19,7 +19,17 @@ const ROUTES = [
   { id: "aus", d: "M168 148 C 154 118, 138 104, 132 96", color: "#8F91D0", delay: "-3.8s" }
 ];
 
-export function HeroNetwork() {
+const SLOTS = ["is-send", "is-recv", "is-shield", "is-status"];
+
+const DEFAULT_CARDS = [
+  { kicker: "From abroad", title: "USD 1,250 sent", note: "Gulf corridor" },
+  { kicker: "In Nepal", title: "NPR payout", note: "Family collects" },
+  { kicker: "Protected", title: "Secure Transaction", note: "" },
+  { kicker: "Transfer Status", title: "Ready to collect", note: "Payout in Nepal" }
+];
+
+export function HeroNetwork({ cards = [] }: { cards?: Array<{ kicker: string; title: string; note: string }> }) {
+  const scene = (cards.length ? cards : DEFAULT_CARDS).slice(0, 4);
   return (
     <div className="hero-hub" aria-hidden>
       <span className="hero-hub-ring" />
@@ -60,28 +70,19 @@ export function HeroNetwork() {
           </g>
         ))}
       </svg>
-      <article className="hero-float is-send">
-        <span>Example</span>
-        <strong>Sending $1,250</strong>
-        <em>Gulf corridor</em>
-      </article>
-      <article className="hero-float is-recv">
-        <span>Example</span>
-        <strong>Received NPR</strong>
-        <em>Family payout</em>
-      </article>
-      <article className="hero-float is-shield">
-        <span>Protected</span>
-        <strong>Secure Transaction</strong>
-      </article>
-      <article className="hero-float is-status">
-        <span>Transfer Status</span>
-        <strong>
-          <i /> Processing
-        </strong>
-        <em>Fast &amp; Reliable</em>
-        <b className="hero-progress" />
-      </article>
+      {scene.map((card, index) => (
+        <article key={`${card.title}-${index}`} className={`hero-float ${SLOTS[index] ?? "is-send"}`}>
+          {card.kicker ? <span>{card.kicker}</span> : null}
+          {card.title ? (
+            <strong>
+              {index === 3 ? <i /> : null}
+              {card.title}
+            </strong>
+          ) : null}
+          {card.note ? <em>{card.note}</em> : null}
+          {index === 3 ? <b className="hero-progress" /> : null}
+        </article>
+      ))}
     </div>
   );
 }

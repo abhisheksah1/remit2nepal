@@ -3,6 +3,7 @@ import { Faq } from "../models/faq.model.js";
 import { Gallery } from "../models/gallery.model.js";
 import { CompanyDocument } from "../models/document.model.js";
 import { News } from "../models/news.model.js";
+import { Banner } from "../models/banner.model.js";
 import { Page } from "../models/page.model.js";
 import { Section } from "../models/section.model.js";
 import { Navigation } from "../models/navigation.model.js";
@@ -63,6 +64,20 @@ export const teamCatalog = createResourceService(TeamMember, {
   richTextFields: ["bio"]
 });
 
+export const bannerCatalog = createResourceService(Banner, {
+  module: "website",
+  searchFields: ["title", "subtitle", "kind", "position"]
+});
+
+export function cleanBannerInput(input: Record<string, unknown>) {
+  const next = { ...input };
+  if (!next.startsAt) delete next.startsAt;
+  if (!next.endsAt) delete next.endsAt;
+  if (next.kind === "COOKIE") next.position = "BOTTOM";
+  if (!next.imageRatio) next.imageRatio = "16:9";
+  return next;
+}
+
 export const newsCatalog = createResourceService(News, {
   module: "news",
   searchFields: ["title", "titleNe", "summary", "summaryNe", "punchLine", "category"],
@@ -98,4 +113,48 @@ export async function publicNews(category?: string) {
   const filter: Record<string, unknown> = { status: "PUBLISHED" };
   if (category) filter.category = category;
   return News.find(filter).sort({ publishedAt: -1, createdAt: -1 }).lean();
+}
+
+const defaultCookieBanner = {
+  title: "Cookies on this site",
+  subtitle: "",
+  body: "We store a small preference on this device so we do not keep showing the same notice.",
+  imageUrl: "",
+  altText: "",
+  kind: "COOKIE",
+  position: "BOTTOM",
+  pageScope: "ALL",
+  pagePath: "",
+  linkUrl: "/privacy",
+  buttonLabel: "Accept",
+  secondaryButtonLabel: "Essential only",
+  frequency: "ONCE",
+  dismissible: true,
+  status: "ACTIVE",
+  displayOrder: 0
+};
+
+export async function ensureDefaultBanners() {
+  try {
+    const count = await Banner.countDocuments({ kind: "COOKIE" });
+    if (count === 0) {
+      await Banner.create(defaultCookieBanner);
+    }
+  } catch {
+    return;
+  }
+}
+
+export async function publicBanners() {
+  await ensureDefaultBanners();
+  const now = new Date();
+  return Banner.find({
+    status: "ACTIVE",
+    $and: [
+      { $or: [{ startsAt: { $exists: false } }, { startsAt: null }, { startsAt: { $lte: now } }] },
+      { $or: [{ endsAt: { $exists: false } }, { endsAt: null }, { endsAt: { $gte: now } }] }
+    ]
+  })
+    .sort({ displayOrder: 1, createdAt: -1 })
+    .lean();
 }

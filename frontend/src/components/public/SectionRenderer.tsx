@@ -1,28 +1,18 @@
 import { Link } from "react-router-dom";
-import { Banknote, Briefcase, Building2, Globe, Send, ShieldCheck, Smartphone } from "lucide-react";
 import type { CmsSection, GalleryItem, NewsItem, PartnerItem, ServiceItem, StatItem } from "@/types/content";
 import type { PublicRatesPayload } from "@/types/rates";
 import { Hero } from "./Hero";
 import { WhyChoose } from "./WhyChoose";
 import { NepalStory } from "./NepalPeopleMap";
 import { RemittanceStage } from "./RemittanceStage";
-import { TransferDesk } from "./TransferDesk";
-import { RateTable } from "./RateTable";
+import { RatesBoard } from "./RatesBoard";
 import { NewsDesk } from "./NewsDesk";
 import { Testimonials } from "./Testimonials";
 import { GlobalPartners } from "./GlobalPartners";
+import { ServicesBoard } from "./ServicesBoard";
 import { BranchFinder } from "./BranchFinder";
 import { Button } from "@/components/ui/Button";
 import { entityId, mediaUrl } from "@/utils/cn";
-
-const icons = {
-  globe: Globe,
-  send: Send,
-  banknote: Banknote,
-  "building-2": Building2,
-  smartphone: Smartphone,
-  briefcase: Briefcase
-};
 
 export function SectionRenderer({
   section,
@@ -47,19 +37,9 @@ export function SectionRenderer({
     case "STATS":
       return null;
     case "SERVICES":
-      return <ServicesSection section={section} services={services} />;
+      return <ServicesBoard section={section} services={services} />;
     case "RATES":
-      return rates ? (
-        <section className="mx-auto max-w-site px-4 py-8 lg:px-8 sm:py-16">
-          <SectionHeading section={section} />
-          <div className="rates-board">
-            <TransferDesk rates={rates} />
-            <div className="glass-panel rounded-3xl p-4 sm:p-6">
-              <RateTable payload={rates} compact />
-            </div>
-          </div>
-        </section>
-      ) : null;
+      return rates ? <RatesBoard section={section} rates={rates} compact /> : null;
     case "WHY_CHOOSE":
       return <WhyChoose section={section} />;
     case "REMITTANCE":
@@ -71,7 +51,7 @@ export function SectionRenderer({
     case "PARTNERS":
       return <GlobalPartners section={section} partners={partners} />;
     case "NEWS":
-      return <NewsSection section={section} news={news} />;
+      return <NewsDesk section={section} news={news} />;
     case "TESTIMONIALS":
       return <Testimonials section={section} />;
     case "BRANCH_FINDER":
@@ -120,38 +100,6 @@ function SectionHeading({ section }: { section: CmsSection }) {
       <h2 className="font-display text-3xl text-navy sm:text-4xl">{section.heading}</h2>
       {section.subheading ? <p className="mt-3 text-lg font-medium text-navy">{section.subheading}</p> : null}
       {section.description ? <p className="mt-2 text-ink-muted">{section.description}</p> : null}
-    </div>
-  );
-}
-
-function ServicesSection({ section, services }: { section: CmsSection; services: ServiceItem[] }) {
-  return (
-    <section id="how-it-works" className="mx-auto max-w-site px-4 lg:px-8 py-16">
-      <SectionHeading section={section} />
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {services.slice(0, 6).map((service) => {
-          const Icon = icons[service.icon as keyof typeof icons] ?? ShieldCheck;
-          return (
-            <Link
-              key={entityId(service)}
-              to={`/services/${service.slug || entityId(service)}`}
-              className="lift-card glass-panel rounded-2xl p-6"
-            >
-              <Icon className="h-6 w-6 text-gold" />
-              <h3 className="mt-4 font-display text-xl text-navy">{service.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">{service.shortDescription}</p>
-            </Link>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function NewsSection({ section, news }: { section: CmsSection; news: NewsItem[] }) {
-  return (
-    <div className="mx-auto max-w-site px-4 py-16 lg:px-8">
-      <NewsDesk section={section} news={news} />
     </div>
   );
 }

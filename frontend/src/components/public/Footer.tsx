@@ -55,7 +55,7 @@ export function Footer({
           <p className="site-footer-tagline">{settings?.tagline || BRAND.tagline}</p>
           <p className="site-footer-about">
             {settings?.footerAbout ||
-              "A licensed remittance company serving families and businesses with regulated payouts across Nepal."}
+              "Remit2Nepal is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."}
           </p>
         </div>
 
@@ -76,8 +76,8 @@ export function Footer({
           </ul>
         </nav>
 
-        <nav aria-label="Transfer">
-          <p className="site-footer-heading">Transfer</p>
+        <nav aria-label="Collect">
+          <p className="site-footer-heading">Collect</p>
           <ul>
             {TRANSFER_LINKS.map((link) => (
               <li key={link.path}>
@@ -133,7 +133,7 @@ export function Footer({
       <div className="site-footer-bottom">
         <div className="site-footer-legal">
           <p>
-            {settings?.copyrightText || `© ${new Date().getFullYear()} ${company}. All rights reserved.`} Licensed remittance operations in Nepal.
+            {settings?.copyrightText || `© ${new Date().getFullYear()} ${company}. All rights reserved.`} Remittance receiving in Nepal.
           </p>
           {legal.length ? (
             <ul>

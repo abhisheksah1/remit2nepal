@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicApi } from "@/api/public.api";
-import { RateTable } from "@/components/public/RateTable";
-import { TransferDesk } from "@/components/public/TransferDesk";
-import { PageHero } from "@/components/public/PageHero";
+import { RatesBoard } from "@/components/public/RatesBoard";
+import { InteriorPage } from "@/components/public/PageHero";
 import { SeoHead } from "@/components/public/SeoHead";
 import { SkeletonLines } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -19,20 +18,15 @@ export default function ExchangeRate() {
 
   return (
     <>
-      <PageHero
+      <SeoHead title="Today's exchange rates" description="NRB-referenced and company customer rates for remittance received in Nepal." />
+      <InteriorPage
         kicker="Treasury desk"
         title="Today's exchange rates"
-        description="Live official Nepal Rastra Bank rates for every published currency, shown beside Remit2Nepal customer rates. Confirm the applicable rate at the counter before completing a transfer."
-      />
-      <div className="mx-auto max-w-site px-4 py-8 lg:px-8 sm:py-16">
-      <SeoHead title="Today's exchange rates" description="NRB-referenced and company customer rates for remittance to Nepal." />
-      <div className="rates-board">
-        <TransferDesk rates={query.data} showCta={false} />
-        <div className="glass-panel rounded-3xl p-4 sm:p-6">
-          <RateTable payload={query.data} />
-        </div>
-      </div>
-    </div>
+        description="Live official Nepal Rastra Bank rates for every published currency, shown beside Remit2Nepal customer rates. Confirm the applicable rate at the counter before you collect."
+        dockClassName="is-fx"
+      >
+        <RatesBoard rates={query.data} />
+      </InteriorPage>
     </>
   );
 }

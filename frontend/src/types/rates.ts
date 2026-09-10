@@ -4,6 +4,9 @@ export interface PublicRate {
   currency: string;
   currencyCode: string;
   unit: number;
+  country?: string;
+  flag?: string;
+  symbol?: string;
   nrbBuyRate?: number;
   nrbSellRate?: number;
   companyBuyRate?: number;

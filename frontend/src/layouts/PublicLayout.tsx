@@ -8,6 +8,7 @@ import { SiteAtmosphere } from "@/components/public/SiteAtmosphere";
 import { ScrollReveal } from "@/components/public/ScrollReveal";
 import { SmoothScroll } from "@/components/public/SmoothScroll";
 import { ChatWidget } from "@/components/public/ChatWidget";
+import { SiteBanners } from "@/components/public/SiteBanners";
 import { SeoHead } from "@/components/public/SeoHead";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { MaintenancePage } from "./MaintenancePage";
@@ -52,6 +53,7 @@ export function PublicLayout() {
       <ScrollReveal />
       <SmoothScroll />
       <Header settings={settings} items={site.data?.navigation ?? []} />
+      <SiteBanners banners={site.data?.banners ?? []} />
       <main className="relative z-0 min-w-0 flex-1 overflow-x-clip">
         <Suspense fallback={<div className="mx-auto max-w-site px-4 py-16 lg:px-8"><Skeleton className="h-72 w-full" /></div>}>
           <Outlet context={site.data} />

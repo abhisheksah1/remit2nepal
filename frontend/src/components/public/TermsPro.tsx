@@ -25,7 +25,7 @@ const TOC = [
   { id: "our-services", label: "Our Services" },
   { id: "account-registration", label: "Account Registration" },
   { id: "identity-verification", label: "Identity Verification" },
-  { id: "sending-money", label: "Sending Money" },
+  { id: "sending-money", label: "Transfers from Abroad" },
   { id: "receiving-money", label: "Receiving Money" },
   { id: "fees", label: "Fees & Exchange Rates" },
   { id: "limits", label: "Transaction Limits" },
@@ -268,9 +268,8 @@ export function TermsPro({
           <section>
             <Heading id="about-terms" n="1">About These Terms</Heading>
             <p>
-              These Terms govern access to and use of {company}&apos;s website, remittance services, and related money
-              transfer services. Using the services means you agree to these Terms and related policies, including our
-              Privacy Policy.
+              These Terms govern access to and use of {company}&apos;s website and remittance receiving services in Nepal.
+              Using the services means you agree to these Terms and related policies, including our Privacy Policy.
             </p>
             <dl className="ppro-dl">
               <div>
@@ -308,8 +307,8 @@ export function TermsPro({
             <div className="ppro-cards">
               <article>
                 <Wallet />
-                <h3>Send Money</h3>
-                <p>Send funds to eligible recipients through supported destinations and payment methods.</p>
+                <h3>Inbound remittance</h3>
+                <p>Receive transfers sent from abroad and pay them out in Nepal through supported channels.</p>
               </article>
               <article>
                 <Landmark />
@@ -378,15 +377,15 @@ export function TermsPro({
           </section>
 
           <section>
-            <Heading id="sending-money" n="6">Sending Money</Heading>
+            <Heading id="sending-money" n="6">Transfers from Abroad</Heading>
             <ol className="tpro-journey">
               {SEND_STEPS.map((step) => (
                 <li key={step}>{step}</li>
               ))}
             </ol>
-            <p>Customers are responsible for providing accurate sender and recipient information.</p>
+            <p>Overseas senders and partners are responsible for providing accurate sender and recipient information.</p>
             <p>
-              Before confirming a transaction, carefully review the recipient details, transfer amount, applicable fees,
+              Before a payout is completed in Nepal, carefully review the beneficiary details, transfer amount, applicable fees,
               exchange rate, and other transaction information displayed to you.
             </p>
           </section>
@@ -734,9 +733,9 @@ export function TermsPro({
                   Contact Us
                 </Button>
               </Link>
-              <Link to="/contact?subject=Send%20money%20enquiry">
+              <Link to="/track">
                 <Button variant="secondary" size="lg" className="apro-btn is-ghost">
-                  Send Money
+                  Track a transfer
                 </Button>
               </Link>
             </div>
