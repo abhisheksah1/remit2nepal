@@ -99,6 +99,92 @@ export interface WhyItem {
   icon?: string;
 }
 
+export interface CompliancePhotoItem {
+  url?: string;
+  alt?: string;
+  overlay?: string;
+  credit?: string;
+}
+
+export interface CompliancePage {
+  seoTitle?: string;
+  seoDescription?: string;
+  heroKicker?: string;
+  heroTitle?: string;
+  heroBody?: string;
+  heroBadge?: string;
+  heroPhoto?: CompliancePhotoItem;
+  commitmentKicker?: string;
+  commitmentHeading?: string;
+  commitmentBody?: string;
+  commitmentPhoto?: CompliancePhotoItem;
+  commitmentItems?: WhyItem[];
+  kycKicker?: string;
+  kycHeading?: string;
+  kycBody?: string;
+  kycNote?: string;
+  kycPhoto?: CompliancePhotoItem;
+  kycPhoto2?: CompliancePhotoItem;
+  kycSteps?: WhyItem[];
+  amlKicker?: string;
+  amlHeading?: string;
+  amlBody?: string;
+  amlPhoto?: CompliancePhotoItem;
+  amlCards?: WhyItem[];
+  screenKicker?: string;
+  screenHeading?: string;
+  screenBody?: string;
+  screenPhoto?: CompliancePhotoItem;
+  screenPills?: string[];
+  fraudKicker?: string;
+  fraudHeading?: string;
+  fraudBody?: string;
+  fraudPhoto?: CompliancePhotoItem;
+  fraudCards?: WhyItem[];
+  privacyKicker?: string;
+  privacyHeading?: string;
+  privacyBody?: string;
+  privacyPhoto?: CompliancePhotoItem;
+  privacyCards?: WhyItem[];
+  privacyLinkLabel?: string;
+  privacyLinkUrl?: string;
+  protectKicker?: string;
+  protectHeading?: string;
+  protectBody?: string;
+  protectPhoto?: CompliancePhotoItem;
+  protectItems?: string[];
+  reportKicker?: string;
+  reportHeading?: string;
+  reportBody?: string;
+  reportPrimaryLabel?: string;
+  reportPrimaryUrl?: string;
+  reportSecondaryLabel?: string;
+  reportSecondaryUrl?: string;
+  teamKicker?: string;
+  teamHeading?: string;
+  teamBody?: string;
+  teamPhoto?: CompliancePhotoItem;
+  teamLinkLabel?: string;
+  teamLinkUrl?: string;
+  teamFlow?: string[];
+  regulatorName?: string;
+  regKicker?: string;
+  regHeading?: string;
+  regBody?: string;
+  regNote?: string;
+  regPhoto?: CompliancePhotoItem;
+  docsKicker?: string;
+  docsHeading?: string;
+  docsBody?: string;
+  ctaHeading?: string;
+  ctaBody?: string;
+  ctaPrimaryLabel?: string;
+  ctaPrimaryUrl?: string;
+  ctaSecondaryLabel?: string;
+  ctaSecondaryUrl?: string;
+  disabledSections?: string[];
+}
+
 export interface CmsSection extends EntityId {
   key: string;
   type: SectionType;
@@ -398,6 +484,7 @@ export interface AboutCompany extends EntityId {
   certifications: string[];
   licenses: string[];
   awards: string[];
+  compliancePage?: CompliancePage;
 }
 
 export interface ContactMessage extends EntityId {

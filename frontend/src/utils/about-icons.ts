@@ -1,19 +1,26 @@
 import {
+  Activity,
   Award,
   BadgeCheck,
   Banknote,
   BookOpen,
   Building2,
+  ClipboardCheck,
   Compass,
   Eye,
+  FileSearch,
+  Fingerprint,
   Globe,
   Heart,
+  HeartHandshake,
   Lock,
   MapPinned,
   Scale,
+  ShieldAlert,
   ShieldCheck,
   Sparkles,
   Target,
+  UserCheck,
   Users,
   Wallet,
   Zap,
@@ -38,7 +45,14 @@ export const ABOUT_ICON_OPTIONS = [
   { value: "sparkles", label: "Sparkles" },
   { value: "target", label: "Target" },
   { value: "book", label: "Book" },
-  { value: "wallet", label: "Wallet" }
+  { value: "wallet", label: "Wallet" },
+  { value: "activity", label: "Monitoring" },
+  { value: "fingerprint", label: "Identity" },
+  { value: "clipboard", label: "Reporting" },
+  { value: "handshake", label: "Support" },
+  { value: "search", label: "Review" },
+  { value: "user", label: "Customer" },
+  { value: "alert", label: "Risk" }
 ] as const;
 
 const ICONS: Record<string, LucideIcon> = {
@@ -59,7 +73,14 @@ const ICONS: Record<string, LucideIcon> = {
   sparkles: Sparkles,
   target: Target,
   book: BookOpen,
-  wallet: Wallet
+  wallet: Wallet,
+  activity: Activity,
+  fingerprint: Fingerprint,
+  clipboard: ClipboardCheck,
+  handshake: HeartHandshake,
+  search: FileSearch,
+  user: UserCheck,
+  alert: ShieldAlert
 };
 
 const TITLE_MATCH: Array<{ match: RegExp; icon: string }> = [

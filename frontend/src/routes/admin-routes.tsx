@@ -9,6 +9,7 @@ const loaders = {
   "/admin/header-footer": () => import("@/pages/admin/HeaderFooter"),
   "/admin/banners": () => import("@/pages/admin/Banners"),
   "/admin/about": () => import("@/pages/admin/About"),
+  "/admin/compliance": () => import("@/pages/admin/Compliance"),
   "/admin/team": () => import("@/pages/admin/Team"),
   "/admin/partners": () => import("@/pages/admin/Partners"),
   "/admin/partners/settings": () => import("@/pages/admin/PartnershipSettings"),
@@ -47,6 +48,7 @@ const Sections = lazy(loaders["/admin/sections"]);
 const HeaderFooter = lazy(loaders["/admin/header-footer"]);
 const Banners = lazy(loaders["/admin/banners"]);
 const About = lazy(loaders["/admin/about"]);
+const Compliance = lazy(loaders["/admin/compliance"]);
 const Team = lazy(loaders["/admin/team"]);
 const Partners = lazy(loaders["/admin/partners"]);
 const PartnershipSettings = lazy(loaders["/admin/partners/settings"]);
@@ -81,6 +83,7 @@ export const adminRouteElements = (
     <Route path="header-footer" element={<HeaderFooter />} />
     <Route path="banners" element={<Banners />} />
     <Route path="about" element={<About />} />
+    <Route path="compliance" element={<Compliance />} />
     <Route path="team" element={<Team />} />
     <Route path="partners" element={<Partners />} />
     <Route path="partners/settings" element={<PartnershipSettings />} />

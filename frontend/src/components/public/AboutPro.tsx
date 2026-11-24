@@ -2,10 +2,19 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { BrandPunch } from "./AboutBlocks";
-import { AboutWorld } from "./AboutWorld";
 import { HeroNetwork } from "./HeroNetwork";
 import { Button } from "@/components/ui/Button";
-import { ABOUT_DEFAULTS, aboutChips, aboutHighlights, aboutLine, aboutList, aboutMissionPoints, aboutSteps, aboutValues, aboutWhy } from "@/content/about-defaults";
+import {
+  ABOUT_DEFAULTS,
+  aboutChips,
+  aboutHighlights,
+  aboutLine,
+  aboutList,
+  aboutMissionPoints,
+  aboutSteps,
+  aboutValues,
+  aboutWhy
+} from "@/content/about-defaults";
 import type { AboutCompany } from "@/types/content";
 import { aboutIcon } from "@/utils/about-icons";
 import { cn, mediaUrl } from "@/utils/cn";
@@ -30,10 +39,27 @@ function Action({
   return <Link to={to}>{button}</Link>;
 }
 
+function Shot({ src, alt }: { src: string; alt: string }) {
+  return (
+    <figure className="about-shot">
+      <img src={mediaUrl(src)} alt={alt} />
+    </figure>
+  );
+}
+
+const JUMP = [
+  { href: "#who-we-are", label: "Who we are" },
+  { href: "#mission", label: "Mission" },
+  { href: "#vision", label: "Vision" },
+  { href: "#why", label: "Why us" },
+  { href: "#values", label: "Values" },
+  { href: "#how", label: "How we work" }
+];
+
 export function AboutPro({ about }: { about: AboutCompany }) {
   const d = ABOUT_DEFAULTS;
   const values = aboutValues(about.coreValues, d.coreValues);
-  const stats = about.statistics?.length ? about.statistics : [];
+  const stats = about.statistics?.filter((item) => item.value && item.label) ?? [];
   const highlights = aboutHighlights(about.whoHighlights, d.whoHighlights);
   const missionPoints = aboutMissionPoints(about.missionPoints, d.missionPoints);
   const whyItems = aboutWhy(about.whyItems, d.whyItems);
@@ -46,7 +72,7 @@ export function AboutPro({ about }: { about: AboutCompany }) {
   const storyImage = about.storyBandImageUrl || "/images/nepal-map/scene-family.svg";
 
   return (
-    <div className="about-pro">
+    <div className="about-pro about-story">
       <section className="apro-hero" aria-labelledby="about-punch">
         <div className="apro-wrap apro-hero-grid">
           <div className="apro-hero-copy">
@@ -62,86 +88,94 @@ export function AboutPro({ about }: { about: AboutCompany }) {
               </Action>
             </div>
           </div>
-          <HeroNetwork />
-        </div>
-      </section>
-
-      <section id="who-we-are" className="apro-split" aria-labelledby="who-heading">
-        <div className="apro-wrap apro-split-grid">
-          <div>
-            <p className="apro-kicker">{aboutLine(about.storyKicker, d.storyKicker)}</p>
-            <h2 id="who-heading">{aboutLine(about.storyHeading, d.storyHeading)}</h2>
-            <p>{aboutLine(about.introduction, d.introduction)}</p>
-            <p>{aboutLine(about.whoBody, d.whoBody)}</p>
-          </div>
-          <div className="apro-media">
-            <span className="apro-blob is-red" aria-hidden />
-            <span className="apro-blob is-navy" aria-hidden />
-            <img src={mediaUrl(whoImage)} alt="" />
-            <ul className="apro-floats">
-              {highlights.map((item) => {
-                const Icon = aboutIcon(item.icon, item.title);
-                return (
-                  <li key={item.title}>
-                    <Icon className="h-4 w-4" aria-hidden />
-                    {item.title}
-                  </li>
-                );
-              })}
-            </ul>
+          <div className="apro-hero-stage">
+            <HeroNetwork />
           </div>
         </div>
+        {stats.length ? (
+          <div className="about-dock" aria-label="Trust figures">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <strong>{stat.value}</strong>
+                <span>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </section>
 
-      <section className="apro-split is-mission" aria-labelledby="mission-heading">
-        <div className="apro-wrap apro-split-grid">
-          <div>
-            <p className="apro-kicker">{aboutLine(about.missionKicker, d.missionKicker)}</p>
-            <h2 id="mission-heading">{aboutLine(about.missionHeading, d.missionHeading)}</h2>
-            <p>{aboutLine(about.mission, d.mission)}</p>
-            <p>{aboutLine(about.missionBody, d.missionBody)}</p>
-            <ul className="apro-points">
-              {missionPoints.map((item) => (
+      <nav className="about-jump" aria-label="On this page">
+        {JUMP.map((item) => (
+          <a key={item.href} href={item.href}>
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <section id="who-we-are" className="photo-bleed is-left" aria-labelledby="who-heading">
+        <Shot src={whoImage} alt="Families collecting remittance in Nepal" />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{aboutLine(about.storyKicker, d.storyKicker)}</p>
+          <h2 id="who-heading">{aboutLine(about.storyHeading, d.storyHeading)}</h2>
+          <p>{aboutLine(about.introduction, d.introduction)}</p>
+          <p>{aboutLine(about.whoBody, d.whoBody)}</p>
+          <ul className="about-pills">
+            {highlights.map((item) => {
+              const Icon = aboutIcon(item.icon, item.title);
+              return (
                 <li key={item.title}>
-                  <strong>{item.title}</strong> {item.description}
+                  <Icon className="h-4 w-4" aria-hidden />
+                  {item.title}
                 </li>
-              ))}
-            </ul>
-          </div>
-          <div className="apro-media">
-            <span className="apro-blob is-navy" aria-hidden />
-            <span className="apro-blob is-red is-br" aria-hidden />
-            <img src={mediaUrl(missionImage)} alt="" />
-          </div>
+              );
+            })}
+          </ul>
         </div>
       </section>
 
-      <section className="apro-split is-vision" aria-labelledby="vision-heading">
-        <div className="apro-wrap apro-split-grid is-reverse">
-          <div className="apro-media">
-            <span className="apro-blob is-red" aria-hidden />
-            <span className="apro-blob is-navy is-br" aria-hidden />
-            <img src={mediaUrl(visionImage)} alt="" />
-          </div>
-          <div>
-            <p className="apro-kicker">{aboutLine(about.visionKicker, d.visionKicker)}</p>
-            <h2 id="vision-heading">{aboutLine(about.visionHeading, d.visionHeading)}</h2>
-            <p>{aboutLine(about.vision, d.vision)}</p>
-            <p>{aboutLine(about.visionBody, d.visionBody)}</p>
-            <ul className="apro-chips">
-              {visionChips.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+      <section id="mission" className="photo-bleed is-right is-tint" aria-labelledby="mission-heading">
+        <Shot src={missionImage} alt="Payout desk serving families in Nepal" />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{aboutLine(about.missionKicker, d.missionKicker)}</p>
+          <h2 id="mission-heading">{aboutLine(about.missionHeading, d.missionHeading)}</h2>
+          <p>{aboutLine(about.mission, d.mission)}</p>
+          <p>{aboutLine(about.missionBody, d.missionBody)}</p>
+          <ul className="about-points">
+            {missionPoints.map((item, index) => (
+              <li key={item.title}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{item.title}</strong>
+                  <em>{item.description}</em>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="apro-band" aria-labelledby="why-heading">
-        <div className="apro-wrap apro-center">
-          <p className="apro-kicker">{aboutLine(about.whyKicker, d.whyKicker)}</p>
-          <h2 id="why-heading">{aboutLine(about.whyHeading, d.whyHeading)}</h2>
-          <p className="apro-lede is-center">{aboutLine(about.whySubheading, d.whySubheading)}</p>
+      <section id="vision" className="photo-bleed is-left" aria-labelledby="vision-heading">
+        <Shot src={visionImage} alt="Branch desk across Nepal" />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{aboutLine(about.visionKicker, d.visionKicker)}</p>
+          <h2 id="vision-heading">{aboutLine(about.visionHeading, d.visionHeading)}</h2>
+          <p>{aboutLine(about.vision, d.vision)}</p>
+          <p>{aboutLine(about.visionBody, d.visionBody)}</p>
+          <ul className="about-chips">
+            {visionChips.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="why" className="apro-band" aria-labelledby="why-heading">
+        <div className="apro-wrap">
+          <div className="about-head">
+            <p className="apro-kicker">{aboutLine(about.whyKicker, d.whyKicker)}</p>
+            <h2 id="why-heading">{aboutLine(about.whyHeading, d.whyHeading)}</h2>
+            <p className="apro-lede">{aboutLine(about.whySubheading, d.whySubheading)}</p>
+          </div>
           <div className="apro-cards">
             {whyItems.map((item) => {
               const Icon = aboutIcon(item.icon, item.title);
@@ -159,11 +193,13 @@ export function AboutPro({ about }: { about: AboutCompany }) {
         </div>
       </section>
 
-      <section className="apro-values" aria-labelledby="values-heading">
+      <section id="values" className="apro-values" aria-labelledby="values-heading">
         <div className="apro-wrap">
-          <p className="apro-kicker">{aboutLine(about.valuesKicker, d.valuesKicker)}</p>
-          <h2 id="values-heading">{aboutLine(about.valuesHeading, d.valuesHeading)}</h2>
-          <p className="apro-lede">{aboutLine(about.valuesSubheading, d.valuesSubheading)}</p>
+          <div className="about-head">
+            <p className="apro-kicker">{aboutLine(about.valuesKicker, d.valuesKicker)}</p>
+            <h2 id="values-heading">{aboutLine(about.valuesHeading, d.valuesHeading)}</h2>
+            <p className="apro-lede">{aboutLine(about.valuesSubheading, d.valuesSubheading)}</p>
+          </div>
           <div className="apro-value-grid">
             {values.map((value) => {
               const Icon = aboutIcon(value.icon, value.title);
@@ -181,10 +217,15 @@ export function AboutPro({ about }: { about: AboutCompany }) {
         </div>
       </section>
 
-      <section className="apro-steps" aria-labelledby="steps-heading">
+      <section id="how" className="apro-steps" aria-labelledby="steps-heading">
         <div className="apro-wrap">
           <p className="apro-kicker">{aboutLine(about.stepsKicker, d.stepsKicker)}</p>
-          <BrandPunch id="steps-heading" text={aboutLine(about.stepsHeading, d.stepsHeading)} as="h2" className="apro-punch is-section" />
+          <BrandPunch
+            id="steps-heading"
+            text={aboutLine(about.stepsHeading, d.stepsHeading)}
+            as="h2"
+            className="apro-punch is-section"
+          />
           <ol className="apro-step-row">
             {steps.map((step, index) => (
               <li key={step.title}>
@@ -199,9 +240,11 @@ export function AboutPro({ about }: { about: AboutCompany }) {
 
       <section className="apro-commit" aria-labelledby="commit-heading">
         <div className="apro-wrap">
-          <p className="apro-kicker">{aboutLine(about.commitmentKicker, d.commitmentKicker)}</p>
-          <h2 id="commit-heading">{aboutLine(about.commitmentHeading, d.commitmentHeading)}</h2>
-          <p className="apro-lede">{aboutLine(about.commitmentBody, d.commitmentBody)}</p>
+          <div className="about-head">
+            <p className="apro-kicker">{aboutLine(about.commitmentKicker, d.commitmentKicker)}</p>
+            <h2 id="commit-heading">{aboutLine(about.commitmentHeading, d.commitmentHeading)}</h2>
+            <p className="apro-lede">{aboutLine(about.commitmentBody, d.commitmentBody)}</p>
+          </div>
           <ul className="apro-commit-row">
             {commitmentItems.map((item) => (
               <li key={item}>{item}</li>
@@ -210,37 +253,16 @@ export function AboutPro({ about }: { about: AboutCompany }) {
         </div>
       </section>
 
-      <section className="apro-story" aria-labelledby="story-heading">
-        <div className="apro-story-map" aria-hidden>
-          <AboutWorld className="apro-world is-soft" />
-        </div>
-        <div className="apro-wrap apro-story-grid">
-          <img src={mediaUrl(storyImage)} alt="" />
-          <div>
-            <p className="apro-kicker">{aboutLine(about.storyBandKicker, d.storyBandKicker)}</p>
-            <h2 id="story-heading">{aboutLine(about.storyBandHeading, d.storyBandHeading)}</h2>
-            <p>{aboutLine(about.storyBandBody, d.storyBandBody)}</p>
-          </div>
+      <section className="photo-bleed is-right is-tint" aria-labelledby="story-heading">
+        <Shot src={storyImage} alt="A family waiting on a remittance payout" />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{aboutLine(about.storyBandKicker, d.storyBandKicker)}</p>
+          <h2 id="story-heading">{aboutLine(about.storyBandHeading, d.storyBandHeading)}</h2>
+          <p>{aboutLine(about.storyBandBody, d.storyBandBody)}</p>
         </div>
       </section>
 
-      {stats.length ? (
-        <section className="apro-stats" aria-label="Trust figures">
-          <div className="apro-wrap apro-stat-row">
-            {stats.map((stat) => (
-              <div key={stat.label}>
-                <p>{stat.value}</p>
-                <span>{stat.label}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       <section className="apro-cta" aria-labelledby="cta-heading">
-        <div className="apro-cta-map" aria-hidden>
-          <AboutWorld className="apro-world is-cta" />
-        </div>
         <div className="apro-wrap apro-center">
           <h2 id="cta-heading">{aboutLine(about.ctaHeading, d.ctaHeading)}</h2>
           <p className="apro-lede is-center is-light">{aboutLine(about.ctaBody, d.ctaBody)}</p>

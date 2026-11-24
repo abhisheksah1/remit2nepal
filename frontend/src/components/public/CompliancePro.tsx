@@ -1,59 +1,99 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import {
-  Activity,
-  ArrowRight,
-  BadgeCheck,
-  ClipboardCheck,
-  Eye,
-  FileSearch,
-  FileText,
-  Fingerprint,
-  HeartHandshake,
-  Lock,
-  ShieldAlert,
-  ShieldCheck,
-  UserCheck
-} from "lucide-react";
-import { ComplianceVisual } from "./ComplianceVisuals";
+import { ArrowRight, BadgeCheck, FileText, ShieldCheck } from "lucide-react";
+import { ComplianceFlow, CompliancePhoto } from "./ComplianceVisuals";
 import { Button } from "@/components/ui/Button";
-import type { AboutCompany, CompanySettings, DocumentItem, LegalLink, TeamMember } from "@/types/content";
+import { isComplianceSectionOn, resolveCompliancePage } from "@/content/compliance-defaults";
+import type {
+  AboutCompany,
+  CompanySettings,
+  CompliancePhotoItem,
+  DocumentItem,
+  LegalLink,
+  TeamMember
+} from "@/types/content";
 import { entityId, mediaUrl } from "@/utils/cn";
+import { aboutIcon } from "@/utils/about-icons";
 import { personInitials } from "@/utils/team";
 
-const COMMITMENT = [
-  { title: "Regulatory Compliance", body: "We follow applicable laws and regulatory requirements in the markets where we provide our services." },
-  { title: "Customer Protection", body: "Controls and processes are designed to help protect customers and keep transfers safer." },
-  { title: "Financial Crime Prevention", body: "We maintain policies intended to reduce the risk of fraud, money laundering, and other misuse." }
-];
+function paras(text: string) {
+  return text
+    .split(/\n\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
 
-const KYC_STEPS = [
-  { n: "01", title: "Identify", body: "Collect required customer information." },
-  { n: "02", title: "Verify", body: "Validate information using appropriate verification procedures." },
-  { n: "03", title: "Protect", body: "Use the information responsibly and securely in accordance with applicable requirements." }
-];
+function accentParts(text: string) {
+  if (!text.includes("//")) return [{ text, tone: "is-navy" }];
+  return text
+    .split("//")
+    .map((part, index) => ({ text: part.trim(), tone: index % 2 ? "is-red" : "is-navy" }))
+    .filter((part) => part.text);
+}
 
-const AML_CARDS = [
-  { title: "Customer Due Diligence", body: "We may review customer information to understand risk and meet applicable due-diligence requirements.", icon: UserCheck },
-  { title: "Transaction Monitoring", body: "Monitoring is designed to help identify unusual or potentially suspicious activity.", icon: Activity },
-  { title: "Risk Assessment", body: "We assess risk so controls can be applied in a proportionate and responsible way.", icon: ShieldAlert },
-  { title: "Regulatory Reporting", body: "Where required by applicable law, we report activity through the appropriate channels.", icon: ClipboardCheck }
-];
+function AccentTitle({
+  text,
+  id,
+  className,
+  as: Tag = "h1"
+}: {
+  text: string;
+  id?: string;
+  className?: string;
+  as?: "h1" | "h2";
+}) {
+  const parts = accentParts(text);
+  return (
+    <Tag id={id} className={className}>
+      {parts.map((part, index) => (
+        <span key={`${part.tone}-${index}`} className={part.tone}>
+          {part.text}
+          {index < parts.length - 1 ? " " : ""}
+        </span>
+      ))}
+    </Tag>
+  );
+}
 
-const FRAUD_CARDS = [
-  { title: "Identity Protection", body: "Measures designed to help protect customer identity.", icon: Fingerprint },
-  { title: "Transaction Monitoring", body: "Monitoring designed to identify unusual or potentially suspicious activity.", icon: Eye },
-  { title: "Security Controls", body: "Technical and operational controls designed to protect systems and information.", icon: Lock },
-  { title: "Customer Awareness", body: "Helping customers recognize suspicious activity and potential scams.", icon: HeartHandshake }
-];
+function CmsLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+  if (!href) return null;
+  if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")) {
+    return (
+      <a href={href} className={className} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    );
+  }
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={href} className={className}>
+      {children}
+    </Link>
+  );
+}
 
-const PROTECTION = [
-  "Clear transaction information",
-  "Secure customer verification",
-  "Responsible transaction processing",
-  "Customer support and assistance"
-];
-
-const SCREENING = ["Screening", "Risk Controls", "Review", "Responsible Decisions"];
+function PagePhoto({
+  photo
+}: {
+  photo: CompliancePhotoItem;
+}) {
+  const src = mediaUrl(photo.url);
+  if (!src) return null;
+  return (
+    <CompliancePhoto
+      src={src}
+      alt={photo.alt || ""}
+      overlay={photo.overlay}
+      credit={photo.credit}
+    />
+  );
+}
 
 function isComplianceMember(member: TeamMember) {
   return /compliance|kyc|aml|cft|sanctions/i.test(`${member.title} ${member.bio}`);
@@ -116,210 +156,225 @@ export function CompliancePro({
   team: TeamMember[];
   documents: DocumentItem[];
 }) {
+  const page = resolveCompliancePage(about.compliancePage);
   const licenses = about.licenses?.filter(Boolean) ?? [];
   const certifications = about.certifications?.filter(Boolean) ?? [];
   const awards = about.awards?.filter(Boolean) ?? [];
   const stats = about.statistics?.filter((item) => item.value && item.label) ?? [];
   const complianceTeam = team.filter(isComplianceMember);
   const policies = policyCards(settings?.legalLinks ?? [], documents);
-  const regulator = regulatorFromLicenses(licenses);
+  const regulator = page.regulatorName.trim() || regulatorFromLicenses(licenses);
   const companyName = settings?.companyName?.trim() || "";
   const address = settings?.address?.trim() || "";
   const hasRegistry = Boolean(regulator || licenses.length || companyName || address);
+  const on = (id: string) => isComplianceSectionOn(page.disabledSections, id);
 
   return (
     <div className="about-pro cpro reveal-skip">
-      <section className="cpro-hero" aria-labelledby="cpro-title">
-        <div className="apro-wrap cpro-hero-grid">
-          <div>
-            <p className="apro-kicker">Compliance &amp; Security</p>
-            <h1 id="cpro-title" className="cpro-title">
-              <span className="is-navy">Compliance</span> You Can <span className="is-red">Trust</span>
-            </h1>
-            <p className="apro-lede">
-              We are committed to maintaining high standards of compliance, security, and responsible financial services.
-              Our compliance framework is designed to help protect our customers, prevent financial crime, and support safe
-              and transparent money transfers.
+      {on("hero") ? (
+      <section className="photo-bleed is-right cpro-hero" aria-labelledby="cpro-title">
+        <PagePhoto photo={page.heroPhoto} />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{page.heroKicker}</p>
+          <AccentTitle text={page.heroTitle} id="cpro-title" className="cpro-title" />
+          {paras(page.heroBody).map((item) => (
+            <p key={item} className="apro-lede">
+              {item}
             </p>
+          ))}
+          {page.heroBadge ? (
             <p className="cpro-badge">
               <ShieldCheck />
-              Committed to Safe &amp; Responsible Money Transfers
+              {page.heroBadge}
             </p>
-          </div>
-          <ComplianceVisual kind="hero" />
+          ) : null}
         </div>
       </section>
+      ) : null}
 
-      <section className="apro-split" aria-labelledby="commitment-heading">
-        <div className="apro-wrap apro-split-grid">
-          <div>
-            <p className="apro-kicker">Our commitment</p>
-            <h2 id="commitment-heading">Built on Trust. Driven by Responsibility.</h2>
-            <p>
-              Compliance is at the heart of how we operate. We follow applicable laws, regulations, and regulatory
-              requirements in the markets where we provide our services.
-            </p>
-            <p>
-              Our approach combines technology, trained professionals, monitoring processes, and internal controls to help
-              maintain a safe and responsible remittance environment.
-            </p>
-            <ul className="apro-points">
-              {COMMITMENT.map((item) => (
-                <li key={item.title}>
-                  <strong>{item.title}</strong>
-                  {item.body}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="cpro-media">
-            <ComplianceVisual kind="commitment" />
-          </div>
+      {on("commitment") ? (
+      <section className="photo-bleed is-left is-tint" aria-labelledby="commitment-heading">
+        <PagePhoto photo={page.commitmentPhoto} />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{page.commitmentKicker}</p>
+          <h2 id="commitment-heading">{page.commitmentHeading}</h2>
+          {paras(page.commitmentBody).map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <ul className="apro-points">
+            {page.commitmentItems.map((item) => (
+              <li key={item.title}>
+                <strong>{item.title}</strong>
+                {item.description}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
+      ) : null}
 
+      {on("kyc") ? (
       <section className="apro-steps" aria-labelledby="kyc-heading">
+        <div className="photo-bleed is-right">
+          <PagePhoto photo={page.kycPhoto} />
+          <div className="photo-bleed-copy">
+            <p className="apro-kicker">{page.kycKicker}</p>
+            <h2 id="kyc-heading">{page.kycHeading}</h2>
+            {paras(page.kycBody).map((item) => (
+              <p key={item} className="apro-lede">
+                {item}
+              </p>
+            ))}
+          </div>
+        </div>
         <div className="apro-wrap">
-          <p className="apro-kicker">Customer verification</p>
-          <h2 id="kyc-heading">Know Your Customer (KYC)</h2>
-          <p className="apro-lede">
-            To help protect our customers and the financial system, we may verify customer identity and other required
-            information before processing certain transactions.
-          </p>
-          <p className="apro-lede">
-            Our verification procedures help us meet applicable regulatory requirements and reduce the risk of fraud,
-            identity theft, money laundering, and other financial crime.
-          </p>
           <ol className="apro-step-row">
-            {KYC_STEPS.map((step) => (
-              <li key={step.n}>
-                <span>{step.n}</span>
+            {page.kycSteps.map((step, index) => (
+              <li key={step.title}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{step.title}</h3>
-                <p>{step.body}</p>
+                <p>{step.description}</p>
               </li>
             ))}
           </ol>
-          <p className="cpro-note">
-            Verification requirements may vary depending on the service, transaction, destination, and applicable
-            regulations.
-          </p>
+          {page.kycNote ? <p className="cpro-note">{page.kycNote}</p> : null}
         </div>
       </section>
+      ) : null}
 
+      {on("aml") ? (
       <section className="cpro-aml" aria-labelledby="aml-heading">
-        <div className="apro-wrap">
-          <p className="apro-kicker is-light">AML / CFT</p>
-          <h2 id="aml-heading">Fighting Financial Crime</h2>
-          <p className="apro-lede is-light">
-            We maintain policies and controls designed to help prevent our services from being misused for money
-            laundering, terrorist financing, fraud, or other prohibited activities.
-          </p>
-          <p className="apro-lede is-light">
-            Our compliance approach may include customer due diligence, transaction monitoring, risk assessment,
-            screening, investigation, and reporting where required by applicable law.
-          </p>
-          <div className="apro-cards cpro-aml-cards">
-            {AML_CARDS.map((item) => (
-              <article key={item.title} className="cpro-dark-card">
-                <span className="apro-icon" aria-hidden>
-                  <item.icon />
-                </span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </article>
+        <div className="photo-bleed is-left">
+          <PagePhoto photo={page.amlPhoto} />
+          <div className="photo-bleed-copy">
+            <p className="apro-kicker is-light">{page.amlKicker}</p>
+            <h2 id="aml-heading">{page.amlHeading}</h2>
+            {paras(page.amlBody).map((item) => (
+              <p key={item} className="apro-lede is-light">
+                {item}
+              </p>
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="cpro-screen" aria-labelledby="screen-heading">
-        <div className="apro-wrap cpro-screen-row">
-          <div>
-            <p className="apro-kicker">Sanctions</p>
-            <h2 id="screen-heading">Responsible Screening</h2>
-            <p>
-              We conduct appropriate screening and controls designed to identify transactions or parties that may require
-              additional review under applicable sanctions, regulatory, or internal risk requirements.
-            </p>
+        <div className="apro-wrap">
+          <div className="apro-cards cpro-aml-cards">
+            {page.amlCards.map((item) => {
+              const Icon = aboutIcon(item.icon, item.title);
+              return (
+                <article key={item.title} className="cpro-dark-card">
+                  <span className="apro-icon" aria-hidden>
+                    <Icon />
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              );
+            })}
           </div>
+        </div>
+      </section>
+      ) : null}
+
+      {on("screening") ? (
+      <section className="photo-bleed is-left is-tint" aria-labelledby="screen-heading">
+        <PagePhoto photo={page.screenPhoto} />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{page.screenKicker}</p>
+          <h2 id="screen-heading">{page.screenHeading}</h2>
+          {paras(page.screenBody).map((item) => (
+            <p key={item}>{item}</p>
+          ))}
           <ul className="cpro-pills">
-            {SCREENING.map((item) => (
+            {page.screenPills.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </div>
       </section>
+      ) : null}
 
+      {on("fraud") ? (
       <section className="cpro-fraud" aria-labelledby="fraud-heading">
-        <div className="apro-wrap">
-          <div className="apro-split-grid">
-            <div>
-              <p className="apro-kicker">Fraud prevention</p>
-              <h2 id="fraud-heading">Protecting You From Fraud</h2>
-              <p>
-                We continuously work to identify and reduce fraudulent or suspicious activity. Our security and compliance
-                processes are designed to help protect customers and maintain the integrity of our services.
-              </p>
-            </div>
-            <div className="cpro-media is-fraud">
-              <ComplianceVisual kind="fraud" />
-            </div>
-          </div>
-          <div className="apro-cards">
-            {FRAUD_CARDS.map((item) => (
-              <article key={item.title} className="apro-card">
-                <span className="apro-icon" aria-hidden>
-                  <item.icon />
-                </span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </article>
+        <div className="photo-bleed is-right">
+          <PagePhoto photo={page.fraudPhoto} />
+          <div className="photo-bleed-copy">
+            <p className="apro-kicker">{page.fraudKicker}</p>
+            <h2 id="fraud-heading">{page.fraudHeading}</h2>
+            {paras(page.fraudBody).map((item) => (
+              <p key={item}>{item}</p>
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="apro-values" aria-labelledby="privacy-heading">
         <div className="apro-wrap">
-          <p className="apro-kicker">Data privacy</p>
-          <h2 id="privacy-heading">Your Information Matters</h2>
-          <p className="apro-lede">
-            We respect the privacy of our customers and take appropriate measures to protect personal information.
-            Customer information is handled in accordance with applicable privacy laws, our privacy policies, and
-            legitimate business and regulatory requirements.
-          </p>
-          <div className="cpro-two">
-            <article className="apro-card">
-              <span className="apro-icon" aria-hidden>
-                <Lock />
-              </span>
-              <h3>Data Protection</h3>
-              <p>We use appropriate technical and organizational safeguards to protect personal information.</p>
-            </article>
-            <article className="apro-card">
-              <span className="apro-icon" aria-hidden>
-                <FileSearch />
-              </span>
-              <h3>Responsible Data Use</h3>
-              <p>Information is collected, used, and retained according to applicable requirements and our published policies.</p>
-            </article>
+          <div className="apro-cards">
+            {page.fraudCards.map((item) => {
+              const Icon = aboutIcon(item.icon, item.title);
+              return (
+                <article key={item.title} className="apro-card">
+                  <span className="apro-icon" aria-hidden>
+                    <Icon />
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              );
+            })}
           </div>
-          <Link to="/privacy" className="apro-text-link">
-            Read Our Privacy Policy <ArrowRight className="h-4 w-4" />
-          </Link>
         </div>
       </section>
+      ) : null}
 
-      <section className="apro-split is-mission" aria-labelledby="protect-heading">
+      {on("privacy") ? (
+      <section className="apro-values" aria-labelledby="privacy-heading">
+        <div className="photo-bleed is-right">
+          <PagePhoto photo={page.privacyPhoto} />
+          <div className="photo-bleed-copy">
+            <p className="apro-kicker">{page.privacyKicker}</p>
+            <h2 id="privacy-heading">{page.privacyHeading}</h2>
+            {paras(page.privacyBody).map((item) => (
+              <p key={item} className="apro-lede">
+                {item}
+              </p>
+            ))}
+          </div>
+        </div>
         <div className="apro-wrap">
-          <p className="apro-kicker">Customers first</p>
-          <h2 id="protect-heading">Protecting Our Customers</h2>
-          <p className="apro-lede">
-            Your security and confidence are important to us. We work to provide transparent information about our
-            services, applicable fees, transaction requirements, and security practices.
-          </p>
+          <div className="cpro-two">
+            {page.privacyCards.map((item) => {
+              const Icon = aboutIcon(item.icon, item.title);
+              return (
+                <article key={item.title} className="apro-card">
+                  <span className="apro-icon" aria-hidden>
+                    <Icon />
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </article>
+              );
+            })}
+          </div>
+          {page.privacyLinkUrl ? (
+            <CmsLink href={page.privacyLinkUrl} className="apro-text-link">
+              {page.privacyLinkLabel} <ArrowRight className="h-4 w-4" />
+            </CmsLink>
+          ) : null}
+        </div>
+      </section>
+      ) : null}
+
+      {on("protect") ? (
+      <section className="photo-bleed is-left is-tint" aria-labelledby="protect-heading">
+        <PagePhoto photo={page.protectPhoto} />
+        <div className="photo-bleed-copy">
+          <p className="apro-kicker">{page.protectKicker}</p>
+          <h2 id="protect-heading">{page.protectHeading}</h2>
+          {paras(page.protectBody).map((item) => (
+            <p key={item} className="apro-lede">
+              {item}
+            </p>
+          ))}
           <ul className="cpro-protect">
-            {PROTECTION.map((item) => (
+            {page.protectItems.map((item) => (
               <li key={item}>
                 <BadgeCheck />
                 {item}
@@ -328,48 +383,55 @@ export function CompliancePro({
           </ul>
         </div>
       </section>
+      ) : null}
 
+      {on("report") ? (
       <section className="cpro-report-wrap" aria-labelledby="report-heading">
         <div className="apro-wrap">
           <article className="cpro-report">
             <div>
-              <p className="apro-kicker">Need help</p>
-              <h2 id="report-heading">See Something Suspicious?</h2>
-              <p>
-                If you believe a transaction or activity may be fraudulent, suspicious, or unauthorized, please contact
-                our support team as soon as possible.
-              </p>
+              <p className="apro-kicker">{page.reportKicker}</p>
+              <h2 id="report-heading">{page.reportHeading}</h2>
+              {paras(page.reportBody).map((item) => (
+                <p key={item}>{item}</p>
+              ))}
             </div>
             <div className="apro-actions">
-              <Link to="/contact?subject=Report%20a%20suspicious%20activity">
-                <Button variant="gold" size="lg" className="apro-btn">
-                  Report an Issue
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button variant="secondary" size="lg" className="apro-btn">
-                  Contact Support
-                </Button>
-              </Link>
+              {page.reportPrimaryUrl ? (
+                <CmsLink href={page.reportPrimaryUrl}>
+                  <Button variant="gold" size="lg" className="apro-btn">
+                    {page.reportPrimaryLabel}
+                  </Button>
+                </CmsLink>
+              ) : null}
+              {page.reportSecondaryUrl ? (
+                <CmsLink href={page.reportSecondaryUrl}>
+                  <Button variant="secondary" size="lg" className="apro-btn">
+                    {page.reportSecondaryLabel}
+                  </Button>
+                </CmsLink>
+              ) : null}
             </div>
           </article>
         </div>
       </section>
+      ) : null}
 
+      {on("team") ? (
       <section className="apro-split is-team" aria-labelledby="team-heading">
         <div className="apro-wrap apro-split-grid">
           <div>
-            <p className="apro-kicker">People</p>
-            <h2 id="team-heading">Our Compliance Team</h2>
-            <p>
-              Our compliance function works across the organization to support responsible operations, identify risks,
-              strengthen controls, and help ensure that our services operate within applicable legal and regulatory
-              requirements.
-            </p>
-            <ComplianceVisual kind="flow" />
-            <Link to="/about/team" className="apro-text-link">
-              Meet the full team <ArrowRight className="h-4 w-4" />
-            </Link>
+            <p className="apro-kicker">{page.teamKicker}</p>
+            <h2 id="team-heading">{page.teamHeading}</h2>
+            {paras(page.teamBody).map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+            <ComplianceFlow steps={page.teamFlow} />
+            {page.teamLinkUrl ? (
+              <CmsLink href={page.teamLinkUrl} className="apro-text-link">
+                {page.teamLinkLabel} <ArrowRight className="h-4 w-4" />
+              </CmsLink>
+            ) : null}
           </div>
           {complianceTeam.length ? (
             <div className="cpro-people">
@@ -389,23 +451,24 @@ export function CompliancePro({
               ))}
             </div>
           ) : (
-            <div className="cpro-media">
-              <ComplianceVisual kind="commitment" />
-            </div>
+            <PagePhoto photo={page.teamPhoto} shape="round" />
           )}
         </div>
       </section>
+      ) : null}
 
-      {hasRegistry ? (
+      {on("regulatory") && hasRegistry ? (
         <section id="regulatory-information" className="cpro-reg-wrap" aria-labelledby="reg-heading">
           <div className="apro-wrap">
             <article className="cpro-reg">
-              <p className="apro-kicker">Transparency</p>
-              <h2 id="reg-heading">Regulatory Information</h2>
-              <p>
-                We operate in accordance with the regulatory requirements applicable to our services and the
-                jurisdictions in which we operate.
-              </p>
+              <div className="cpro-reg-photo">
+                <PagePhoto photo={page.regPhoto} shape="capsule-wide" />
+              </div>
+              <p className="apro-kicker">{page.regKicker}</p>
+              <h2 id="reg-heading">{page.regHeading}</h2>
+              {paras(page.regBody).map((item) => (
+                <p key={item}>{item}</p>
+              ))}
               <dl className="cpro-dl">
                 {regulator ? (
                   <>
@@ -452,10 +515,7 @@ export function CompliancePro({
                   </ul>
                 </div>
               ) : null}
-              <p className="cpro-note">
-                License numbers, certificates, and additional filings appear here only when they have been published as
-                public documents.
-              </p>
+              {page.regNote ? <p className="cpro-note">{page.regNote}</p> : null}
               <a href="#policies" className="apro-text-link">
                 View Regulatory Details <ArrowRight className="h-4 w-4" />
               </a>
@@ -464,12 +524,12 @@ export function CompliancePro({
         </section>
       ) : null}
 
-      {policies.length ? (
+      {on("policies") && policies.length ? (
         <section id="policies" className="apro-band" aria-labelledby="docs-heading">
           <div className="apro-wrap">
-            <p className="apro-kicker">Documents</p>
-            <h2 id="docs-heading">Policies &amp; Important Information</h2>
-            <p className="apro-lede">Read the published policies and service information that apply to our customers.</p>
+            <p className="apro-kicker">{page.docsKicker}</p>
+            <h2 id="docs-heading">{page.docsHeading}</h2>
+            <p className="apro-lede">{page.docsBody}</p>
             <div className="cpro-docs">
               {policies.map((item) => {
                 const inner = (
@@ -499,7 +559,7 @@ export function CompliancePro({
         </section>
       ) : null}
 
-      {stats.length ? (
+      {on("stats") && stats.length ? (
         <section className="apro-stats" aria-label="Trust figures">
           <div className="apro-wrap apro-stat-row">
             {stats.map((stat) => (
@@ -512,30 +572,34 @@ export function CompliancePro({
         </section>
       ) : null}
 
+      {on("cta") ? (
       <section className="apro-cta" aria-labelledby="cpro-final">
         <div className="apro-wrap apro-center">
-          <h2 id="cpro-final" className="cpro-final">
-            <span className="is-red">Trust</span> Is More Than a Promise. It&apos;s Our Responsibility.
-          </h2>
-          <p className="apro-lede is-center is-light">
-            We believe responsible financial services are built on transparency, security, accountability, and continuous
-            improvement. We remain committed to strengthening our compliance practices and protecting the people and
-            communities we serve.
-          </p>
+          <AccentTitle text={page.ctaHeading} id="cpro-final" className="cpro-final" as="h2" />
+          {paras(page.ctaBody).map((item) => (
+            <p key={item} className="apro-lede is-center is-light">
+              {item}
+            </p>
+          ))}
           <div className="apro-actions is-center">
-            <a href="#policies">
-              <Button variant="gold" size="lg" className="apro-btn">
-                Learn More About Our Policies
-              </Button>
-            </a>
-            <Link to="/contact">
-              <Button variant="secondary" size="lg" className="apro-btn is-ghost">
-                Contact Our Team
-              </Button>
-            </Link>
+            {page.ctaPrimaryUrl ? (
+              <CmsLink href={page.ctaPrimaryUrl}>
+                <Button variant="gold" size="lg" className="apro-btn">
+                  {page.ctaPrimaryLabel}
+                </Button>
+              </CmsLink>
+            ) : null}
+            {page.ctaSecondaryUrl ? (
+              <CmsLink href={page.ctaSecondaryUrl}>
+                <Button variant="secondary" size="lg" className="apro-btn is-ghost">
+                  {page.ctaSecondaryLabel}
+                </Button>
+              </CmsLink>
+            ) : null}
           </div>
         </div>
       </section>
+      ) : null}
     </div>
   );
 }

@@ -238,7 +238,7 @@ export default function LeaveDashboard() {
                 ))}
               </select>
             </label>
-            <div className="min-w-[220px]">
+            <div className="min-w-0 w-full sm:min-w-[220px] sm:w-auto">
               <SearchSelect
                 label="Employee"
                 value={employeeId}

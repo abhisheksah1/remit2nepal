@@ -4,6 +4,7 @@ import { CompliancePro } from "@/components/public/CompliancePro";
 import { SeoHead } from "@/components/public/SeoHead";
 import { SkeletonLines } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { resolveCompliancePage } from "@/content/compliance-defaults";
 import { groupTeam } from "@/utils/team";
 
 export default function AboutCompliance() {
@@ -21,12 +22,11 @@ export default function AboutCompliance() {
   }
   if (!about) return <EmptyState title="Compliance content is being prepared" />;
 
+  const seo = resolveCompliancePage(about.compliancePage);
+
   return (
     <>
-      <SeoHead
-        title="Compliance & Security | Remit To Nepal Pvt. Ltd"
-        description="How Remit To Nepal Pvt. Ltd approaches compliance, KYC, financial-crime controls, privacy, and customer protection."
-      />
+      <SeoHead title={seo.seoTitle} description={seo.seoDescription} />
       <CompliancePro
         about={about}
         settings={site.data?.settings ?? null}

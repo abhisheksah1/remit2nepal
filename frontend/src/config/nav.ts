@@ -58,6 +58,7 @@ export const adminNav: AdminNavGroup[] = [
     label: "Company",
     items: [
       { label: "About", path: "/admin/about", icon: ShieldCheck, permission: "about" },
+      { label: "Compliance", path: "/admin/compliance", icon: Shield, permission: "about" },
       { label: "Board & Team", path: "/admin/team", icon: Users, permission: "about" },
       { label: "Partners", path: "/admin/partners", icon: Handshake, permission: "partners" },
       { label: "Partnership Settings", path: "/admin/partners/settings", icon: SlidersHorizontal, permission: "partners" },
