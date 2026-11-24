@@ -16,7 +16,7 @@ const partnershipSettingSchema = new Schema(
     pageDescription: {
       type: String,
       default:
-        "Join Remit2Nepal as a national agent. Submit full details and documents for verification. After review, the company emails the agreement for signature, stamp, and return by email."
+        "Join Remit To Nepal Pvt. Ltd as a national agent. Submit full details and documents for verification. After review, the company emails the agreement for signature, stamp, and return by email."
     },
     internationalEnabled: { type: Boolean, default: true },
     internationalKicker: { type: String, default: "Sending corridors" },
@@ -47,7 +47,7 @@ const partnershipSettingSchema = new Schema(
         "Choose Cooperative or Private Agent when you apply",
         "Fill the form with full company and owner details",
         "Upload documents for verification first",
-        "After review, Remit2Nepal emails the company agreement",
+        "After review, Remit To Nepal Pvt. Ltd emails the company agreement",
         "Sign, stamp, complete the papers, scan, and email them back"
       ]
     },

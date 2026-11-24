@@ -16,7 +16,7 @@ const aboutCompanySchema = new Schema(
     heroTitle: { type: String, default: "" },
     heroDescription: { type: String, default: "" },
     bestOfKicker: { type: String, default: "Best of company" },
-    bestOfHeading: { type: String, default: "Best of Remit2Nepal" },
+    bestOfHeading: { type: String, default: "Best of Remit To Nepal Pvt. Ltd" },
     bestOfSubheading: { type: String, default: "" },
     storyKicker: { type: String, default: "The company" },
     storyHeading: { type: String, default: "Who we are" },

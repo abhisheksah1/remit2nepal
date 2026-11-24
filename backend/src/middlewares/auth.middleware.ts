@@ -10,6 +10,9 @@ import { PERMISSIONS } from "../constants/permissions.js";
 
 async function sessionFromToken(token: string) {
   const payload = jwt.verify(token, env.JWT_SECRET) as AccessTokenPayload;
+  if (payload.typ === "leave") {
+    return null;
+  }
   const user = await User.findById(payload.sub);
   if (!user || user.status !== "ACTIVE") {
     return null;

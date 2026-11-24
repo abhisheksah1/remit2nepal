@@ -144,7 +144,7 @@ export default function About() {
       visionImageUrl: data.visionImageUrl || "",
       history: data.history || "",
       bestOfKicker: data.bestOfKicker || "Best of company",
-      bestOfHeading: data.bestOfHeading || "Best of Remit2Nepal",
+      bestOfHeading: data.bestOfHeading || "Best of Remit To Nepal Pvt. Ltd",
       bestOfSubheading: data.bestOfSubheading || "",
       storyKicker: aboutLine(data.storyKicker, d.storyKicker),
       storyHeading: aboutLine(data.storyHeading, d.storyHeading),

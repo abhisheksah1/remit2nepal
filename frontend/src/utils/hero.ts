@@ -4,6 +4,11 @@ export type HeroSceneCard = {
   note: string;
 };
 
+export type HeroBgSlide = {
+  title: string;
+  imageUrl: string;
+};
+
 type ItemRow = Record<string, unknown>;
 
 function asRow(value: unknown): ItemRow | null {
@@ -15,7 +20,17 @@ function text(row: ItemRow, key: string) {
   return String(row[key] ?? "").trim();
 }
 
+export function isHeroBgSettingsRow(row: ItemRow) {
+  return text(row, "kind") === "heroBgSettings";
+}
+
+export function isHeroSlideRow(row: ItemRow) {
+  if (isHeroBgSettingsRow(row)) return false;
+  return text(row, "kind") === "heroSlide" || Boolean(text(row, "imageUrl"));
+}
+
 export function isHeroSceneRow(row: ItemRow) {
+  if (isHeroSlideRow(row) || isHeroBgSettingsRow(row)) return false;
   return Boolean(text(row, "kicker") || text(row, "note") || text(row, "strong"));
 }
 
@@ -23,8 +38,38 @@ export function heroChips(items: unknown): string[] {
   if (!Array.isArray(items)) return [];
   return items
     .map(asRow)
-    .filter((row): row is ItemRow => Boolean(row) && text(row, "title") && !("value" in row) && !isHeroSceneRow(row))
+    .filter(
+      (row): row is ItemRow =>
+        Boolean(row) && text(row, "title") && !("value" in row) && !isHeroSceneRow(row) && !isHeroSlideRow(row) && !isHeroBgSettingsRow(row)
+    )
     .map((row) => text(row, "title"));
+}
+
+export function heroBgSlides(items: unknown, fallbackUrl = ""): HeroBgSlide[] {
+  const slides: HeroBgSlide[] = [];
+  if (Array.isArray(items)) {
+    for (const value of items) {
+      const row = asRow(value);
+      if (!row || !isHeroSlideRow(row)) continue;
+      const imageUrl = text(row, "imageUrl");
+      if (!imageUrl) continue;
+      slides.push({ title: text(row, "title"), imageUrl });
+    }
+  }
+  const fallback = fallbackUrl.trim();
+  if (!slides.length && fallback) return [{ title: "", imageUrl: fallback }];
+  return slides;
+}
+
+export function heroBgSeconds(items: unknown, fallback = 5) {
+  if (!Array.isArray(items)) return fallback;
+  for (const value of items) {
+    const row = asRow(value);
+    if (!row || !isHeroBgSettingsRow(row)) continue;
+    const seconds = Number(row.seconds);
+    if (Number.isFinite(seconds) && seconds >= 3 && seconds <= 30) return Math.round(seconds);
+  }
+  return fallback;
 }
 
 export function heroSceneCards(items: unknown): HeroSceneCard[] {

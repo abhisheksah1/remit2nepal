@@ -115,8 +115,8 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
   if (settings) {
     cards.push({
       kind: "company",
-      title: settings.companyName || "Remit2Nepal",
-      keywords: "remit2nepal, company, about, who, tagline, what is",
+      title: settings.companyName || "Remit To Nepal Pvt. Ltd",
+      keywords: "sarasxpress, remit2nepal, company, about, who, tagline, what is",
       href: "/about",
       hrefLabel: "About Us",
       text: joinLines([
@@ -130,7 +130,7 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
     });
     cards.push({
       kind: "contact",
-      title: "Contact Remit2Nepal",
+      title: `Contact ${settings.companyName || "Remit To Nepal Pvt. Ltd"}`,
       keywords: "contact, phone, email, address, office, hours, location, hotline, emergency, whatsapp, track, tracking, remittance status",
       href: "/contact",
       hrefLabel: "Contact",
@@ -156,7 +156,7 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
   if (about) {
     cards.push({
       kind: "about",
-      title: about.heroTitle || about.storyHeading || "About Remit2Nepal",
+      title: about.heroTitle || about.storyHeading || `About ${settings?.companyName || "Remit To Nepal Pvt. Ltd"}`,
       keywords: "about, mission, vision, history, license, compliance, values, who we are",
       href: "/about",
       hrefLabel: "About Us",
@@ -208,7 +208,7 @@ export async function loadSiteKnowledge(): Promise<SiteCard[]> {
       keywords: "branch, branches, our agent, finder, nationwide, how many agents, location, agent list",
       href: "/branches",
       hrefLabel: "Our Agent",
-      text: `Remit2Nepal has ${branches.length} active agents/branches. Ask with a district, city, or agent name to get the list, address, and phone. Open Our Agent to search everyone.`
+      text: `${settings?.companyName || "Remit To Nepal Pvt. Ltd"} has ${branches.length} active agents/branches. Ask with a district, city, or agent name to get the list, address, and phone. Open Our Agent to search everyone.`
     });
   }
   for (const branch of branches) {

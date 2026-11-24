@@ -11,7 +11,7 @@ const TYPE_LABELS: Record<string, string> = {
   STATS: "Hero stats",
   SERVICES: "Services",
   RATES: "Exchange rates",
-  WHY_CHOOSE: "Why Remit2Nepal",
+  WHY_CHOOSE: "Why Remit To Nepal Pvt. Ltd",
   REMITTANCE: "Remittance cubes",
   PARTNERS: "Partners",
   TESTIMONIALS: "Testimonials",
@@ -34,7 +34,7 @@ export default function Homepage() {
     <div>
       <PageHeader
         title="Homepage"
-        description="Turn sections on or off and change their order in Sections. Open Hero to change the first screen: title, intro, buttons, chips, globe cards, and background."
+        description="Turn sections on or off and change their order in Sections. Open Hero to change the first screen: title, buttons, rotating Nepal scene photos (Everest, Pashupatinath, Fewa Lake), and globe cards."
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Homepage" }]}
       />
       <DataTable

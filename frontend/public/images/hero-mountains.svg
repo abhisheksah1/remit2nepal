@@ -1,33 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax meet">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMax meet">
   <defs>
+    <linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7f9fd" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#d5e0f4" stop-opacity="0.35"/>
+    </linearGradient>
     <linearGradient id="heroFar" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#d7e2f4" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#b7c7e4" stop-opacity="0.4"/>
+      <stop offset="0%" stop-color="#c9d6ee"/>
+      <stop offset="100%" stop-color="#9aadd0"/>
     </linearGradient>
     <linearGradient id="heroMid" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#9aadd0" stop-opacity="0.42"/>
-      <stop offset="100%" stop-color="#7386b8" stop-opacity="0.28"/>
+      <stop offset="0%" stop-color="#8ea0c8"/>
+      <stop offset="100%" stop-color="#5d6eaa"/>
     </linearGradient>
     <linearGradient id="heroNear" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#6d7ab8" stop-opacity="0.32"/>
-      <stop offset="52%" stop-color="#3f4a96" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#2e3192" stop-opacity="0.16"/>
+      <stop offset="0%" stop-color="#8a99c0"/>
+      <stop offset="100%" stop-color="#6d7cac"/>
     </linearGradient>
     <linearGradient id="heroFoot" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2e3192" stop-opacity="0.08"/>
-      <stop offset="100%" stop-color="#eef3fb" stop-opacity="0.2"/>
+      <stop offset="0%" stop-color="#9aa8c8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#f5f8fc" stop-opacity="0.9"/>
     </linearGradient>
     <linearGradient id="heroSnow" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#e8eef8" stop-opacity="0.35"/>
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e4ecf8"/>
     </linearGradient>
   </defs>
-  <path fill="url(#heroFar)" d="M0 520 L0 292 L110 268 L230 304 L360 214 L500 268 L620 176 L720 92 L830 196 L960 148 L1100 236 L1240 186 L1440 248 L1440 520Z"/>
-  <path fill="url(#heroMid)" d="M0 520 L0 338 L170 308 L320 352 L470 272 L620 328 L720 228 L860 312 L1010 278 L1180 338 L1440 298 L1440 520Z"/>
-  <path fill="url(#heroNear)" d="M0 520 L0 378 L150 354 L270 392 L410 312 L540 368 L640 278 L720 168 L810 292 L930 248 L1080 338 L1240 292 L1440 358 L1440 520Z"/>
-  <path fill="url(#heroSnow)" d="M670 226 L720 168 L778 238 L748 256 L724 226 L702 248Z"/>
-  <path fill="url(#heroSnow)" opacity="0.55" d="M392 328 L410 312 L432 336 L418 342 L408 328 L398 338Z"/>
-  <path fill="url(#heroSnow)" opacity="0.5" d="M910 266 L930 248 L952 274 L938 282 L928 266 L918 276Z"/>
-  <path fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linejoin="round" d="M640 278 L720 168 L810 292"/>
-  <path fill="url(#heroFoot)" d="M0 520 L0 424 L220 404 L460 436 L720 392 L980 428 L1220 408 L1440 430 L1440 520Z"/>
+  <rect width="1440" height="560" fill="url(#heroSky)"/>
+  <path fill="url(#heroFar)" d="M0 560 L0 310 L90 286 L180 332 L280 248 L390 304 L500 198 L620 268 L720 72 L830 214 L940 148 L1060 250 L1180 186 L1300 246 L1440 210 L1440 560Z"/>
+  <path fill="url(#heroMid)" d="M0 560 L0 356 L140 328 L250 372 L370 292 L490 348 L600 268 L720 168 L850 328 L980 286 L1120 348 L1280 308 L1440 338 L1440 560Z"/>
+  <path fill="url(#heroNear)" d="M0 560 L0 402 L130 376 L240 418 L360 332 L500 392 L620 298 L720 178 L840 312 L960 268 L1100 360 L1240 314 L1440 382 L1440 560Z"/>
+  <path fill="url(#heroSnow)" d="M668 236 L720 178 L786 252 L752 268 L724 232 L698 258Z"/>
+  <path fill="url(#heroSnow)" opacity="0.7" d="M338 350 L360 332 L386 358 L368 366 L356 348 L344 358Z"/>
+  <path fill="url(#heroSnow)" opacity="0.65" d="M938 286 L960 268 L986 296 L968 304 L956 286 L946 296Z"/>
+  <path fill="url(#heroSnow)" opacity="0.45" d="M1160 214 L1180 186 L1210 228 L1190 236 L1178 214 L1168 226Z"/>
+  <path fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linejoin="round" d="M620 298 L720 178 L840 312"/>
+  <path fill="url(#heroFoot)" d="M0 560 L0 448 L240 426 L500 458 L720 412 L980 450 L1220 430 L1440 454 L1440 560Z"/>
 </svg>

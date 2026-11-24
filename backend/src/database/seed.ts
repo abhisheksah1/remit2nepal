@@ -47,7 +47,7 @@ import { defaultChatbotQuestions, defaultChatbotSteps } from "../constants/chatb
 
 async function seed() {
   await connectDatabase();
-  logger.info("Seeding Remit2Nepal data (idempotent)");
+  logger.info("Seeding Remit To Nepal Pvt. Ltd data (idempotent)");
 
   for (const key of PERMISSIONS) {
     await Permission.updateOne(
@@ -88,7 +88,7 @@ async function seed() {
     {
       $setOnInsert: {
         key: "default",
-        companyName: "Remit2Nepal",
+        companyName: "Remit To Nepal Pvt. Ltd",
         tagline: receivingCompanyCopy.tagline,
         phone: "+977-1-5550100",
         email: "hello@remit2nepal.com",
@@ -97,7 +97,7 @@ async function seed() {
         emergencyContact: "+977-9800000000",
         headerCta: { label: "Send Enquiry", url: "/contact", enabled: true },
         footerAbout: receivingCompanyCopy.footerAbout,
-        copyrightText: "© Remit2Nepal. All rights reserved.",
+        copyrightText: "© Remit To Nepal Pvt. Ltd. All rights reserved.",
         legalLinks: [
           { label: "Privacy Policy", url: "/privacy" },
           { label: "Terms of Service", url: "/terms" }
@@ -107,6 +107,14 @@ async function seed() {
       }
     },
     { upsert: true }
+  );
+  await CompanySetting.updateOne(
+    { key: "default", companyName: "Remit2Nepal" },
+    { $set: { companyName: "Remit To Nepal Pvt. Ltd" } }
+  );
+  await CompanySetting.updateOne(
+    { key: "default", copyrightText: "© Remit2Nepal. All rights reserved." },
+    { $set: { copyrightText: "© Remit To Nepal Pvt. Ltd. All rights reserved." } }
   );
 
   await SeoSetting.updateOne(
@@ -221,14 +229,14 @@ async function seed() {
         missionHeading: "Our Mission",
         visionKicker: "Future",
         visionHeading: "Our Vision",
-        whyKicker: "Why Remit2Nepal",
+        whyKicker: "Why Remit To Nepal Pvt. Ltd",
         whyHeading: "Why Choose Us?",
         valuesKicker: "Culture",
         valuesHeading: "What We Stand For",
         valuesSubheading: "Our values guide every decision we make and every payout we complete.",
         chairmanName: "Rajendra Adhikari",
         chairmanTitle: "Chairman",
-        heroKicker: "About Remit2Nepal",
+        heroKicker: "About Remit To Nepal Pvt. Ltd",
         heroSecondaryLabel: "Learn More About Us",
         heroSecondaryUrl: "#who-we-are",
         storyKicker: "Our story",
@@ -250,7 +258,7 @@ async function seed() {
           "Behind every payout is a family in Nepal waiting on money sent from abroad. We help make those connections possible — one collection at a time.",
         ctaSecondaryLabel: "Contact Us",
         ctaSecondaryUrl: "/contact",
-        bestOfHeading: "Best of Remit2Nepal",
+        bestOfHeading: "Best of Remit To Nepal Pvt. Ltd",
         galleryImages: [],
         coreValues: [
           { title: "Trust", description: "We build lasting relationships through honesty, transparency, and reliability.", icon: "shield" },
@@ -319,8 +327,8 @@ async function seed() {
         title: "Privacy Policy",
         slug: "privacy",
         status: "PUBLISHED",
-        content: "<p>Remit2Nepal collects only the information required to operate remittance services and respond to enquiries. Contact messages are never published.</p>",
-        seoTitle: "Privacy Policy | Remit2Nepal"
+        content: "<p>Remit To Nepal Pvt. Ltd collects only the information required to operate remittance services and respond to enquiries. Contact messages are never published.</p>",
+        seoTitle: "Privacy Policy | Remit To Nepal Pvt. Ltd"
       }
     },
     { upsert: true }
@@ -333,7 +341,7 @@ async function seed() {
         slug: "terms",
         status: "PUBLISHED",
         content: "<p>Transfers are processed according to applicable Nepal Rastra Bank regulations and branch identification requirements.</p>",
-        seoTitle: "Terms of Service | Remit2Nepal"
+        seoTitle: "Terms of Service | Remit To Nepal Pvt. Ltd"
       }
     },
     { upsert: true }

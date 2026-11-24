@@ -6,6 +6,7 @@ import { adminApi } from "@/api/admin.api";
 import { getErrorMessage } from "@/api/client";
 import { settingsFormSchema, type SettingsFormValues } from "@/schemas/settings.schema";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
@@ -93,8 +94,22 @@ export default function Settings() {
           <legend>Brand</legend>
           <Input label="Company name" {...form.register("companyName")} error={form.formState.errors.companyName?.message} />
           <Input label="Tagline" {...form.register("tagline")} />
-          <Input label="Logo URL" {...form.register("logoUrl")} />
-          <Input label="Favicon URL" {...form.register("faviconUrl")} />
+          <ImageUploadField
+            label="Logo"
+            folder="brand"
+            fit="contain"
+            value={form.watch("logoUrl") || ""}
+            onChange={(url) => form.setValue("logoUrl", url, { shouldDirty: true })}
+            hint="Upload a PNG or WebP. This is used in the header, footer, chat, and admin."
+          />
+          <ImageUploadField
+            label="Favicon"
+            folder="brand"
+            fit="contain"
+            value={form.watch("faviconUrl") || ""}
+            onChange={(url) => form.setValue("faviconUrl", url, { shouldDirty: true })}
+            hint="Square icon for the browser tab."
+          />
         </fieldset>
         <fieldset className="admin-field-group space-y-4">
           <legend>Contact</legend>

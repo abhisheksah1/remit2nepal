@@ -31,7 +31,7 @@ export const receivingHeroCopy = {
   heading: "Receiving from abroad. // Paying families in Nepal.",
   subheading: "Remittance receiving company in Nepal",
   description:
-    "Remit2Nepal receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
+    "Remit To Nepal Pvt. Ltd receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
   buttonLabel: "Track",
   buttonUrl: "/track",
   secondaryButtonLabel: "How It Works",
@@ -48,7 +48,7 @@ export const receivingRemittanceCopy = {
   heading: "Remittance to Nepal",
   subheading: "Sent from abroad. Collected in Nepal.",
   description:
-    "When a transfer is sent from overseas, Remit2Nepal pays it out in Nepal as cash pickup, bank deposit, or wallet. Check today’s rate before you collect.",
+    "When a transfer is sent from overseas, Remit To Nepal Pvt. Ltd pays it out in Nepal as cash pickup, bank deposit, or wallet. Check today’s rate before you collect.",
   icon: "Receive in Nepal",
   buttonLabel: "View exchange rate",
   buttonUrl: "/exchange-rate",
@@ -57,15 +57,15 @@ export const receivingRemittanceCopy = {
   items: [
     { word: "REMITTANCE" },
     { title: "Bank deposit", description: "Credit to a Nepali bank account when the name and number match." },
-    { title: "Cash pickup", description: "Collect at a Remit2Nepal branch or agent." },
+    { title: "Cash pickup", description: "Collect at a Remit To Nepal Pvt. Ltd branch or agent." },
     { title: "NPR payout", description: "Receive the amount in Nepali rupees." },
     { title: "Published rates", description: "See the rate on the exchange rate page before you collect." }
   ]
 };
 
 export const receivingWhyCopy = {
-  heading: "Why families choose Remit2Nepal",
-  icon: "Why Remit2Nepal",
+  heading: "Why families choose Remit To Nepal Pvt. Ltd",
+  icon: "Why Remit To Nepal Pvt. Ltd",
   subheading: "Nationwide payout. Built for families.",
   items: [
     { title: "Secure", description: "Documented payout processes and protected customer data." },
@@ -90,19 +90,19 @@ export const receivingPartnersCopy = {
 export const receivingCompanyCopy = {
   tagline: "Remitting Happiness...",
   footerAbout:
-    "Remit2Nepal is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."
+    "Remit To Nepal Pvt. Ltd is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."
 };
 
 export const receivingSeoCopy = {
-  siteTitle: "Remit2Nepal | Remittance receiving in Nepal",
+  siteTitle: "Remit To Nepal Pvt. Ltd | Remittance receiving in Nepal",
   metaDescription:
-    "Remit2Nepal receives remittance sent from abroad and pays families in Nepal through cash pickup, bank deposit, and wallet, with published NRB-referenced rates.",
-  keywords: "remittance, Nepal, receive, payout, cash pickup, bank deposit, wallet"
+    "Remit To Nepal Pvt. Ltd receives remittance sent from abroad and pays families in Nepal through cash pickup, bank deposit, and wallet, with published NRB-referenced rates.",
+  keywords: "sarasxpress, remittance, Nepal, receive, payout, cash pickup, bank deposit, wallet"
 };
 
 export const receivingAboutCopy = {
   introduction:
-    "Remit2Nepal is a remittance receiving company in Nepal. We pay out money that families receive from relatives working abroad — as cash pickup, bank deposit, or wallet across the country.",
+    "Remit To Nepal Pvt. Ltd is a remittance receiving company in Nepal. We pay out money that families receive from relatives working abroad — as cash pickup, bank deposit, or wallet across the country.",
   whoBody:
     "Our work starts when a transfer is sent from overseas. We identify the payout, confirm the beneficiary, and complete the payment in Nepal with published rates and clear branch hours.",
   whoHighlights: [
@@ -126,7 +126,7 @@ export const receivingAboutCopy = {
     "We want every beneficiary in Nepal to collect with confidence — clear rates, a nearby desk, and a process that is easy to follow.",
   visionChips: ["Payout in Nepal", "Sent from abroad", "Families first"],
   whySubheading:
-    "Remit2Nepal receives remittance from abroad and pays it to families across Nepal.",
+    "Remit To Nepal Pvt. Ltd receives remittance from abroad and pays it to families across Nepal.",
   whyItems: [
     { title: "Fast payout", description: "Collect the same day when the transfer is ready.", icon: "zap" },
     { title: "Secure collection", description: "ID checks at the counter before we pay.", icon: "shield" },
@@ -137,12 +137,12 @@ export const receivingAboutCopy = {
   ],
   heroTitle: "Receiving from abroad. // Paying families in Nepal.",
   heroDescription:
-    "Remit2Nepal receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
+    "Remit To Nepal Pvt. Ltd receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
   heroPrimaryLabel: "Track",
   heroPrimaryUrl: "/track",
   steps: [
     { title: "Sent abroad", description: "A relative or partner sends the transfer from overseas." },
-    { title: "We receive it", description: "Remit2Nepal receives the payout instruction in Nepal." },
+    { title: "We receive it", description: "Remit To Nepal Pvt. Ltd receives the payout instruction in Nepal." },
     { title: "Confirm", description: "The beneficiary is identified before payment." },
     { title: "Collect", description: "Cash pickup, bank deposit, or wallet — paid out in NPR." }
   ],
@@ -152,14 +152,14 @@ export const receivingAboutCopy = {
     "We work together across the receiving network to complete payouts, support beneficiaries, and keep collection in Nepal clear and dependable.",
   teamMotto: "One Team • One Goal • Families in Nepal",
   ctaHeading: "Collect in Nepal. Stay connected.",
-  ctaBody: "Ask about a payout, branch hours, or today’s rate. Remit2Nepal receives remittance sent from abroad.",
+  ctaBody: "Ask about a payout, branch hours, or today’s rate. Remit To Nepal Pvt. Ltd receives remittance sent from abroad.",
   ctaPrimaryLabel: "Track",
   ctaPrimaryUrl: "/track",
   bestOfSubheading: "A nationwide payout desk and rates you can check against NRB.",
   chairmanMessage:
-    "<p>Trust is earned in every payout. We built Remit2Nepal around transparent rates and people who answer the phone.</p>",
+    "<p>Trust is earned in every payout. We built Remit To Nepal Pvt. Ltd around transparent rates and people who answer the phone.</p>",
   history:
-    "<p>Founded to serve families in Nepal who receive remittance from relatives working abroad, Remit2Nepal expanded from Kathmandu into a nationwide branch and partner payout network.</p>"
+    "<p>Founded to serve families in Nepal who receive remittance from relatives working abroad, Remit To Nepal Pvt. Ltd expanded from Kathmandu into a nationwide branch and partner payout network.</p>"
 };
 
 export const defaultSections = [
@@ -317,7 +317,7 @@ export const defaultServices = [
     title: "International Remittance",
     slug: "international-remittance",
     shortDescription: "Inbound remittance from overseas corridors, paid out in Nepal.",
-    fullDescription: "<p>Remit2Nepal receives transfers sent from abroad and pays beneficiaries in Nepal with identification and payout tracking.</p>",
+    fullDescription: "<p>Remit To Nepal Pvt. Ltd receives transfers sent from abroad and pays beneficiaries in Nepal with identification and payout tracking.</p>",
     icon: "globe",
     accentColor: "#F5A623",
     features: ["Inbound corridors", "ID verification", "Payout tracking"],
@@ -337,7 +337,7 @@ export const defaultServices = [
   {
     title: "Cash Pickup",
     slug: "cash-pickup",
-    shortDescription: "Collect cash at Remit2Nepal branches with original ID.",
+    shortDescription: "Collect cash at Remit To Nepal Pvt. Ltd branches with original ID.",
     fullDescription: "<p>Walk-in cash payout during published branch hours.</p>",
     icon: "banknote",
     accentColor: "#2E3192",
@@ -475,7 +475,7 @@ export const defaultNews = [
     slug: "nrb-rate-desk-comparison",
     punchLine: "Official NRB rates sit beside our customer rates — nothing hidden.",
     punchLineNe: "आधिकारिक एनआरबी दर र हाम्रो ग्राहक दर सँगै — केही लुकाइएको छैन।",
-    summary: "Customers can view official NRB rates alongside Remit2Nepal customer rates.",
+    summary: "Customers can view official NRB rates alongside Remit To Nepal Pvt. Ltd customer rates.",
     summaryNe: "ग्राहकले नेपाल राष्ट्र बैंकको आधिकारिक दर र रेमिट२नेपालको ग्राहक दर सँगै हेर्न सक्छन्।",
     content: "<p>The public exchange-rate page now distinguishes official Nepal Rastra Bank rates from company customer rates.</p>",
     contentNe: "<p>सार्वजनिक विनिमय दर पृष्ठमा अब नेपाल राष्ट्र बैंकको आधिकारिक दर र कम्पनीको ग्राहक दर छुट्याएर देखाइन्छ।</p>",

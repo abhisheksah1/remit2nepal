@@ -1,20 +1,24 @@
 import { useEffect } from "react";
 import type { SeoSettings } from "@/types/content";
+import { BRAND } from "@/constants/brand";
+import { mediaUrl } from "@/utils/cn";
 
 export function SeoHead({
   seo,
   title,
   description,
-  image
+  image,
+  favicon
 }: {
   seo?: SeoSettings | null;
   title?: string;
   description?: string;
   image?: string;
+  favicon?: string;
 }) {
   useEffect(() => {
-    const pageTitle = title || seo?.siteTitle || "Remit2Nepal";
-    document.title = pageTitle.includes("Remit2Nepal") ? pageTitle : `${pageTitle} | Remit2Nepal`;
+    const pageTitle = title || seo?.siteTitle || BRAND.name;
+    document.title = pageTitle.includes(BRAND.name) ? pageTitle : `${pageTitle} | ${BRAND.name}`;
     const desc = description || seo?.metaDescription || "";
     upsertMeta("description", desc);
     upsertMeta("og:title", pageTitle, true);
@@ -22,6 +26,16 @@ export function SeoHead({
     upsertMeta("og:image", image || seo?.ogImage || "", true);
     const robots = seo?.robots || "index,follow";
     upsertMeta("robots", robots);
+    const icon = mediaUrl(favicon || seo?.faviconUrl);
+    if (icon) {
+      let link = document.querySelector("link[rel='icon']");
+      if (!link) {
+        link = document.createElement("link");
+        link.setAttribute("rel", "icon");
+        document.head.appendChild(link);
+      }
+      link.setAttribute("href", icon);
+    }
     if (seo?.canonicalUrl) {
       let link = document.querySelector("link[rel='canonical']");
       if (!link) {
@@ -31,7 +45,7 @@ export function SeoHead({
       }
       link.setAttribute("href", seo.canonicalUrl);
     }
-  }, [seo, title, description, image]);
+  }, [seo, title, description, image, favicon]);
 
   return null;
 }

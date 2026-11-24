@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import { authApi } from "@/api/auth.api";
+import { publicApi } from "@/api/public.api";
 import { getErrorMessage } from "@/api/client";
 import { changePasswordSchema, type ChangePasswordValues } from "@/schemas/auth.schema";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,13 +11,16 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { BRAND } from "@/constants/brand";
+import { BRAND, brandLogoSrc } from "@/constants/brand";
 
 export default function ChangePassword() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const client = useQueryClient();
   const { push } = useToast();
+  const site = useQuery({ queryKey: ["public", "site"], queryFn: publicApi.site, staleTime: 60_000 });
+  const logoSrc = brandLogoSrc(site.data?.settings?.logoUrl);
+  const company = site.data?.settings?.companyName || BRAND.name;
   const form = useForm<ChangePasswordValues>({ resolver: zodResolver(changePasswordSchema) });
   const mutation = useMutation({
     mutationFn: (values: ChangePasswordValues) => authApi.changePassword(values.currentPassword, values.newPassword),
@@ -35,8 +39,8 @@ export default function ChangePassword() {
     <div className="admin-login">
       <aside className="admin-login-brand">
         <div className="flex items-center gap-3">
-          <img src={BRAND.logo} alt="" />
-          <p className="text-lg font-extrabold tracking-tight text-white">{BRAND.name}</p>
+          <img src={logoSrc} alt="" />
+          <p className="text-lg font-extrabold tracking-tight text-white">{company}</p>
         </div>
         <div>
           <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.18em] text-white/55">Security</p>
@@ -49,9 +53,9 @@ export default function ChangePassword() {
       </aside>
       <div className="admin-login-form">
         <div className="admin-login-mobile">
-          <img src={BRAND.logo} alt="" />
+          <img src={logoSrc} alt="" />
           <div>
-            <p className="text-base font-extrabold text-navy">{BRAND.name}</p>
+            <p className="text-base font-extrabold text-navy">{company}</p>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-navy/50">Security</p>
           </div>
         </div>

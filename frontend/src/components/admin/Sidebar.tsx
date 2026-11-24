@@ -1,11 +1,13 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, X } from "lucide-react";
 import { adminNav } from "@/config/nav";
 import { prefetchAdminPage } from "@/routes/admin-routes";
 import { hasPermission } from "@/hooks/usePermission";
 import type { AuthUser } from "@/types/auth";
-import { BRAND } from "@/constants/brand";
+import { BRAND, brandLogoSrc } from "@/constants/brand";
+import { adminApi } from "@/api/admin.api";
 import { cn } from "@/utils/cn";
 import { initials } from "@/utils/format";
 
@@ -29,6 +31,8 @@ export function Sidebar({
   onClose: () => void;
 }) {
   const location = useLocation();
+  const settings = useQuery({ queryKey: ["admin-settings"], queryFn: adminApi.settings.get, staleTime: 60_000 });
+  const logoSrc = brandLogoSrc(settings.data?.logoUrl);
   const groups = useMemo(
     () =>
       adminNav
@@ -50,7 +54,7 @@ export function Sidebar({
       <aside className={cn("admin-sidebar", open && "is-open")} aria-label="Admin navigation">
         <div className="admin-sidebar-brand">
           <div className="flex min-w-0 items-center gap-3">
-            <img src={BRAND.logo} alt="" className="admin-sidebar-logo" />
+            <img src={logoSrc} alt="" className="admin-sidebar-logo" />
             <div className="admin-sidebar-brand-copy">
               <p>{BRAND.name}</p>
               <span>Admin desk</span>

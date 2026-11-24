@@ -33,7 +33,7 @@ export default function AboutTeam() {
 
   return (
     <div className="about-team-page">
-      <SeoHead title={`${title} | Remit2Nepal`} description={description} />
+      <SeoHead title={`${title} | Remit To Nepal Pvt. Ltd`} description={description} />
       <AboutHero
         about={about}
         kicker={about?.teamKicker || "Operations"}
@@ -45,7 +45,7 @@ export default function AboutTeam() {
         <AboutPeople
           kicker="Top Leaders"
           title={topLeadersHeading(about?.teamLeadHeading)}
-          description="Top employees of the Remit2Nepal desk."
+          description="Top employees of the Remit To Nepal Pvt. Ltd desk."
           members={topLeaders}
           tone="team"
         />

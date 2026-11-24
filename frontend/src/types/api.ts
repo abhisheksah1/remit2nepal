@@ -27,6 +27,9 @@ export interface ListParams {
   limit?: number;
   search?: string;
   status?: string;
+  employee?: string;
+  leaveType?: string;
+  kind?: string;
 }
 
 export type EntityId = {
@@ -60,4 +63,5 @@ export type PermissionKey =
   | "admins"
   | "documents"
   | "chatbot"
-  | "remittances";
+  | "remittances"
+  | "leave_tracker";

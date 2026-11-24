@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronRight, Minus, Send, X } from "lucide-react";
 import { publicApi } from "@/api/public.api";
 import { getErrorMessage } from "@/api/client";
+import { brandLogoSrc } from "@/constants/brand";
 import { CHAT_OPEN_EVENT } from "@/utils/chatbot";
 import type { ChatbotAgentHit, ChatbotAskLink, ChatbotAskResult } from "@/types/content";
 
@@ -23,8 +24,9 @@ function uid() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-export function ChatWidget() {
+export function ChatWidget({ logoUrl }: { logoUrl?: string }) {
   const config = useQuery({ queryKey: ["public", "chatbot"], queryFn: publicApi.chatbot });
+  const logoSrc = brandLogoSrc(logoUrl);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatLine[]>([]);
@@ -101,7 +103,7 @@ export function ChatWidget() {
 
   if (!enabled) return null;
 
-  const name = data?.botName || "Remit2Nepal Assist";
+  const name = data?.botName || "Remit To Nepal Assist";
   const suggestions = data?.suggestedQuestions?.length ? data.suggestedQuestions : data?.topics ?? [];
 
   return (
@@ -113,19 +115,16 @@ export function ChatWidget() {
         aria-hidden={!open}
       >
           <header className="chat-panel-head">
-            <span className="chat-avatar" aria-hidden>
-              {name.slice(0, 1)}
-            </span>
-            <div>
-              <p>{name}</p>
-              <span>Online for agents</span>
+            <div className="chat-brand">
+              <img src={logoSrc} alt={name} />
+              <span className="chat-live">Online</span>
             </div>
             <div className="chat-panel-actions">
               <button type="button" className="chat-icon-btn" onClick={() => setOpen(false)} aria-label="Minimize chat">
-                <Minus className="h-4 w-4" />
+                <Minus />
               </button>
               <button type="button" className="chat-icon-btn" onClick={() => setOpen(false)} aria-label="Close chat">
-                <X className="h-4 w-4" />
+                <X />
               </button>
             </div>
           </header>

@@ -3,7 +3,7 @@ import { Schema, model, type InferSchemaType } from "mongoose";
 const seoSettingSchema = new Schema(
   {
     key: { type: String, default: "global", unique: true },
-    siteTitle: { type: String, default: "Remit2Nepal" },
+    siteTitle: { type: String, default: "Remit To Nepal Pvt. Ltd" },
     metaDescription: { type: String, default: "" },
     keywords: { type: String, default: "" },
     faviconUrl: { type: String, default: "" },

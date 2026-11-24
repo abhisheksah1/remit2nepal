@@ -27,7 +27,7 @@ export default function AboutBoard() {
 
   return (
     <>
-      <SeoHead title={`${title} | Remit2Nepal`} description={description} />
+      <SeoHead title={`${title} | Remit To Nepal Pvt. Ltd`} description={description} />
       <BoardChamber
         kicker={about?.boardKicker || "Governance"}
         title={title}

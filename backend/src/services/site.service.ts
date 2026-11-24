@@ -12,6 +12,10 @@ import { CompanyDocument } from "../models/document.model.js";
 import { AboutCompany } from "../models/about-company.model.js";
 import { TeamMember } from "../models/team-member.model.js";
 import { Page } from "../models/page.model.js";
+import { ChatbotSetting } from "../models/chatbot-setting.model.js";
+import { ChatbotQa } from "../models/chatbot-qa.model.js";
+import { ChatbotAgentStep } from "../models/chatbot-agent-step.model.js";
+import { PartnershipSetting } from "../models/partnership-setting.model.js";
 import { publicBanners } from "./content.service.js";
 import { publicRates } from "./exchange-rate.service.js";
 import {
@@ -25,6 +29,84 @@ import {
   receivingSeoCopy,
   receivingWhyCopy
 } from "../database/seed-content.js";
+
+const COMPANY_NAME = "Remit To Nepal Pvt. Ltd";
+let companyRenameApplied = false;
+
+function applyLegalName(text: string) {
+  return text
+    .split("SarasXpress Assist").join("Remit To Nepal Assist")
+    .split("Remit2Nepal Assist").join("Remit To Nepal Assist")
+    .split("SarasXpress").join(COMPANY_NAME)
+    .split("Remit2Nepal").join(COMPANY_NAME);
+}
+
+function needsLegalName(text: string) {
+  return text.includes("SarasXpress") || text.includes("Remit2Nepal");
+}
+
+function rewriteCompanyName(value: unknown): boolean {
+  if (Array.isArray(value)) {
+    let changed = false;
+    for (let i = 0; i < value.length; i += 1) {
+      const item = value[i];
+      if (typeof item === "string" && needsLegalName(item)) {
+        value[i] = applyLegalName(item);
+        changed = true;
+      } else if (item && typeof item === "object" && !(item instanceof Date)) {
+        changed = rewriteCompanyName(item) || changed;
+      }
+    }
+    return changed;
+  }
+  if (!value || typeof value !== "object" || value instanceof Date) return false;
+  const record = value as Record<string, unknown>;
+  let changed = false;
+  for (const key of Object.keys(record)) {
+    if (key === "_id" || key === "__v" || key === "createdAt" || key === "updatedAt") continue;
+    const item = record[key];
+    if (typeof item === "string" && needsLegalName(item)) {
+      record[key] = applyLegalName(item);
+      changed = true;
+    } else if (item && typeof item === "object" && !(item instanceof Date)) {
+      changed = rewriteCompanyName(item) || changed;
+    }
+  }
+  return changed;
+}
+
+async function renameCompanyDocuments() {
+  if (companyRenameApplied) return;
+  const models = [
+    CompanySetting,
+    SeoSetting,
+    Section,
+    AboutCompany,
+    Service,
+    News,
+    Faq,
+    Page,
+    ChatbotSetting,
+    ChatbotQa,
+    ChatbotAgentStep,
+    PartnershipSetting
+  ];
+  for (const Model of models) {
+    const docs = await (Model as { find: () => Promise<Array<{ toObject: () => object; set: (value: object) => void; save: () => Promise<unknown> }>> }).find();
+    for (const doc of docs) {
+      const obj = doc.toObject();
+      if (!rewriteCompanyName(obj)) continue;
+      const rest = { ...obj } as Record<string, unknown>;
+      delete rest._id;
+      delete rest.__v;
+      delete rest.createdAt;
+      delete rest.updatedAt;
+      doc.set(rest);
+      await doc.save();
+    }
+  }
+  companyRenameApplied = true;
+}
 
 const nepalMapSeed = defaultSections.find((item) => item.key === "nepal-people");
 const remittanceSeed = defaultSections.find((item) => item.key === "remittance-stage");
@@ -46,6 +128,7 @@ function isHoverInstruction(value?: string) {
 
 async function refreshSectionCopy() {
   try {
+    await renameCompanyDocuments();
     const remittance = await Section.findOne({ key: "remittance-stage" });
     if (remittance && isHoverInstruction(remittance.description)) {
       remittance.description = receivingRemittanceCopy.description;
@@ -170,7 +253,7 @@ async function refreshSectionCopy() {
         $set: {
           shortDescription: "Inbound remittance from overseas corridors, paid out in Nepal.",
           fullDescription:
-            "<p>Remit2Nepal receives transfers sent from abroad and pays beneficiaries in Nepal with identification and payout tracking.</p>",
+            "<p>Remit To Nepal Pvt. Ltd receives transfers sent from abroad and pays beneficiaries in Nepal with identification and payout tracking.</p>",
           features: ["Inbound corridors", "ID verification", "Payout tracking"]
         }
       }

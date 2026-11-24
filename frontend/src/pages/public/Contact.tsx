@@ -66,7 +66,7 @@ export default function Contact() {
 
   return (
     <>
-      <SeoHead title="Contact Remit2Nepal" description="Ask about branches, rates, and transfers. Do not send passwords or one-time codes." />
+      <SeoHead title="Contact Remit To Nepal Pvt. Ltd" description="Ask about branches, rates, and transfers. Do not send passwords or one-time codes." />
       <section ref={root} className="cdesk reveal-skip" aria-labelledby="contact-title">
         <div className="cdesk-sky" aria-hidden>
           <span className="cdesk-glow is-blue" />

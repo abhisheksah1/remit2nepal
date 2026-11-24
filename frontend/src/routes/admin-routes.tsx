@@ -30,6 +30,7 @@ const loaders = {
   "/admin/contact": () => import("@/pages/admin/Contact"),
   "/admin/seo": () => import("@/pages/admin/Seo"),
   "/admin/admins": () => import("@/pages/admin/Admins"),
+  "/admin/leave-tracker": () => import("@/pages/admin/LeaveTrackerUsers"),
   "/admin/audit-logs": () => import("@/pages/admin/AuditLogs"),
   "/admin/settings": () => import("@/pages/admin/Settings")
 } as const;
@@ -67,6 +68,7 @@ const Media = lazy(loaders["/admin/media"]);
 const Contact = lazy(loaders["/admin/contact"]);
 const Seo = lazy(loaders["/admin/seo"]);
 const Admins = lazy(loaders["/admin/admins"]);
+const LeaveTrackerUsers = lazy(loaders["/admin/leave-tracker"]);
 const AuditLogs = lazy(loaders["/admin/audit-logs"]);
 const Settings = lazy(loaders["/admin/settings"]);
 
@@ -100,6 +102,7 @@ export const adminRouteElements = (
     <Route path="contact" element={<Contact />} />
     <Route path="seo" element={<Seo />} />
     <Route path="admins" element={<Admins />} />
+    <Route path="leave-tracker" element={<LeaveTrackerUsers />} />
     <Route path="audit-logs" element={<AuditLogs />} />
     <Route path="settings" element={<Settings />} />
   </>

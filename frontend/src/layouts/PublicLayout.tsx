@@ -11,6 +11,7 @@ import { ChatWidget } from "@/components/public/ChatWidget";
 import { SiteBanners } from "@/components/public/SiteBanners";
 import { SeoHead } from "@/components/public/SeoHead";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { BRAND } from "@/constants/brand";
 import { MaintenancePage } from "./MaintenancePage";
 
 export function PublicLayout() {
@@ -34,7 +35,7 @@ export function PublicLayout() {
     return (
       <div className="grid min-h-screen place-items-center bg-cream px-6 text-center">
         <div>
-          <p className="font-display text-3xl text-navy">Remit2Nepal</p>
+          <p className="font-display text-3xl text-navy">{BRAND.name}</p>
           <p className="mt-3 text-ink-muted">The website could not be loaded. Please try again shortly.</p>
         </div>
       </div>
@@ -48,7 +49,7 @@ export function PublicLayout() {
 
   return (
     <div className="site-shell relative z-10 flex min-h-screen flex-col">
-      <SeoHead seo={site.data?.seo} />
+      <SeoHead seo={site.data?.seo} favicon={settings?.faviconUrl} />
       <SiteAtmosphere />
       <ScrollReveal />
       <SmoothScroll />
@@ -60,7 +61,7 @@ export function PublicLayout() {
         </Suspense>
       </main>
       <Footer settings={settings} items={site.data?.navigation ?? []} social={site.data?.social ?? []} />
-      <ChatWidget />
+      <ChatWidget logoUrl={settings?.logoUrl} />
     </div>
   );
 }

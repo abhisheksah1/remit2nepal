@@ -28,6 +28,7 @@ import {
 } from "./cms.routes.js";
 import { publicRouter } from "./public.routes.js";
 import { chatbotAdminRouter, chatbotPublicRouter, chatbotQaRouter, chatbotStepRouter } from "./chatbot.routes.js";
+import { leaveAuthRouter, leaveTrackerRouter, leaveTrackerUsersRouter } from "./leave-tracker.routes.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { requirePasswordReady } from "../middlewares/rbac.middleware.js";
 
@@ -40,12 +41,15 @@ apiRouter.get("/health", (_req, res) => {
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/public", publicRouter);
 apiRouter.use("/public/chatbot", chatbotPublicRouter);
+apiRouter.use("/leave-tracker/auth", leaveAuthRouter);
+apiRouter.use("/leave-tracker", leaveTrackerRouter);
 apiRouter.get("/robots.txt", publicApi.robots);
 apiRouter.get("/sitemap.xml", publicApi.sitemap);
 
 apiRouter.use(authMiddleware);
 apiRouter.use(requirePasswordReady);
 apiRouter.use("/admins", adminRouter);
+apiRouter.use("/leave-tracker-users", leaveTrackerUsersRouter);
 apiRouter.use("/dashboard", dashboardRouter);
 apiRouter.use("/audit-logs", auditRouter);
 apiRouter.use("/settings", settingsRouter);

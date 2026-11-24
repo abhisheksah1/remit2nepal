@@ -20,8 +20,8 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHero kicker="Inside the network" title="Gallery" description="Branches, events and community work from Remit2Nepal." />
-      <SeoHead title="Gallery" description="Branches, events and community work from Remit2Nepal." />
+      <PageHero kicker="Inside the network" title="Gallery" description="Branches, events and community work from Remit To Nepal Pvt. Ltd." />
+      <SeoHead title="Gallery" description="Branches, events and community work from Remit To Nepal Pvt. Ltd." />
       <div className="mx-auto max-w-site px-4 py-16 lg:px-8">
         <div className="gallery-map-grid">
           {photos.map((item) => (

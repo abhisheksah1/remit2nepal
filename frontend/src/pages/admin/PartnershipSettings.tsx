@@ -118,7 +118,7 @@ export default function PartnershipSettings() {
         crumbs={[{ label: "Admin", to: "/admin" }, { label: "Partners", to: "/admin/partners" }, { label: "Settings" }]}
       />
       <p className="mb-6 max-w-3xl text-sm text-ink-muted">
-        Edit the public Become a Agent page and choose whether Cooperative and Private Agent applications are open. After you verify an applicant’s documents, email the company agreement from Remit2Nepal. The agent signs, stamps, completes the papers, scans them, and emails them back.
+        Edit the public Become a Agent page and choose whether Cooperative and Private Agent applications are open. After you verify an applicant’s documents, email the company agreement from Remit To Nepal Pvt. Ltd. The agent signs, stamps, completes the papers, scans them, and emails them back.
       </p>
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">

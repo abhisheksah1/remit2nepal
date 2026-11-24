@@ -67,7 +67,7 @@ export default function Partners() {
 
   const title = PUBLIC_NAV.becomeAgent.label;
   const description =
-    settings?.pageDescription || "Join Remit2Nepal as a national agent. Submit full details for verification, then complete the emailed agreement.";
+    settings?.pageDescription || "Join Remit To Nepal Pvt. Ltd as a national agent. Submit full details for verification, then complete the emailed agreement.";
   const points = settings?.nationalPoints?.length
     ? settings.nationalPoints
     : ["Cooperative or Private Agent", "Submit full details and documents for verification", "Sign and stamp the agreement after the company emails it"];

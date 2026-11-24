@@ -36,7 +36,7 @@ export function ChatAssist() {
         </div>
         <aside className="chat-assist-preview" aria-hidden>
           <div className="chat-assist-preview-head">
-            <span>{data.botName || "Remit2Nepal Assist"}</span>
+            <span>{data.botName || "Remit To Nepal Assist"}</span>
             <em>Online</em>
           </div>
           <div className="chat-assist-preview-body">
@@ -44,7 +44,7 @@ export function ChatAssist() {
             <p className="is-user">How do I become an agent?</p>
             <p className="is-bot">
               <Sparkles className="mr-1 inline h-3.5 w-3.5" />
-            Ask anything about Remit2Nepal — agents, DC install, rates, directors, Our Team, and this website.
+            Ask anything about Remit To Nepal Pvt. Ltd — agents, DC install, rates, directors, Our Team, and this website.
             </p>
           </div>
         </aside>

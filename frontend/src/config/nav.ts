@@ -2,6 +2,7 @@ import type { PermissionKey } from "@/types/api";
 import {
   Activity,
   Building2,
+  CalendarDays,
   CircleHelp,
   Contact,
   FileText,
@@ -96,6 +97,7 @@ export const adminNav: AdminNavGroup[] = [
       { label: "Contact Messages", path: "/admin/contact", icon: Contact, permission: "contact" },
       { label: "SEO", path: "/admin/seo", icon: Globe, permission: "seo" },
       { label: "Administrators", path: "/admin/admins", icon: Shield, permission: "admins" },
+      { label: "Leave tracker access", path: "/admin/leave-tracker", icon: CalendarDays, permission: "leave_tracker" },
       { label: "Audit Logs", path: "/admin/audit-logs", icon: Activity, permission: "audit_logs" },
       { label: "Settings", path: "/admin/settings", icon: Settings, permission: "settings" }
     ]

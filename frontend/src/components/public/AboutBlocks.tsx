@@ -15,7 +15,7 @@ function punchParts(text: string) {
       .map((part, index) => ({ text: part.trim(), tone: index % 2 === 0 ? "is-navy" : "is-red" }))
       .filter((part) => part.text);
   }
-  const brand = trimmed.match(/^(.*?)(\bRemit2Nepal\b)(.*)$/i);
+  const brand = trimmed.match(/^(.*?)(\b(?:Remit To Nepal Pvt. Ltd|Remit2Nepal)\b)(.*)$/i);
   if (brand) {
     return [
       { text: brand[1].trim(), tone: "is-navy" },
@@ -92,7 +92,7 @@ export function AboutBest({ about }: { about: AboutCompany }) {
     <section className="about-best">
       <div className="about-stage">
         <p className="about-kicker">{about.bestOfKicker || "Best of company"}</p>
-        <BrandPunch text={about.bestOfHeading || "Best of Remit2Nepal"} as="h2" className="is-section" />
+        <BrandPunch text={about.bestOfHeading || "Best of Remit To Nepal Pvt. Ltd"} as="h2" className="is-section" />
         {about.bestOfSubheading ? <p className="about-lede">{about.bestOfSubheading}</p> : null}
 
         {about.statistics?.length ? (

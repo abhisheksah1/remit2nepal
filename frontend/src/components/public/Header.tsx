@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CompanySettings, NavItem } from "@/types/content";
 import { ABOUT_DROPDOWN, ABOUT_NAV, isAboutPath } from "@/config/about-nav";
 import { PUBLIC_NAV, publicNavLabel } from "@/config/public-labels";
-import { BRAND } from "@/constants/brand";
+import { BRAND, brandLogoSrc } from "@/constants/brand";
 import { RateTicker } from "./RateTicker";
 import { cn } from "@/utils/cn";
 
@@ -39,7 +39,7 @@ export function Header({
   const nav = items.filter((item) => item.location === "HEADER" && item.enabled && item.path !== "/");
   const drawerExtra = nav.filter((item) => !PRIMARY_PATHS.has(item.path) && !isAboutPath(item.path));
   const company = settings?.companyName || BRAND.name;
-  const logoSrc = settings?.logoUrl || BRAND.logo;
+  const logoSrc = brandLogoSrc(settings?.logoUrl);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -111,8 +111,8 @@ export function Header({
     <>
     <header ref={headerRef} className={cn("site-header", scrolled && "is-stuck", open && "is-menu-open")}>
       <div className="vault-rail">
-        <div className="mx-auto flex max-w-site items-center gap-3 px-4 py-1.5 text-[11px] uppercase tracking-[0.16em] text-cream/80 sm:gap-4 sm:tracking-[0.2em] lg:px-8 sm:text-xs">
-          <span className="hidden items-center gap-1.5 text-gold md:inline-flex">
+        <div className="mx-auto flex max-w-site items-center gap-3 px-4 py-1.5 text-[11px] uppercase tracking-[0.16em] text-white/90 sm:gap-4 sm:tracking-[0.2em] lg:px-8 sm:text-xs">
+          <span className="hidden items-center gap-1.5 text-white md:inline-flex">
             <ShieldCheck className="h-3.5 w-3.5" />
             Licensed desk
           </span>
@@ -120,7 +120,7 @@ export function Header({
             <RateTicker />
           </div>
           {settings?.phone ? (
-            <a href={`tel:${settings.phone}`} className="hidden shrink-0 items-center gap-1.5 hover:text-gold sm:inline-flex">
+            <a href={`tel:${settings.phone}`} className="hidden shrink-0 items-center gap-1.5 text-white hover:text-white sm:inline-flex">
               <Phone className="h-3.5 w-3.5" />
               {settings.phone}
             </a>

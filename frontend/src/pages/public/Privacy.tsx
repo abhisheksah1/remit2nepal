@@ -22,11 +22,11 @@ export default function Privacy() {
   return (
     <>
       <SeoHead
-        title={page.data?.seoTitle || "Privacy Policy | Remit2Nepal"}
+        title={page.data?.seoTitle || "Privacy Policy | Remit To Nepal Pvt. Ltd"}
         description={
           page.data?.seoDescription ||
           page.data?.summary ||
-          "How Remit2Nepal collects, uses, and protects personal information when you use our website and remittance services."
+          "How Remit To Nepal Pvt. Ltd collects, uses, and protects personal information when you use our website and remittance services."
         }
       />
       <PrivacyPro settings={site.data?.settings ?? null} page={page.data ?? null} />

@@ -4,7 +4,7 @@ import { SeoHead } from "@/components/public/SeoHead";
 export default function Branches() {
   return (
     <div className="agent-desk reveal-skip">
-      <SeoHead title="Our Agent" description="Search Remit2Nepal agents by name, district or address across Nepal." />
+      <SeoHead title="Our Agent" description="Search Remit To Nepal Pvt. Ltd agents by name, district or address across Nepal." />
       <div className="agent-sky" aria-hidden>
         <span className="agent-mesh" />
         <div className="agent-mountains" />

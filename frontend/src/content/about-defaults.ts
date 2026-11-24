@@ -1,10 +1,10 @@
 import type { WhyItem } from "@/types/content";
 
 export const ABOUT_DEFAULTS = {
-  heroKicker: "About Remit2Nepal",
+  heroKicker: "About Remit To Nepal Pvt. Ltd",
   heroTitle: "Receiving from abroad. // Paying families in Nepal.",
   heroDescription:
-    "Remit2Nepal receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
+    "Remit To Nepal Pvt. Ltd receives remittance sent from overseas and pays families in Nepal. Collect as cash pickup, bank deposit, or wallet.",
   heroPrimaryLabel: "Track",
   heroPrimaryUrl: "/track",
   heroSecondaryLabel: "Learn More About Us",
@@ -12,7 +12,7 @@ export const ABOUT_DEFAULTS = {
   storyKicker: "Our story",
   storyHeading: "Who We Are",
   introduction:
-    "Remit2Nepal is a remittance receiving company in Nepal. We pay out money that families receive from relatives working abroad — as cash pickup, bank deposit, or wallet across the country.",
+    "Remit To Nepal Pvt. Ltd is a remittance receiving company in Nepal. We pay out money that families receive from relatives working abroad — as cash pickup, bank deposit, or wallet across the country.",
   whoBody:
     "Our work starts when a transfer is sent from overseas. We identify the payout, confirm the beneficiary, and complete the payment in Nepal with published rates and clear branch hours.",
   whoHighlights: [
@@ -36,9 +36,9 @@ export const ABOUT_DEFAULTS = {
   visionBody:
     "We want every beneficiary in Nepal to collect with confidence — clear rates, a nearby desk, and a process that is easy to follow.",
   visionChips: ["Payout in Nepal", "Sent from abroad", "Families first"],
-  whyKicker: "Why Remit2Nepal",
+  whyKicker: "Why Remit To Nepal Pvt. Ltd",
   whyHeading: "Why Choose Us?",
-  whySubheading: "Remit2Nepal receives remittance from abroad and pays it to families across Nepal.",
+  whySubheading: "Remit To Nepal Pvt. Ltd receives remittance from abroad and pays it to families across Nepal.",
   whyItems: [
     { title: "Fast payout", description: "Collect the same day when the transfer is ready.", icon: "zap" },
     { title: "Secure collection", description: "ID checks at the counter before we pay.", icon: "shield" },
@@ -62,7 +62,7 @@ export const ABOUT_DEFAULTS = {
   stepsHeading: "Receive. // Confirm. // Pay out.",
   steps: [
     { title: "Sent abroad", description: "A relative or partner sends the transfer from overseas." },
-    { title: "We receive it", description: "Remit2Nepal receives the payout instruction in Nepal." },
+    { title: "We receive it", description: "Remit To Nepal Pvt. Ltd receives the payout instruction in Nepal." },
     { title: "Confirm", description: "The beneficiary is identified before payment." },
     { title: "Collect", description: "Cash pickup, bank deposit, or wallet — paid out in NPR." }
   ] as WhyItem[],
@@ -88,7 +88,7 @@ export const ABOUT_DEFAULTS = {
   storyBandBody:
     "Behind every payout is a family in Nepal waiting on money sent from abroad. We help make those connections possible — one collection at a time.",
   ctaHeading: "Collect in Nepal. Stay connected.",
-  ctaBody: "Ask about a payout, branch hours, or today’s rate. Remit2Nepal receives remittance sent from abroad.",
+  ctaBody: "Ask about a payout, branch hours, or today’s rate. Remit To Nepal Pvt. Ltd receives remittance sent from abroad.",
   ctaPrimaryLabel: "Track",
   ctaPrimaryUrl: "/track",
   ctaSecondaryLabel: "Contact Us",
@@ -100,6 +100,7 @@ const SEED_LINES = new Set([
   "Built for families who wait on a transfer",
   "Licensed remittance for people sending from abroad and families receiving across Nepal.",
   "Remit2Nepal is a regulated remittance company connecting overseas earners with families across Nepal. We operate a documented payout network, publish exchange rates with NRB comparison, and keep licenses visible to the public.",
+  "Remit To Nepal Pvt. Ltd is a regulated remittance company connecting overseas earners with families across Nepal. We operate a documented payout network, publish exchange rates with NRB comparison, and keep licenses visible to the public.",
   "Move money with care, speed, and accountability.",
   "To be Nepal's most trusted remittance institution.",
   "The company",

@@ -22,7 +22,7 @@ export default function ExchangeRate() {
       <InteriorPage
         kicker="Treasury desk"
         title="Today's exchange rates"
-        description="Live official Nepal Rastra Bank rates for every published currency, shown beside Remit2Nepal customer rates. Confirm the applicable rate at the counter before you collect."
+        description="Live official Nepal Rastra Bank rates for every published currency, shown beside Remit To Nepal Pvt. Ltd customer rates. Confirm the applicable rate at the counter before you collect."
         dockClassName="is-fx"
       >
         <RatesBoard rates={query.data} />

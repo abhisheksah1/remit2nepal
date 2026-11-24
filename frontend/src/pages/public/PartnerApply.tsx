@@ -44,7 +44,7 @@ export default function PartnerApply() {
     { icon: Landmark, text: `Choose ${coop} or ${privateAgent}` },
     { icon: Building2, text: "Fill the form with full company and owner details" },
     { icon: FileCheck2, text: "Upload documents so the desk can verify them first" },
-    { icon: Mail, text: "After verification, Remit2Nepal emails the company agreement" },
+    { icon: Mail, text: "After verification, Remit To Nepal Pvt. Ltd emails the company agreement" },
     { icon: Stamp, text: "Sign, stamp, complete the papers, scan them, and email them back" }
   ];
 

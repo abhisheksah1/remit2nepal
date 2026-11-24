@@ -24,8 +24,8 @@ export default function AboutCompliance() {
   return (
     <>
       <SeoHead
-        title="Compliance & Security | Remit2Nepal"
-        description="How Remit2Nepal approaches compliance, KYC, financial-crime controls, privacy, and customer protection."
+        title="Compliance & Security | Remit To Nepal Pvt. Ltd"
+        description="How Remit To Nepal Pvt. Ltd approaches compliance, KYC, financial-crime controls, privacy, and customer protection."
       />
       <CompliancePro
         about={about}

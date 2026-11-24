@@ -2,6 +2,7 @@ import { ResourceCrud, StatusCell } from "@/components/admin/ResourceCrud";
 import { adminApi } from "@/api/admin.api";
 import { sectionFormSchema } from "@/schemas/cms.schema";
 import type { CmsSection } from "@/types/content";
+import { heroBgSeconds, isHeroBgSettingsRow, isHeroSceneRow, isHeroSlideRow } from "@/utils/hero";
 
 type FormValues = Record<string, string | number | boolean>;
 
@@ -70,7 +71,7 @@ const types = [
   { value: "STATS", label: "Hero stats" },
   { value: "SERVICES", label: "Services" },
   { value: "RATES", label: "Exchange rates" },
-  { value: "WHY_CHOOSE", label: "Why Remit2Nepal" },
+  { value: "WHY_CHOOSE", label: "Why Remit To Nepal Pvt. Ltd" },
   { value: "REMITTANCE", label: "Remittance cubes" },
   { value: "PARTNERS", label: "Partners" },
   { value: "TESTIMONIALS", label: "Testimonials" },
@@ -100,16 +101,18 @@ function pointsJsonFrom(item?: CmsSection) {
   return JSON.stringify(points);
 }
 
-function isHeroSceneRow(row: unknown) {
-  if (!row || typeof row !== "object") return false;
-  const item = row as Record<string, unknown>;
-  return Boolean(item.kicker || item.note || item.strong);
+function asItemRow(row: unknown) {
+  return row && typeof row === "object" ? (row as Record<string, unknown>) : null;
 }
 
 function itemsJsonFrom(item?: CmsSection) {
   const items = Array.isArray(item?.items) ? item.items : [];
   if (item?.type === "HERO") {
-    const chips = items.filter((row) => row && typeof row === "object" && "title" in row && !("value" in row) && !isHeroSceneRow(row));
+    const chips = items.filter((row) => {
+      const itemRow = asItemRow(row);
+      if (!itemRow || !("title" in itemRow) || "value" in itemRow) return false;
+      return !isHeroSceneRow(itemRow) && !isHeroSlideRow(itemRow) && !isHeroBgSettingsRow(itemRow);
+    });
     return JSON.stringify(chips);
   }
   if (item?.type === "REMITTANCE") return "[]";
@@ -119,14 +122,32 @@ function itemsJsonFrom(item?: CmsSection) {
 function sceneJsonFrom(item?: CmsSection) {
   if (item?.type !== "HERO") return "[]";
   const items = Array.isArray(item.items) ? item.items : [];
-  return JSON.stringify(items.filter(isHeroSceneRow));
+  return JSON.stringify(items.filter((row) => {
+    const itemRow = asItemRow(row);
+    return itemRow ? isHeroSceneRow(itemRow) : false;
+  }));
+}
+
+function heroBgJsonFrom(item?: CmsSection) {
+  if (item?.type !== "HERO") return "[]";
+  const items = Array.isArray(item.items) ? item.items : [];
+  return JSON.stringify(
+    items
+      .map(asItemRow)
+      .filter((row): row is Record<string, unknown> => Boolean(row) && isHeroSlideRow(row))
+      .map((row) => ({
+        kind: "heroSlide",
+        title: String(row.title ?? ""),
+        imageUrl: String(row.imageUrl ?? "")
+      }))
+  );
 }
 
 export default function Sections() {
   return (
     <ResourceCrud<CmsSection>
       title="Sections"
-      description="Edit homepage copy, buttons, and cards. Open the Hero block to change the first screen. Numbers under it are in Hero stats."
+      description="Edit homepage copy, buttons, and cards. Open the Hero block to set rotating background scenes and copy. Numbers under it are in Hero stats."
       crumbs={[{ label: "Admin", to: "/admin" }, { label: "Sections" }]}
       queryKey="admin-sections"
       list={adminApi.sections.list}
@@ -283,12 +304,36 @@ export default function Sections() {
           showWhen: isHero
         },
         {
-          name: "backgroundUrl",
-          label: "Background photo",
-          type: "image",
-          folder: "sections",
+          name: "heroBgJson",
+          id: "items-hero-bg",
+          label: "Background scenes",
+          type: "list",
+          folder: "hero",
           group: "On the page",
-          hint: "Optional. Replaces the mountain silhouette behind the hero copy.",
+          addLabel: "Add scene",
+          emptyItem: { kind: "heroSlide", title: "", imageUrl: "" },
+          itemFields: [
+            { name: "title", label: "Place name (e.g. Fewa Lake, Mount Everest, Pashupatinath)" },
+            { name: "imageUrl", label: "Scene photo", type: "image", folder: "hero" }
+          ],
+          hint: "These photos rotate behind the hero. Add Mount Everest, Pashupatinath, Fewa Lake, or any Nepal scene. Order is the play order.",
+          showWhen: isHero
+        },
+        {
+          name: "heroBgSeconds",
+          label: "Change photo every (seconds)",
+          type: "number",
+          group: "On the page",
+          hint: "Default is 5. Use 3 to 30 seconds.",
+          showWhen: isHero
+        },
+        {
+          name: "backgroundUrl",
+          label: "Fallback photo",
+          type: "image",
+          folder: "hero",
+          group: "On the page",
+          hint: "Used only if no background scenes are added. Otherwise the rotating scenes above take over.",
           showWhen: isHero
         },
         {
@@ -438,6 +483,8 @@ export default function Sections() {
         alignment: item?.alignment ?? "left",
         itemsJson: itemsJsonFrom(item),
         sceneJson: sceneJsonFrom(item),
+        heroBgJson: heroBgJsonFrom(item),
+        heroBgSeconds: heroBgSeconds(item?.items, 5),
         pointsJson: pointsJsonFrom(item),
         overlay: item?.overlay ?? true,
         enabled: item?.enabled ?? true,
@@ -483,10 +530,16 @@ export default function Sections() {
         }
         if (values.type === "HERO") {
           let scenes: unknown = [];
+          let slides: unknown = [];
           try {
             scenes = JSON.parse(String(values.sceneJson || "[]"));
           } catch {
             scenes = [];
+          }
+          try {
+            slides = JSON.parse(String(values.heroBgJson || "[]"));
+          } catch {
+            slides = [];
           }
           const chips = Array.isArray(items) ? items : [];
           const sceneRows = Array.isArray(scenes)
@@ -495,7 +548,24 @@ export default function Sections() {
                 return Object.values(row as Record<string, unknown>).some((value) => String(value ?? "").trim());
               })
             : [];
-          items = [...chips, ...sceneRows];
+          const slideRows = Array.isArray(slides)
+            ? slides
+                .filter((row) => {
+                  if (!row || typeof row !== "object") return false;
+                  return String((row as { imageUrl?: string }).imageUrl ?? "").trim();
+                })
+                .map((row) => ({
+                  kind: "heroSlide",
+                  title: String((row as { title?: string }).title ?? "").trim(),
+                  imageUrl: String((row as { imageUrl?: string }).imageUrl ?? "").trim()
+                }))
+            : [];
+          const seconds = Number(values.heroBgSeconds);
+          const settings = {
+            kind: "heroBgSettings",
+            seconds: Number.isFinite(seconds) ? Math.min(30, Math.max(3, Math.round(seconds))) : 5
+          };
+          items = [...chips, ...sceneRows, ...slideRows, settings];
         }
         return {
           key: values.key,

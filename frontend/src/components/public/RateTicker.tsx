@@ -11,14 +11,14 @@ export function RateTicker() {
   });
   const rates = query.data?.rates ?? [];
   if (!rates.length) {
-    return <p className="truncate tracking-[0.18em] text-cream/70">Treasury desk · Receiving remittance in Nepal</p>;
+    return <p className="truncate tracking-[0.18em] text-white/80">Treasury desk · Receiving remittance in Nepal</p>;
   }
   const row = (
     <>
       {rates.map((rate) => (
         <span key={rate.currencyCode} className="mx-5 inline-flex items-center gap-2">
-          <span className="text-gold">{rate.currencyCode}</span>
-          <span className="text-cream/85">{formatNpr(rate.companyBuyRate ?? rate.nrbBuyRate)}</span>
+          <span className="font-bold text-white">{rate.currencyCode}</span>
+          <span className="text-white/90">{formatNpr(rate.companyBuyRate ?? rate.nrbBuyRate)}</span>
         </span>
       ))}
     </>

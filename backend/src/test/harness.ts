@@ -61,7 +61,7 @@ export async function seedAuthFixtures(): Promise<void> {
   });
   await CompanySetting.create({
     key: "default",
-    companyName: "Remit2Nepal",
+    companyName: "Remit To Nepal Pvt. Ltd",
     publicRateDisplay: "BOTH"
   });
   await NrbConfig.create({

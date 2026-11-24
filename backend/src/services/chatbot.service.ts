@@ -110,20 +110,46 @@ export async function ensureChatbotDefaults() {
   }
   if (settings.welcomeMessage.includes("becoming an agent, DC installation problems, and payout questions")) {
     settings.welcomeMessage =
-      "Hello. Ask me anything about Remit2Nepal — becoming an agent, DC install, rates, branches, services, charges, and the content on this site.";
+      "Hello. Ask me anything about Remit To Nepal Pvt. Ltd — becoming an agent, DC install, rates, branches, services, charges, and the content on this site.";
   }
   if (settings.placeholder === "Ask about agents, DC install, or payouts...") {
-    settings.placeholder = "Ask anything about Remit2Nepal...";
+    settings.placeholder = "Ask anything about Remit To Nepal Pvt. Ltd...";
   }
   if (settings.welcomeMessage.includes("becoming an agent, DC install, rates, branches, services, charges")) {
     settings.welcomeMessage =
-      "Hello. Ask me anything about Remit2Nepal — agents, DC install, rates, directors, Our Team, and the content on this site.";
+      "Hello. Ask me anything about Remit To Nepal Pvt. Ltd — agents, DC install, rates, directors, Our Team, and the content on this site.";
   }
   if (settings.sectionDescription.includes("Ask about becoming an agent, DC install, rates, branches, services, fees")) {
     settings.sectionDescription =
       "Ask about becoming an agent, DC install, rates, branches, directors, Our Team, fees, and anything published on this website.";
   }
+  if (settings.botName.includes("Remit2Nepal")) {
+    settings.botName = settings.botName.split("Remit2Nepal").join("Remit To Nepal Pvt. Ltd");
+  }
+  if (settings.welcomeMessage.includes("Remit2Nepal")) {
+    settings.welcomeMessage = settings.welcomeMessage.split("Remit2Nepal").join("Remit To Nepal Pvt. Ltd");
+  }
+  if (settings.placeholder.includes("Remit2Nepal")) {
+    settings.placeholder = settings.placeholder.split("Remit2Nepal").join("Remit To Nepal Pvt. Ltd");
+  }
   if (settings.isModified()) await settings.save();
+
+  const qaRows = await ChatbotQa.find({ answer: /Remit2Nepal/ });
+  await Promise.all(
+    qaRows.map((row) => {
+      if (!row.answer.includes("Remit2Nepal")) return null;
+      row.answer = row.answer.split("Remit2Nepal").join("Remit To Nepal Pvt. Ltd");
+      return row.save();
+    })
+  );
+  const stepRows = await ChatbotAgentStep.find({ body: /Remit2Nepal/ });
+  await Promise.all(
+    stepRows.map((row) => {
+      if (!row.body.includes("Remit2Nepal")) return null;
+      row.body = row.body.split("Remit2Nepal").join("Remit To Nepal Pvt. Ltd");
+      return row.save();
+    })
+  );
 
   await ChatbotQa.updateOne(
     { question: "Who are the directors?", answer: /licensed operations/i },
@@ -308,6 +334,7 @@ export async function answerChat(message: string) {
     ChatbotKnowledgeChunk.find().lean(),
     loadSiteKnowledge()
   ]);
+  const siteName = siteCards.find((card) => card.kind === "company")?.title?.trim() || "Remit To Nepal Pvt. Ltd";
   const suggestions = relatedChips(queryTokens, questions, "", baseSuggestions);
 
   const stepIndex = numberedStep(query);
@@ -416,7 +443,7 @@ export async function answerChat(message: string) {
     const searchHref = placeTokens.length ? `/branches?q=${encodeURIComponent(placeTokens.join(" "))}` : "/branches";
     const intro = matched.length
       ? `Here are agents matching your question.`
-      : `Remit2Nepal has ${allAgents.length} agents nationwide.`;
+      : `${siteName} has ${allAgents.length} agents nationwide.`;
     const reply = clip(`${intro}${agentListBlock(listed, allAgents.length, matched.length ? "Matching agents" : "Our Agent list")}`, 1400);
     return pack(
       "site",
@@ -449,8 +476,8 @@ export async function answerChat(message: string) {
     const intro = namedPeople.length && !wantsBoard && !wantsTeam
       ? `Here is who I found.`
       : href === "/about/board"
-        ? `Here are the directors of Remit2Nepal.`
-        : `Here is Our Team at Remit2Nepal.`;
+        ? `Here are the directors of ${siteName}.`
+        : `Here is Our Team at ${siteName}.`;
     const reply = clip(`${intro}${agentListBlock(listed, group.length || listed.length, label, "See the full page")}`, 1400);
     return pack(
       "site",

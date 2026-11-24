@@ -11,6 +11,7 @@ export interface AccessTokenPayload {
   role: RoleName;
   permissions: string[];
   mustChangePassword: boolean;
+  typ?: "cms" | "leave";
 }
 
 export interface RefreshTokenPayload {

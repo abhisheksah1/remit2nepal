@@ -41,6 +41,7 @@ import type {
   RateHistoryItem
 } from "@/types/rates";
 import type { AuditLogItem, DashboardPayload } from "@/types/ops";
+import type { LeaveTrackerAccount } from "@/types/leave";
 
 function list<T>(path: string, params?: ListParams) {
   return unwrap<Paginated<T>>(api.get(path, { params }));
@@ -224,6 +225,12 @@ export const adminApi = {
     update: (id: string, body: unknown) => patch<AdminAccount>(`/admins/${id}`, body),
     remove: (id: string) => remove<AdminAccount>(`/admins/${id}`),
     permissions: () => get<PermissionOption[]>("/admins/permissions")
+  },
+  leaveTrackerUsers: {
+    list: (params?: ListParams) => unwrap<Paginated<LeaveTrackerAccount>>(api.get("/leave-tracker-users", { params })),
+    create: (body: unknown) => create<LeaveTrackerAccount>("/leave-tracker-users", body),
+    update: (id: string, body: unknown) => patch<LeaveTrackerAccount>(`/leave-tracker-users/${id}`, body),
+    remove: (id: string) => remove<LeaveTrackerAccount>(`/leave-tracker-users/${id}`)
   },
   auditLogs: (params?: ListParams & { module?: string; userId?: string; action?: string }) =>
     unwrap<Paginated<AuditLogItem>>(api.get("/audit-logs", { params })),

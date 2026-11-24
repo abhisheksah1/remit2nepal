@@ -3,7 +3,7 @@ import { Clock3, Facebook, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide
 import type { CompanySettings, NavItem, SocialLink } from "@/types/content";
 import { ABOUT_NAV } from "@/config/about-nav";
 import { PUBLIC_NAV } from "@/config/public-labels";
-import { BRAND } from "@/constants/brand";
+import { BRAND, brandLogoSrc } from "@/constants/brand";
 
 const icons: Record<string, typeof Facebook> = {
   facebook: Facebook,
@@ -50,12 +50,12 @@ export function Footer({
       <div className="site-footer-main">
         <div className="site-footer-brand">
           <Link to="/" aria-label={`${company} home`}>
-            <img src={settings?.logoUrl || BRAND.logo} alt={company} className="site-logo-footer" />
+            <img src={brandLogoSrc(settings?.logoUrl)} alt={company} className="site-logo-footer" />
           </Link>
           <p className="site-footer-tagline">{settings?.tagline || BRAND.tagline}</p>
           <p className="site-footer-about">
             {settings?.footerAbout ||
-              "Remit2Nepal is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."}
+              "Remit To Nepal Pvt. Ltd is a remittance receiving company in Nepal. Transfers sent from abroad are paid out here as cash pickup, bank deposit, or wallet."}
           </p>
         </div>
 

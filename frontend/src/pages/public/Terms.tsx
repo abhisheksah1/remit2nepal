@@ -23,11 +23,11 @@ export default function Terms() {
   return (
     <>
       <SeoHead
-        title={page.data?.seoTitle || "Terms & Services | Remit2Nepal"}
+        title={page.data?.seoTitle || "Terms & Services | Remit To Nepal Pvt. Ltd"}
         description={
           page.data?.seoDescription ||
           page.data?.summary ||
-          "Terms that apply when you use Remit2Nepal’s website and remittance services."
+          "Terms that apply when you use Remit To Nepal Pvt. Ltd’s website and remittance services."
         }
       />
       <TermsPro

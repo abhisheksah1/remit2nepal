@@ -18,6 +18,6 @@ export function statusTone(status: string): Tone {
   if (["ACTIVE", "PUBLISHED", "LIVE", "SUCCESS", "REPLIED", "APPROVED", "PAID"].includes(status)) return "green";
   if (["INACTIVE", "DRAFT", "ARCHIVED", "UNPAID"].includes(status)) return "muted";
   if (["FAILED", "LOCKED", "ALERT", "MAINTENANCE", "REJECTED"].includes(status)) return "red";
-  if (["NEW", "NOTICE", "SUBMITTED"].includes(status)) return "gold";
+  if (["NEW", "NOTICE", "SUBMITTED", "PENDING"].includes(status)) return "gold";
   return "navy";
 }

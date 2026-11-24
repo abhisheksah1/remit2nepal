@@ -4,13 +4,13 @@ const chatbotSettingSchema = new Schema(
   {
     key: { type: String, required: true, unique: true, default: "default" },
     enabled: { type: Boolean, default: true },
-    botName: { type: String, default: "Remit2Nepal Assist" },
+    botName: { type: String, default: "Remit To Nepal Assist" },
     welcomeMessage: {
       type: String,
       default:
-        "Hello. Ask me anything about Remit2Nepal — agents, DC install, rates, directors, Our Team, and the content on this site."
+        "Hello. Ask me anything about Remit To Nepal Pvt. Ltd — agents, DC install, rates, directors, Our Team, and the content on this site."
     },
-    placeholder: { type: String, default: "Ask anything about Remit2Nepal..." },
+    placeholder: { type: String, default: "Ask anything about Remit To Nepal Pvt. Ltd..." },
     fallbackMessage: {
       type: String,
       default:

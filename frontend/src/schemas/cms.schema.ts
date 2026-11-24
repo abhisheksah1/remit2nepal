@@ -159,6 +159,8 @@ export const sectionFormSchema = z.object({
   alignment: z.enum(["left", "center", "right"]).optional(),
   itemsJson: optionalText,
   sceneJson: optionalText,
+  heroBgJson: optionalText,
+  heroBgSeconds: z.coerce.number().min(3).max(30).optional(),
   pointsJson: optionalText,
   collage1: optionalText,
   collage2: optionalText,

@@ -148,7 +148,7 @@ export function TermsPro({
   const [tocOpen, setTocOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const company = settings?.companyName?.trim() || "Remit2Nepal";
+  const company = settings?.companyName?.trim() || "Remit To Nepal Pvt. Ltd";
   const address = settings?.address?.trim() || "";
   const email = settings?.email?.trim() || "";
   const phone = settings?.phone?.trim() || "";

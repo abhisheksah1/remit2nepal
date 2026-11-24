@@ -16,9 +16,9 @@ import { entityId } from "@/utils/cn";
 
 const emptySettings: ChatbotSettings = {
   enabled: true,
-  botName: "Remit2Nepal Assist",
-  welcomeMessage: "Hello. Ask me anything about Remit2Nepal — agents, DC install, rates, directors, Our Team, and the content on this site.",
-  placeholder: "Ask anything about Remit2Nepal...",
+  botName: "Remit To Nepal Assist",
+  welcomeMessage: "Hello. Ask me anything about Remit To Nepal Pvt. Ltd — agents, DC install, rates, directors, Our Team, and the content on this site.",
+  placeholder: "Ask anything about Remit To Nepal Pvt. Ltd...",
   fallbackMessage: "I could not find that yet. Try a suggested question or contact operations.",
   launcherLabel: "Agent help",
   sectionKicker: "Agent desk",

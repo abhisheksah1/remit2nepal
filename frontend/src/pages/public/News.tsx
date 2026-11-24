@@ -16,7 +16,7 @@ export default function News() {
 
   return (
     <>
-      <SeoHead title="News and notices" description="Public notices, alerts and news from Remit2Nepal." />
+      <SeoHead title="News and notices" description="Public notices, alerts and news from Remit To Nepal Pvt. Ltd." />
       <NewsDesk news={query.data ?? []} listing />
     </>
   );

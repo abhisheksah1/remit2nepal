@@ -165,7 +165,7 @@ export function PartnerApplyForm({
         <CheckCircle2 className="h-12 w-12 text-gold" />
         <h2 className="mt-4 font-display text-3xl text-navy">Application received</h2>
         <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-          Thank you. The partnership desk will verify your documents first. If they are in order, Remit2Nepal will email
+          Thank you. The partnership desk will verify your documents first. If they are in order, Remit To Nepal Pvt. Ltd will email
           the company agreement. Sign it, add your stamp, complete the required papers, scan them, and email them back
           {deskEmail ? (
             <>
@@ -242,7 +242,7 @@ export function PartnerApplyForm({
         <p className="apply-section-kicker">{kind === "NATIONAL" ? "Step 3" : "Step 2"}</p>
         <h2 className="mt-1 font-display text-2xl text-navy">Documents for verification</h2>
         <p className="mt-2 text-sm text-ink-muted">
-          Upload clear scans of these files. The desk verifies them before Remit2Nepal emails the company agreement.
+          Upload clear scans of these files. The desk verifies them before Remit To Nepal Pvt. Ltd emails the company agreement.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {documentFields.map((item) => (
@@ -261,7 +261,7 @@ export function PartnerApplyForm({
         <p className="apply-section-kicker">After you submit</p>
         <h2 className="mt-1 font-display text-2xl text-navy">Agreement by email</h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-          Do not wait for a download on this page. Once your documents are verified, Remit2Nepal sends the agreement from
+          Do not wait for a download on this page. Once your documents are verified, Remit To Nepal Pvt. Ltd sends the agreement from
           the company. Sign it, stamp it, fill any remaining papers, scan everything, and email the scans back
           {deskEmail ? (
             <>

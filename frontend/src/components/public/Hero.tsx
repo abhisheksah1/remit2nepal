@@ -1,10 +1,10 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
 import { AboutGlobe } from "./AboutGlobe";
 import type { CmsSection, StatItem } from "@/types/content";
 import { cn, mediaUrl } from "@/utils/cn";
-import { heroChips, heroTitleParts } from "@/utils/hero";
+import { heroBgSeconds, heroBgSlides, heroChips, heroTitleParts } from "@/utils/hero";
 
 const TRUST = ["Cash pickup", "Bank deposit", "Wallet credit", "Nationwide payout"];
 
@@ -40,7 +40,23 @@ export function Hero({ section, stats = [] }: { section: CmsSection; stats?: Sta
   const secondaryUrl = section.secondaryButtonUrl?.trim() || "#how-it-works";
   const chips = heroChips(section.items);
   const trust = chips.length ? chips : TRUST;
-  const photo = section.backgroundUrl?.trim();
+  const slides = useMemo(() => heroBgSlides(section.items, section.backgroundUrl), [section.items, section.backgroundUrl]);
+  const seconds = heroBgSeconds(section.items, 5);
+  const [active, setActive] = useState(0);
+  const photo = slides[active]?.imageUrl || slides[0]?.imageUrl;
+
+  useEffect(() => {
+    setActive(0);
+  }, [slides.length]);
+
+  useEffect(() => {
+    if (slides.length < 2) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const timer = window.setInterval(() => {
+      setActive((index) => (index + 1) % slides.length);
+    }, seconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [slides.length, seconds]);
 
   useEffect(() => {
     const node = stage.current;
@@ -59,23 +75,21 @@ export function Hero({ section, stats = [] }: { section: CmsSection; stats?: Sta
   }, []);
 
   return (
-    <section
-      ref={stage}
-      className={cn("hero-stage", photo && "has-photo")}
-      aria-labelledby="hero-title"
-    >
+    <section ref={stage} className={cn("hero-stage", photo && "has-photo")} aria-labelledby="hero-title">
       <div className="hero-atm" aria-hidden>
-        <span className="hero-atm-glow is-blue" />
-        <span className="hero-atm-glow is-red" />
         <span className="hero-atm-grid" />
-        {photo ? (
-          <div
-            className={cn("hero-photo", section.overlay === false && "is-clear")}
-            style={{ backgroundImage: `url(${mediaUrl(photo)})` }}
-          />
-        ) : (
-          <div className="hero-mountains" />
-        )}
+        {slides.length ? (
+          <div className="hero-photos">
+            {slides.map((slide, index) => (
+              <div
+                key={`${slide.imageUrl}-${index}`}
+                className={cn("hero-photo", section.overlay === false && "is-clear", index === active && "is-on")}
+                style={{ backgroundImage: `url(${mediaUrl(slide.imageUrl)})` }}
+              />
+            ))}
+          </div>
+        ) : null}
+        <div className="hero-mountains" />
       </div>
 
       <div className="hero-inner">

@@ -95,11 +95,11 @@ describe("branches", () => {
     const XLSX = await import("xlsx");
     const { cookies, csrf } = await loginAs(app, "superadmin", "change-this-password");
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([["Cover"], ["Remit2Nepal agents"]]), "Cover");
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([["Cover"], ["Remit To Nepal Pvt. Ltd agents"]]), "Cover");
     XLSX.utils.book_append_sheet(
       workbook,
       XLSX.utils.aoa_to_sheet([
-        ["Remit2Nepal Pvt. Ltd."],
+        ["Remit To Nepal Pvt. Ltd Pvt. Ltd."],
         [],
         ["S.N.", "Name of Agent", "District", "Full Address"],
         ["1", "Dhangadhi Desk", "Kailali", "Main Road, Dhangadhi"]

@@ -22,7 +22,7 @@ export default function About() {
   return (
     <>
       <SeoHead
-        title={`${aboutLine(about.heroTitle, ABOUT_DEFAULTS.heroTitle).replace(/\s*\/\/\s*/g, " ")} | Remit2Nepal`}
+        title={`${aboutLine(about.heroTitle, ABOUT_DEFAULTS.heroTitle).replace(/\s*\/\/\s*/g, " ")} | Remit To Nepal Pvt. Ltd`}
         description={aboutLine(about.heroDescription, ABOUT_DEFAULTS.heroDescription)}
       />
       <AboutPro about={about} />
